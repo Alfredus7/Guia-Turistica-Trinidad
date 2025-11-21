@@ -1,0 +1,270 @@
+﻿@model guia_turistico.Models.SitiosTuristicos
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>SitiosTuristicos</h4>
+<hr />
+<div class="row">
+    <div class="col-md-8">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+
+            <!-- Mapa Interactivo -->
+            <div class="form-group mb-4">
+                <label class="control-label fw-bold">📍 Selecciona la ubicación en el mapa:</label>
+                <div id="map" style="height: 400px; width: 100%; border: 2px solid #dee2e6; border-radius: 8px; margin: 10px 0;"></div>
+                <small class="text-muted">
+                    💡 <strong>Instrucciones:</strong> Haz clic en cualquier lugar del mapa para colocar el marcador.
+                    Puedes arrastrar el marcador para ajustar la posición.
+                </small>
+            </div>
+
+            <!-- Coordenadas (ocultas - se llenan automáticamente) -->
+            <input type="hidden" asp-for="Latitud" id="Latitud" />
+            <input type="hidden" asp-for="Longitud" id="Longitud" />
+
+           @*  <!-- Botón para centrar en ubicación actual -->
+            <div class="form-group mb-3">
+                <button type="button" class="btn btn-outline-primary btn-sm" onclick="centerToMyLocation()">
+                    📍 Centrar en mi ubicación actual
+                </button>
+                <small class="text-muted ms-2">(Opcional) Usa tu GPS para encontrar tu ubicación</small>
+            </div> *@
+
+            <hr />
+
+            <!-- Resto de campos del formulario -->
+            <div class="form-group">
+                <label asp-for="Nombre" class="control-label"></label>
+                <input asp-for="Nombre" class="form-control" />
+                <span asp-validation-for="Nombre" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="NombreIngles" class="control-label"></label>
+                <input asp-for="NombreIngles" class="form-control" />
+                <span asp-validation-for="NombreIngles" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="NombrePortugues" class="control-label"></label>
+                <input asp-for="NombrePortugues" class="form-control" />
+                <span asp-validation-for="NombrePortugues" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Descripcion" class="control-label"></label>
+                <textarea asp-for="Descripcion" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="Descripcion" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="DescripcionIngles" class="control-label"></label>
+                <textarea asp-for="DescripcionIngles" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="DescripcionIngles" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="DescripcionPortugues" class="control-label"></label>
+                <textarea asp-for="DescripcionPortugues" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="DescripcionPortugues" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Direccion" class="control-label"></label>
+                <input asp-for="Direccion" class="form-control" />
+                <span asp-validation-for="Direccion" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="TipoId" class="control-label"></label>
+                <select asp-for="TipoId" class="form-control" asp-items="ViewBag.TipoId"></select>
+                <span asp-validation-for="TipoId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-4">
+                <input type="submit" value="Save" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <!-- Incluir Leaflet CSS y JS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+        // Variables globales
+        let map;
+        let marker;
+
+        // Coordenadas de Trinidad, Beni, Bolivia
+        const trinidadLat = -14.8350;
+        const trinidadLng = -64.9030;
+
+        // Inicializar mapa cuando el documento esté listo
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeMap();
+        });
+
+        function initializeMap() {
+            // Crear mapa centrado en Trinidad
+            map = L.map('map').setView([trinidadLat, trinidadLng], 13);
+
+            // Capa de OpenStreetMap
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+
+            // Evento para hacer clic en el mapa
+            map.on('click', function(e) {
+                placeMarker(e.latlng);
+            });
+
+            // Verificar si ya existen coordenadas en el formulario (modo edición)
+            const existingLat = document.getElementById('Latitud').value;
+            const existingLng = document.getElementById('Longitud').value;
+
+            if (existingLat && existingLng) {
+                // Usar las coordenadas existentes del sitio
+                const existingLatLng = [parseFloat(existingLat), parseFloat(existingLng)];
+                placeMarker(existingLatLng);
+                map.setView(existingLatLng, 15); // Zoom más cercano para coordenadas existentes
+                showFeedback('📍 Ubicación actual del sitio cargada');
+            } else {
+                // Agregar marcador inicial en el centro de Trinidad (para nuevos sitios)
+                placeMarker([trinidadLat, trinidadLng]);
+            }
+
+            // Agregar un círculo para destacar el área central de Trinidad
+            L.circle([trinidadLat, trinidadLng], {
+                color: 'blue',
+                fillColor: '#00bfff',
+                fillOpacity: 0.1,
+                radius: 1000
+            }).addTo(map).bindPopup("Trinidad, Beni");
+        }
+
+        function placeMarker(latlng) {
+            // Remover marcador existente
+            if (marker) {
+                map.removeLayer(marker);
+            }
+
+            // Crear nuevo marcador (arrastrable)
+            marker = L.marker(latlng, {
+                draggable: true
+            }).addTo(map);
+
+            // Actualizar coordenadas cuando se mueve el marcador
+            marker.on('dragend', function(e) {
+                updateCoordinates(e.target.getLatLng());
+            });
+
+            // Actualizar coordenadas inmediatamente
+            updateCoordinates(latlng);
+
+            // Centrar el mapa en el marcador (pero mantener zoom)
+            map.setView(latlng, map.getZoom());
+        }
+
+        function updateCoordinates(latlng) {
+            document.getElementById('Latitud').value = latlng.lat.toFixed(6);
+            document.getElementById('Longitud').value = latlng.lng.toFixed(6);
+
+            // Mostrar feedback visual
+            showFeedback('✅ Ubicación seleccionada: ' + latlng.lat.toFixed(6) + ', ' + latlng.lng.toFixed(6));
+        }
+
+        function centerToMyLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        const userLat = position.coords.latitude;
+                        const userLng = position.coords.longitude;
+
+                        placeMarker([userLat, userLng]);
+                        map.setView([userLat, userLng], 15);
+
+                        showFeedback('📍 Ubicación actual encontrada - Trinidad está marcada en azul');
+                    },
+                    function(error) {
+                        let errorMessage = 'Error al obtener la ubicación: ';
+                        switch(error.code) {
+                            case error.PERMISSION_DENIED:
+                                errorMessage += 'Permiso denegado por el usuario';
+                                break;
+                            case error.POSITION_UNAVAILABLE:
+                                errorMessage += 'Ubicación no disponible';
+                                break;
+                            case error.TIMEOUT:
+                                errorMessage += 'Tiempo de espera agotado';
+                                break;
+                            default:
+                                errorMessage += 'Error desconocido';
+                        }
+                        showFeedback(errorMessage, 'error');
+                    }
+                );
+            } else {
+                showFeedback('Tu navegador no soporta geolocalización', 'error');
+            }
+        }
+
+        // Función para centrar el mapa en Trinidad
+        function centerToTrinidad() {
+            map.setView([trinidadLat, trinidadLng], 13);
+            placeMarker([trinidadLat, trinidadLng]);
+            showFeedback('🗺️ Mapa centrado en Trinidad, Beni');
+        }
+
+        function showFeedback(message, type = 'success') {
+            // Crear o actualizar elemento de feedback
+            let feedbackEl = document.getElementById('mapFeedback');
+            if (!feedbackEl) {
+                feedbackEl = document.createElement('div');
+                feedbackEl.id = 'mapFeedback';
+                feedbackEl.className = 'alert alert-info mt-2';
+                feedbackEl.style.padding = '8px 12px';
+                document.querySelector('#map').parentNode.appendChild(feedbackEl);
+            }
+
+            feedbackEl.textContent = message;
+            feedbackEl.className = `alert ${type === 'error' ? 'alert-danger' : 'alert-success'} mt-2`;
+
+            // Auto-ocultar después de 4 segundos
+            setTimeout(() => {
+                feedbackEl.style.opacity = '0';
+                feedbackEl.style.transition = 'opacity 0.5s';
+                setTimeout(() => feedbackEl.remove(), 500);
+            }, 4000);
+        }
+
+        // Validación antes de enviar el formulario
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const lat = document.getElementById('Latitud').value;
+            const lng = document.getElementById('Longitud').value;
+
+            if (!lat || !lng) {
+                e.preventDefault();
+                alert('⚠️ Por favor, selecciona una ubicación en el mapa antes de guardar.');
+                return false;
+            }
+        });
+    </script>
+}

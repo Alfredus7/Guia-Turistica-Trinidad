@@ -1,0 +1,174 @@
+﻿@model IEnumerable<guia_turistico.Models.SitiosTuristicos>
+
+@{
+    var selectedLanguage = Context.Request.Cookies["selectedLanguage"] ?? "es";
+    ViewData["Title"] = "Sitios por Tipo";
+}
+
+<header class="bg-light py-5 text-center">
+    <div class="container">
+        <h1 class="fw-bold">
+            @switch (selectedLanguage)
+            {
+                case "en":
+                    <text>Tourist Sites - @(ViewBag.TipoNombreIngles ?? ViewBag.TipoNombre)</text>
+                    ;
+                    break;
+                case "pt":
+                    <text>Locais Turísticos - @(ViewBag.TipoNombrePortugues ?? ViewBag.TipoNombre)</text>
+                    ;
+                    break;
+                default:
+                    <text>Sitios Turísticos - @ViewBag.TipoNombre</text>
+                    ;
+                    break;
+            }
+        </h1>
+    </div>
+</header>
+
+<div class="container my-5">
+    <div class="row g-4">
+        @if (Model != null && Model.Any())
+        {
+            foreach (var sitio in Model)
+            {
+                string imagen = sitio.Imagenes?.FirstOrDefault()?.Url ?? "/images/default-sitio.jpg";
+
+                <div class="col-12 col-md-4">
+                    <div class="card h-100 shadow-sm border-0">
+                        <div class="ratio ratio-4x3">
+                            <img src="@imagen"
+                                 class="card-img-top img-fluid object-fit-cover rounded-top"
+                                 alt="@sitio.Nombre"
+                                 onerror="this.src='/images/default-sitio.jpg';" />
+                        </div>
+
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">
+                                @switch (selectedLanguage)
+                                {
+                                    case "en":
+                                        <text>@(string.IsNullOrEmpty(sitio.NombreIngles) ? sitio.Nombre : sitio.NombreIngles)</text>
+                                        ;
+                                        break;
+                                    case "pt":
+                                        <text>@(string.IsNullOrEmpty(sitio.NombrePortugues) ? sitio.Nombre : sitio.NombrePortugues)</text>
+                                        ;
+                                        break;
+                                    default:
+                                        <text>@sitio.Nombre</text>
+                                        ;
+                                        break;
+                                }
+                            </h5>
+
+                            <p class="card-text text-muted mb-2">
+                                ⭐ @Math.Round(
+                                                        (sitio.Comentarios?.Any() ?? false)
+                                                        ? sitio.Comentarios.Average(c => c.Puntuacion)
+                                                        : 0, 1) / 5
+                    </p>
+
+                            <p class="card-text">
+                        @switch (selectedLanguage)
+                                {
+                                    case "en":
+                                        <text>@((sitio.DescripcionIngles?.Length > 100 ? sitio.DescripcionIngles.Substring(0, 100) + "..." : sitio.DescripcionIngles) ?? sitio.Descripcion)</text>
+                                        ;
+                                        break;
+                                    case "pt":
+                                        <text>@((sitio.DescripcionPortugues?.Length > 100 ? sitio.DescripcionPortugues.Substring(0, 100) + "..." : sitio.DescripcionPortugues) ?? sitio.Descripcion)</text>
+                                        ;
+                                        break;
+                                    default:
+                                        <text>@(sitio.Descripcion?.Length > 100 ? sitio.Descripcion.Substring(0, 100) + "..." : sitio.Descripcion)</text>
+                                        ;
+                                        break;
+                                }
+                            </p>
+
+                            <a asp-controller="Home"
+                               asp-action="Details"
+                               asp-route-id="@sitio.Id"
+                               class="btn btn-outline-primary mt-auto">
+                                @switch (selectedLanguage)
+                                {
+                                    case "en":
+                                        <text>View Details</text>
+                                        ;
+                                        break;
+                                    case "pt":
+                                        <text>Ver Detalhes</text>
+                                        ;
+                                        break;
+                                    default:
+                                        <text>Ver Detalles</text>
+                                        ;
+                                        break;
+                                }
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="text-center text-muted">
+                <p>
+                    @switch (selectedLanguage)
+                    {
+                        case "en":
+                            <text>No sites registered in this category yet.</text>
+                            ;
+                            break;
+                        case "pt":
+                            <text>Nenhum local registrado nesta categoria ainda.</text>
+                            ;
+                            break;
+                        default:
+                            <text>No hay sitios registrados en esta categoría aún.</text>
+                            ;
+                            break;
+                    }
+                </p>
+            </div>
+        }
+    </div>
+
+    <div class="mt-4 text-center">
+        <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-2"></i>
+            @switch (selectedLanguage)
+            {
+                case "en":
+                    <text>Back to Home</text>
+                    break;
+                case "pt":
+                    <text>Voltar para Início</text>
+                    break;
+                default:
+                    <text>Volver al Inicio</text>
+                    break;
+            }
+        </a>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Manejar imágenes que no cargan
+        document.querySelectorAll('img').forEach(img => {
+            img.addEventListener('error', function() {
+                if (this.src.includes('https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg')) return;
+
+                if (this.alt.includes('Sitio') || this.classList.contains('sitio-img')) {
+                    this.src = 'https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg';
+                } else {
+                    this.src = 'https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg';
+                }
+            });
+        });
+    });
+</script>

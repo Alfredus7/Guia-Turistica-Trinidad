@@ -1,0 +1,256 @@
+﻿@model guia_turistico.Models.ImagenesSitios
+
+@{
+    ViewData["Title"] = "Agregar Imágenes";
+}
+
+<h1 class="fw-bold text-center mb-4">Agregar Imágenes al Sitio Turístico</h1>
+
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <form asp-action="Create" id="imageForm">
+            <div asp-validation-summary="All" class="text-danger"></div>
+
+            <!-- Campo para seleccionar el sitio turístico -->
+            <div class="form-group mb-4">
+                <label asp-for="SitioTuristicoId" class="control-label fw-bold">Sitio Turístico</label>
+                <select asp-for="SitioTuristicoId" class="form-control" asp-items="ViewBag.SitioTuristicoId">
+                    <option value="">-- Seleccionar Sitio Turístico --</option>
+                </select>
+                <span asp-validation-for="SitioTuristicoId" class="text-danger"></span>
+            </div>
+
+            <!-- Sección para agregar múltiples imágenes -->
+            <div class="form-group mb-4">
+                <label class="control-label fw-bold">Agregar Imágenes</label>
+                <div class="input-group mb-3">
+                    <input type="url" id="imageUrlInput" class="form-control" placeholder="https://ejemplo.com/imagen.jpg" />
+                    <button type="button" class="btn btn-success" id="addImageBtn">
+                        <i class="fas fa-plus-circle me-2"></i>Agregar Link
+                    </button>
+                </div>
+                <small class="text-muted">Pega la URL de la imagen y haz clic en "Agregar Link"</small>
+            </div>
+
+            <!-- Preview de imágenes agregadas -->
+            <div id="imagePreviewContainer" class="row g-3 mb-4">
+                <!-- Las cards de imágenes se agregarán aquí dinámicamente -->
+            </div>
+
+            <!-- Contador de imágenes -->
+            <div class="alert alert-info d-flex align-items-center" id="imageCounter">
+                <i class="fas fa-info-circle me-2"></i>
+                <span id="counterText">0 imágenes agregadas</span>
+            </div>
+
+            <!-- Botones de acción -->
+            <div class="form-group d-flex gap-3">
+                <button type="submit" class="btn btn-primary flex-fill" id="submitBtn" disabled>
+                    <i class="fas fa-save me-2"></i>Guardar Todas las Imágenes
+                </button>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Volver al Listado
+                </a>
+            </div>
+
+            <!-- Campo oculto para almacenar todas las URLs -->
+            <input type="hidden" id="allImageUrls" name="allImageUrls" />
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const imageUrlInput = document.getElementById('imageUrlInput');
+            const addImageBtn = document.getElementById('addImageBtn');
+            const imagePreviewContainer = document.getElementById('imagePreviewContainer');
+            const imageCounter = document.getElementById('imageCounter');
+            const counterText = document.getElementById('counterText');
+            const submitBtn = document.getElementById('submitBtn');
+            const allImageUrls = document.getElementById('allImageUrls');
+            const sitioSelect = document.getElementById('SitioTuristicoId');
+
+            let imageUrls = [];
+
+            // Función para validar URL de imagen
+            function isValidImageUrl(url) {
+                if (!url) return false;
+
+                // Patrones comunes de URLs de imágenes
+                const imagePatterns = [
+                    /\.(jpeg|jpg|jfif|pjpeg|pjp)$/i,
+                    /\.(png)$/i,
+                    /\.(gif)$/i,
+                    /\.(bmp)$/i,
+                    /\.(webp)$/i,
+                    /\.(svg)$/i,
+                    /\.(avif)$/i
+                ];
+
+                try {
+                    const urlObj = new URL(url);
+                    return imagePatterns.some(pattern => pattern.test(urlObj.pathname));
+                } catch {
+                    return false;
+                }
+            }
+
+            // Función para agregar imagen
+            function addImage(url) {
+                if (!isValidImageUrl(url)) {
+                    showAlert('Por favor ingresa una URL válida de imagen (jpg, png, gif, etc.)', 'danger');
+                    return;
+                }
+
+                if (imageUrls.includes(url)) {
+                    showAlert('Esta imagen ya ha sido agregada', 'warning');
+                    return;
+                }
+
+                // Agregar a la lista
+                imageUrls.push(url);
+
+                // Crear card de preview
+                const cardId = `imageCard_${imageUrls.length}`;
+                const cardHtml = `
+                    <div class="col-md-6 col-lg-4" id="${cardId}">
+                        <div class="card h-100 shadow-sm">
+                            <div class="ratio ratio-4x3">
+                                <img src="${url}" class="card-img-top object-fit-cover"
+                                     alt="Preview imagen"
+                                     onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg'">
+                            </div>
+                            <div class="card-body d-flex flex-column">
+                                <p class="card-text small text-truncate">${url}</p>
+                                <button type="button" class="btn btn-outline-danger btn-sm mt-auto"
+                                        onclick="removeImage('${cardId}', '${url}')">
+                                    <i class="fas fa-trash me-1"></i>Eliminar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                imagePreviewContainer.insertAdjacentHTML('beforeend', cardHtml);
+                updateCounter();
+                imageUrlInput.value = '';
+                imageUrlInput.focus();
+            }
+
+            // Función para eliminar imagen
+            window.removeImage = function(cardId, url) {
+                const cardElement = document.getElementById(cardId);
+                if (cardElement) {
+                    cardElement.remove();
+                }
+
+                imageUrls = imageUrls.filter(u => u !== url);
+                updateCounter();
+            }
+
+            // Función para actualizar contador
+            function updateCounter() {
+                const count = imageUrls.length;
+                counterText.textContent = `${count} imagen(es) agregada(s)`;
+
+                // Habilitar/deshabilitar botón de enviar
+                submitBtn.disabled = count === 0 || !sitioSelect.value;
+
+                // Actualizar campo oculto
+                allImageUrls.value = JSON.stringify(imageUrls);
+
+                // Cambiar color del alert según la cantidad
+                if (count === 0) {
+                    imageCounter.className = 'alert alert-info d-flex align-items-center';
+                } else if (count < 3) {
+                    imageCounter.className = 'alert alert-warning d-flex align-items-center';
+                } else {
+                    imageCounter.className = 'alert alert-success d-flex align-items-center';
+                }
+            }
+
+            // Función para mostrar alertas
+            function showAlert(message, type) {
+                const alertHtml = `
+                    <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+                        ${message}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                `;
+
+                // Insertar antes del formulario
+                const form = document.getElementById('imageForm');
+                form.insertAdjacentHTML('afterbegin', alertHtml);
+
+                // Auto-eliminar después de 5 segundos
+                setTimeout(() => {
+                    const alert = document.querySelector('.alert');
+                    if (alert) {
+                        alert.remove();
+                    }
+                }, 5000);
+            }
+
+            // Event Listeners
+            addImageBtn.addEventListener('click', function() {
+                const url = imageUrlInput.value.trim();
+                if (url) {
+                    addImage(url);
+                }
+            });
+
+            imageUrlInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    addImageBtn.click();
+                }
+            });
+
+            sitioSelect.addEventListener('change', function() {
+                updateCounter();
+            });
+
+            // Manejar envío del formulario
+            document.getElementById('imageForm').addEventListener('submit', function(e) {
+                if (imageUrls.length === 0) {
+                    e.preventDefault();
+                    showAlert('Debes agregar al menos una imagen', 'danger');
+                    return;
+                }
+
+                if (!sitioSelect.value) {
+                    e.preventDefault();
+                    showAlert('Debes seleccionar un sitio turístico', 'danger');
+                    return;
+                }
+
+                // Mostrar loading
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Guardando...';
+                submitBtn.disabled = true;
+            });
+
+            // Validación en tiempo real de la URL
+            imageUrlInput.addEventListener('input', function() {
+                const url = this.value.trim();
+                if (url && isValidImageUrl(url)) {
+                    this.classList.remove('is-invalid');
+                    this.classList.add('is-valid');
+                } else if (url) {
+                    this.classList.remove('is-valid');
+                    this.classList.add('is-invalid');
+                } else {
+                    this.classList.remove('is-valid', 'is-invalid');
+                }
+            });
+        });
+    </script>
+
+    <style>
+       
+    </style>
+}

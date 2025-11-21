@@ -1,0 +1,527 @@
+﻿@model guia_turistico.Models.SitiosTuristicos
+
+@{
+    ViewData["Title"] = "Detalles del Sitio Turístico";
+    var selectedLanguage = Context.Request.Cookies["selectedLanguage"] ?? "es";
+}
+
+<div class="container my-5">
+    <div class="text-center mb-4">
+        <h1 class="fw-bold display-5">
+            @switch (selectedLanguage)
+            {
+                case "en":
+                    <text>@(string.IsNullOrEmpty(Model.NombreIngles) ? Model.Nombre : Model.NombreIngles)</text>
+                    break;
+                case "pt":
+                    <text>@(string.IsNullOrEmpty(Model.NombrePortugues) ? Model.Nombre : Model.NombrePortugues)</text>
+                    break;
+                default:
+                    <text>@Model.Nombre</text>
+                    break;
+            }
+        </h1>
+
+        <p class="text-muted">
+            @switch (selectedLanguage)
+            {
+                case "en":
+                    <text>Learn more about this place</text>
+                    break;
+                case "pt":
+                    <text>Saiba mais sobre este lugar</text>
+                    break;
+                default:
+                    <text>Descubre más sobre este lugar</text>
+                    break;
+            }
+        </p>
+    </div>
+
+    <!-- Carousel de Imágenes -->
+    @if (Model.Imagenes != null && Model.Imagenes.Any())
+    {
+        <div class="card shadow-lg border-0 mb-5">
+            <div class="card-body p-0">
+                <div id="sitioCarousel" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-indicators">
+                        @for (int i = 0; i < Model.Imagenes.Count; i++)
+                        {
+                            <button type="button" data-bs-target="#sitioCarousel" data-bs-slide-to="@i"
+                                    class="@(i == 0 ? "active" : "")" aria-label="Slide @(i + 1)"></button>
+                        }
+                    </div>
+
+                    <div class="carousel-inner rounded-3">
+                        @for (int i = 0; i < Model.Imagenes.Count; i++)
+                        {
+                            var imagen = Model.Imagenes.ElementAt(i);
+                            <div class="carousel-item @(i == 0 ? "active" : "")">
+                                <img src="@imagen.Url" class="d-block w-100" style="height: 450px; object-fit: cover;" alt="@Model.Nombre">
+                            </div>
+                        }
+                    </div>
+
+                    <button class="carousel-control-prev" type="button" data-bs-target="#sitioCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon"></span>
+                        <span class="visually-hidden">
+                            @switch (selectedLanguage)
+                            {
+                                case "en":
+                                    <text>Previous</text>
+                                    break;
+                                case "pt":
+                                    <text>Anterior</text>
+                                    break;
+                                default:
+                                    <text>Anterior</text>
+                                    break;
+                            }
+                        </span>
+                    </button>
+
+                    <button class="carousel-control-next" type="button" data-bs-target="#sitioCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon"></span>
+                        <span class="visually-hidden">
+                            @switch (selectedLanguage)
+                            {
+                                case "en":
+                                    <text>Next</text>
+                                    break;
+                                case "pt":
+                                    <text>Próximo</text>
+                                    break;
+                                default:
+                                    <text>Siguiente</text>
+                                    break;
+                            }
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info text-center shadow-sm">
+            <i class="fas fa-image"></i>
+            @switch (selectedLanguage)
+            {
+                case "en":
+                    <text>No images available for this tourist site.</text>
+                    break;
+                case "pt":
+                    <text>Não há imagens disponíveis para este local turístico.</text>
+                    break;
+                default:
+                    <text>No hay imágenes disponibles para este sitio turístico.</text>
+                    break;
+            }
+        </div>
+    }
+
+    <!-- Información -->
+    <div class="card shadow-sm border-0 mb-5">
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3 fw-bold">
+                    @switch (selectedLanguage)
+                    {
+                        case "en":
+                            <text>Description</text>
+                            break;
+                        case "pt":
+                            <text>Descrição</text>
+                            break;
+                        default:
+                            <text>Descripción</text>
+                            break;
+                    }
+                </dt>
+                <dd class="col-sm-9">
+                    @switch (selectedLanguage)
+                    {
+                        case "en":
+                            <span>@(string.IsNullOrEmpty(Model.DescripcionIngles) ? Model.Descripcion : Model.DescripcionIngles)</span>
+                            break;
+                        case "pt":
+                            <span>@(string.IsNullOrEmpty(Model.DescripcionPortugues) ? Model.Descripcion : Model.DescripcionPortugues)</span>
+                            break;
+                        default:
+                            <span>@Model.Descripcion</span>
+                            break;
+                    }
+                </dd>
+
+                <dt class="col-sm-3 fw-bold">
+                    @switch (selectedLanguage)
+                    {
+                        case "en":
+                            <text>Address</text>
+                            break;
+                        case "pt":
+                            <text>Endereço</text>
+                            break;
+                        default:
+                            <text>Dirección</text>
+                            break;
+                    }
+                </dt>
+                <dd class="col-sm-9">@Model.Direccion</dd>
+
+                <!-- Tipo/Categoría -->
+                <dt class="col-sm-3 fw-bold">
+                    @switch (selectedLanguage)
+                    {
+                        case "en":
+                            <text>Category</text>
+                            break;
+                        case "pt":
+                            <text>Categoria</text>
+                            break;
+                        default:
+                            <text>Categoría</text>
+                            break;
+                    }
+                </dt>
+                <dd class="col-sm-9">
+                    <span class="badge bg-primary">@Model.Tipo?.Nombre</span>
+                </dd>
+            </dl>
+        </div>
+    </div>
+
+    <!-- Calificación general -->
+    <div class="text-center mb-4">
+        <h3 class="mb-2">
+            ⭐
+            @switch (selectedLanguage)
+            {
+                case "en":
+                    <text>Overall Rating:</text>
+                    break;
+                case "pt":
+                    <text>Avaliação Geral:</text>
+                    break;
+                default:
+                    <text>Calificación General:</text>
+                    break;
+            }
+            <span class="text-primary">@Model.PuntuacionPromedio.ToString("0.0")</span> / 5
+        </h3>
+        <div>
+            @{
+                var promedio = Model.PuntuacionPromedio;
+                var estrellasLlenas = (int)Math.Floor(promedio);
+                var mediaEstrella = promedio - estrellasLlenas >= 0.5;
+            }
+            @for (int i = 1; i <= 5; i++)
+            {
+                if (i <= estrellasLlenas)
+                {
+                    <i class="fas fa-star text-warning fs-4"></i>
+                }
+                else if (i == estrellasLlenas + 1 && mediaEstrella)
+                {
+                    <i class="fas fa-star-half-alt text-warning fs-4"></i>
+                }
+                else
+                {
+                    <i class="far fa-star text-muted fs-4"></i>
+                }
+            }
+        </div>
+        <small class="text-muted">
+            @Model.Comentarios.Count
+            @switch (selectedLanguage)
+            {
+                case "en":
+                    <text>reviews</text>
+                    break;
+                case "pt":
+                    <text>avaliações</text>
+                    break;
+                default:
+                    <text>reseñas</text>
+                    break;
+            }
+        </small>
+    </div>
+
+    <!-- Comentarios -->
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+            @if (User.Identity.IsAuthenticated)
+            {
+                <form asp-action="AgregarComentario" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="sitioId" value="@Model.Id" />
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">
+                            @switch (selectedLanguage)
+                            {
+                                case "en":
+                                    <text>Your Rating:</text>
+                                    break;
+                                case "pt":
+                                    <text>Sua Avaliação:</text>
+                                    break;
+                                default:
+                                    <text>Tu puntuación:</text>
+                                    break;
+                            }
+                        </label>
+                        <div id="ratingStars">
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                <i class="far fa-star star-select text-warning fs-4 mx-1" data-value="@i" style="cursor:pointer;"></i>
+                            }
+                            <input type="hidden" id="puntuacion" name="puntuacion" value="0" required />
+                        </div>
+                        <div id="ratingText" class="text-muted small mt-1">
+                            @switch (selectedLanguage)
+                            {
+                                case "en":
+                                    <text>Click on the stars to rate</text>
+                                    break;
+                                case "pt":
+                                    <text>Clique nas estrelas para avaliar</text>
+                                    break;
+                                default:
+                                    <text>Haz clic en las estrellas para puntuar</text>
+                                    break;
+                            }
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="texto" class="form-label fw-semibold">
+                            @switch (selectedLanguage)
+                            {
+                                case "en":
+                                    <text>Your opinion:</text>
+                                    break;
+                                case "pt":
+                                    <text>Sua opinião:</text>
+                                    break;
+                                default:
+                                    <text>Tu opinión:</text>
+                                    break;
+                            }
+                        </label>
+                        <textarea class="form-control shadow-sm" id="texto" name="texto" rows="3" maxlength="500" required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-success px-4">
+                        @switch (selectedLanguage)
+                        {
+                            case "en":
+                                <text>Submit Review</text>
+                                break;
+                            case "pt":
+                                <text>Enviar Opinião</text>
+                                break;
+                            default:
+                                <text>Enviar Opinión</text>
+                                break;
+                        }
+                    </button>
+                </form>
+            }
+            else
+            {
+                <div class="text-center">
+                    <i class="fas fa-lock"></i>
+                    @switch (selectedLanguage)
+                    {
+                        case "en":
+                            <text>You must <a href="/Identity/Account/Login" class="alert-link">log in</a> to leave a review.</text>
+                            break;
+                        case "pt":
+                            <text>Você deve <a href="/Identity/Account/Login" class="alert-link">fazer login</a> para deixar uma opinião.</text>
+                            break;
+                        default:
+                            <text>Debes <a href="/Identity/Account/Login" class="alert-link">iniciar sesión</a> para dejar tu opinión.</text>
+                            break;
+                    }
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Opiniones -->
+    <div class="mt-5">
+        <h4 class="mb-4">
+            💬
+            @switch (selectedLanguage)
+            {
+                case "en":
+                    <text>User Reviews</text>
+                    break;
+                case "pt":
+                    <text>Opiniões dos Usuários</text>
+                    break;
+                default:
+                    <text>Opiniones de usuarios</text>
+                    break;
+            }
+            <span class="badge bg-primary ms-2">@Model.Comentarios.Count</span>
+        </h4>
+        @if (Model.Comentarios != null && Model.Comentarios.Any())
+        {
+            foreach (var comentario in Model.Comentarios.OrderByDescending(c => c.Fecha))
+            {
+                <div class="card mb-3 shadow-sm border-0">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h6 class="fw-bold mb-0">
+                                <i class="fas fa-user-circle me-2"></i> @comentario.NombreUsuario
+                            </h6>
+                            <small class="text-muted">@comentario.Fecha.ToString("dd/MM/yyyy HH:mm")</small>
+                        </div>
+                        <div class="mb-2">
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                if (i <= comentario.Puntuacion)
+                                {
+                                    <i class="fas fa-star text-warning"></i>
+                                }
+                                else
+                                {
+                                    <i class="far fa-star text-muted"></i>
+                                }
+                            }
+                            <span class="ms-2 small text-muted">@comentario.Puntuacion/5</span>
+                        </div>
+                        <p class="mb-0">@comentario.Texto</p>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="alert alert-info shadow-sm">
+                <i class="fas fa-info-circle me-2"></i>
+                @switch (selectedLanguage)
+                {
+                    case "en":
+                        <text>No comments yet. Be the first to share your experience!</text>
+                        break;
+                    case "pt":
+                        <text>Ainda não há comentários. Seja o primeiro a opinar!</text>
+                        break;
+                    default:
+                        <text>Aún no hay comentarios. ¡Sé el primero en opinar!</text>
+                        break;
+                }
+            </div>
+        }
+    </div>
+
+    <div class="mt-4 text-center">
+        <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-2"></i>
+            @switch (selectedLanguage)
+            {
+                case "en":
+                    <text>Back to Home</text>
+                    break;
+                case "pt":
+                    <text>Voltar para Início</text>
+                    break;
+                default:
+                    <text>Volver al Inicio</text>
+                    break;
+            }
+        </a>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const stars = document.querySelectorAll(".star-select");
+            const input = document.getElementById("puntuacion");
+            const ratingText = document.getElementById("ratingText");
+
+            const ratingMessages = {
+                'es': ['Selecciona puntuación', 'Muy malo', 'Malo', 'Regular', 'Bueno', 'Excelente'],
+                'en': ['Select rating', 'Very bad', 'Bad', 'Regular', 'Good', 'Excellent'],
+                'pt': ['Selecione avaliação', 'Muito ruim', 'Ruim', 'Regular', 'Bom', 'Excelente']
+            };
+
+            const currentLang = '@selectedLanguage';
+
+            stars.forEach(star => {
+                star.addEventListener("click", () => {
+                    const val = parseInt(star.getAttribute("data-value"));
+                    input.value = val;
+
+                    // Actualizar estrellas visualmente
+                    stars.forEach((s, index) => {
+                        if (index < val) {
+                            s.classList.replace("far", "fas");
+                        } else {
+                            s.classList.replace("fas", "far");
+                        }
+                    });
+
+                    // Actualizar texto descriptivo
+                    ratingText.textContent = ratingMessages[currentLang][val];
+                });
+
+                star.addEventListener("mouseover", () => {
+                    const val = parseInt(star.getAttribute("data-value"));
+                    stars.forEach((s, index) => {
+                        if (index < val) {
+                            s.classList.add("fas");
+                            s.classList.remove("far");
+                        }
+                    });
+                });
+
+                star.addEventListener("mouseout", () => {
+                    const currentVal = parseInt(input.value);
+                    stars.forEach((s, index) => {
+                        if (index >= currentVal) {
+                            s.classList.add("far");
+                            s.classList.remove("fas");
+                        }
+                    });
+                });
+            });
+
+            // Validación del formulario
+            const form = document.querySelector('form');
+            form.addEventListener('submit', function(e) {
+                if (parseInt(input.value) === 0) {
+                    e.preventDefault();
+                    ratingText.innerHTML = '<span class="text-danger">' + ratingMessages[currentLang][0] + '</span>';
+                    input.focus();
+                }
+            });
+
+            // Inicializar carousel
+            var myCarousel = document.querySelector('#sitioCarousel');
+            if (myCarousel) {
+                var carousel = new bootstrap.Carousel(myCarousel);
+            }
+        });
+    </script>
+
+    <style>
+        .star-select:hover {
+            transform: scale(1.2);
+            transition: transform 0.2s;
+        }
+
+        .card {
+            transition: transform 0.2s;
+        }
+
+            .card:hover {
+                transform: translateY(-2px);
+            }
+    </style>
+}

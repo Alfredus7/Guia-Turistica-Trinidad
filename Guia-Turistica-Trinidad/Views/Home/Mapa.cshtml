@@ -1,0 +1,243 @@
+﻿@model IEnumerable<guia_turistico.Models.SitiosTuristicos>
+
+@{
+    ViewData["Title"] = "Mapa de Sitios Turísticos";
+    var selectedLanguage = Context.Request.Cookies["selectedLanguage"] ?? "es";
+}
+
+<div class="container my-4">
+    <h2 class="text-center mb-4">
+        @switch (selectedLanguage)
+        {
+            case "en":
+                <text>🗺️ Tourist Sites Map of Trinidad</text>
+                break;
+            case "pt":
+                <text>🗺️ Mapa de Locais Turísticos de Trinidad</text>
+                break;
+            default:
+                <text>🗺️ Mapa de Sitios Turísticos de Trinidad</text>
+                break;
+        }
+    </h2>
+
+    <div id="mapa" style="height: 600px; border-radius: 10px; border: 2px solid #dee2e6;"></div>
+
+    <!-- Leyenda del mapa -->
+    <div class="mt-3 text-center">
+        <small class="text-muted">
+            <i class="fas fa-map-marker-alt text-danger me-1"></i>
+            @switch (selectedLanguage)
+            {
+                case "en":
+                    <text>Click on markers for more information</text>
+                    break;
+                case "pt":
+                    <text>Clique nos marcadores para mais informações</text>
+                    break;
+                default:
+                    <text>Haz clic en los marcadores para más información</text>
+                    break;
+            }
+        </small>
+    </div>
+</div>
+
+@section Scripts {
+    <!-- Leaflet CSS y JS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <style>
+        .leaflet-popup-content h5 {
+            color: #2c3e50;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .leaflet-popup-content p {
+            margin: 5px 0;
+            font-size: 13px;
+        }
+
+        .leaflet-popup-content .btn {
+            font-size: 12px;
+            padding: 4px 8px;
+        }
+
+        .custom-popup {
+            min-width: 250px;
+        }
+
+        .site-type {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 12px;
+            font-size: 11px;
+            margin-bottom: 5px;
+        }
+    </style>
+
+    <script>
+        // Inicializamos el mapa centrado en Trinidad
+        var mapa = L.map('mapa').setView([-14.8333, -64.9], 13);
+
+        // Capa base de OpenStreetMap
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>',
+            maxZoom: 18
+        }).addTo(mapa);
+
+        // Icono personalizado para los marcadores
+        var customIcon = L.icon({
+            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+            shadowSize: [41, 41]
+        });
+
+        // Array para almacenar los marcadores
+        var markers = [];
+
+        // Agregar marcadores para cada sitio turístico
+        @foreach (var sitio in Model)
+        {
+                <text>
+                (function() {
+                    var sitioData = {
+                        id: @sitio.Id,
+                        nombre: '@Html.Raw(System.Net.WebUtility.HtmlEncode(sitio.Nombre))',
+                        nombreIngles: '@Html.Raw(System.Net.WebUtility.HtmlEncode(sitio.NombreIngles ?? ""))',
+                        nombrePortugues: '@Html.Raw(System.Net.WebUtility.HtmlEncode(sitio.NombrePortugues ?? ""))',
+                        direccion: '@Html.Raw(System.Net.WebUtility.HtmlEncode(sitio.Direccion ?? ""))',
+                        tipo: '@Html.Raw(System.Net.WebUtility.HtmlEncode(sitio.Tipo?.Nombre ?? ""))',
+                        latitud: @sitio.Latitud.ToString().Replace(",", "."),
+                        longitud: @sitio.Longitud.ToString().Replace(",", ".")
+                    };
+
+                    var marker = L.marker([sitioData.latitud, sitioData.longitud], {
+                        icon: customIcon
+                    }).addTo(mapa);
+
+                    markers.push(marker);
+
+                    // Determinar el nombre a mostrar según el idioma
+                    var displayName = sitioData.nombre;
+                    var currentLang = '@selectedLanguage';
+
+                    if (currentLang === 'en' && sitioData.nombreIngles) {
+                        displayName = sitioData.nombreIngles;
+                    } else if (currentLang === 'pt' && sitioData.nombrePortugues) {
+                        displayName = sitioData.nombrePortugues;
+                    }
+
+                    // Textos según idioma para el popup
+                    var viewDetailsText = 'Ver detalles';
+                    var addressText = 'Dirección';
+                    var typeText = 'Categoría';
+
+                    if (currentLang === 'en') {
+                        viewDetailsText = 'View details';
+                        addressText = 'Address';
+                        typeText = 'Category';
+                    } else if (currentLang === 'pt') {
+                        viewDetailsText = 'Ver detalhes';
+                        addressText = 'Endereço';
+                        typeText = 'Categoria';
+                    }
+
+                    // Crear contenido del popup
+                    var popupContent = `
+                        <div class="custom-popup">
+                            <h5>${displayName}</h5>
+                            ${sitioData.tipo ? `<div class="site-type">${sitioData.tipo}</div><br>` : ''}
+                            ${sitioData.direccion ? `<p><strong>${addressText}:</strong> ${sitioData.direccion}</p>` : ''}
+                            <a href='@Url.Action("Details", "Home", new { id = sitio.Id })'
+                               class="btn btn-primary btn-sm"
+                               style="background-color: #3498db; border: none; color: white; text-decoration: none; display: inline-block;">
+                               ${viewDetailsText}
+                            </a>
+                        </div>
+                    `;
+
+                    marker.bindPopup(popupContent);
+
+                    // Efecto al pasar el mouse
+                    marker.on('mouseover', function() {
+                        this.openPopup();
+                    });
+
+                })();
+                </text>
+        }
+
+        // Mostrar mensaje si no hay sitios
+        @if (!Model.Any())
+        {
+                <text>
+                mapa.setView([-14.8333, -64.9], 12);
+                L.popup()
+                    .setLatLng([-14.8333, -64.9])
+                    .setContent('<div class="text-center"><i class="fas fa-exclamation-triangle"></i><br>No hay sitios turísticos registrados</div>')
+                    .openOn(mapa);
+                </text>
+        }
+
+        // Controles del mapa
+        L.control.zoom({ position: 'topright' }).addTo(mapa);
+
+        // Escala del mapa
+        L.control.scale({ position: 'bottomleft' }).addTo(mapa);
+
+        // Mostrar coordenadas al hacer clic (útil para desarrollo)
+        mapa.on('click', function(e) {
+            console.log('Coordenadas:', e.latlng.lat, e.latlng.lng);
+        });
+
+        // Ajustar el mapa al tamaño del contenedor
+        setTimeout(function() {
+            mapa.invalidateSize();
+        }, 100);
+
+        // Mostrar estadísticas en consola
+        console.log('Sitios cargados en el mapa:', markers.length);
+
+        // Si hay marcadores, ajustar el viewport para mostrar todos
+        if (markers.length > 0) {
+            var group = new L.featureGroup(markers);
+            mapa.fitBounds(group.getBounds().pad(0.1));
+        }
+    </script>
+
+    @if (!Model.Any())
+    {
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Mostrar alerta si no hay sitios
+                var alertDiv = document.createElement('div');
+                alertDiv.className = 'alert alert-warning alert-dismissible fade show';
+                alertDiv.innerHTML = `
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    @switch (selectedLanguage)
+                    {
+                            case "en":
+                                    <text>No tourist sites available to display on the map.</text>
+                                    break;
+                            case "pt":
+                                    <text>Nenhum local turístico disponível para exibir no mapa.</text>
+                                    break;
+                            default:
+                                    <text>No hay sitios turísticos disponibles para mostrar en el mapa.</text>
+                                    break;
+                    }
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                `;
+                document.querySelector('.container').insertBefore(alertDiv, document.getElementById('mapa'));
+            });
+        </script>
+    }
+}
