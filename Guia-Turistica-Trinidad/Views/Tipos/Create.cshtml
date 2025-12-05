@@ -1,63 +1,568 @@
 ﻿@model guia_turistico.Models.Tipos
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Nuevo Tipo de Sitio Turístico";
 }
 
-<h1>Create</h1>
 
-<h4>Tipos</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Nombre" class="control-label"></label>
-                <input asp-for="Nombre" class="form-control" />
-                <span asp-validation-for="Nombre" class="text-danger"></span>
+<div class="container py-4">
+
+    <!-- Header con navegación -->
+    <div class="bg-primary-gradient text-white py-4">
+        <div class="container">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+                <div class="text-center text-md-start">
+                    <h1 class="display-6 fw-bold mb-1">
+                        <i class="fas fa-tag me-2"></i>Nuevo Tipo de Sitio Turístico
+                    </h1>
+                    <p class="lead mb-0 opacity-75">Crea una nueva categoría para clasificar los sitios turísticos</p>
+                </div>
+                <a asp-action="Index" class="btn btn-outline-light btn-lg">
+                    <i class="fas fa-arrow-left me-2"></i>Volver al Listado
+                </a>
             </div>
-            <div class="form-group">
-                <label asp-for="NombreIngles" class="control-label"></label>
-                <input asp-for="NombreIngles" class="form-control" />
-                <span asp-validation-for="NombreIngles" class="text-danger"></span>
+        </div>
+    </div>
+
+    <!-- Form Container -->
+    <div class="row justify-content-center mt-4">
+        <div class="col-lg-10 col-xl-9">
+            <div class="card shadow-lg border-0 rounded-3 overflow-hidden">
+                <!-- Card Header -->
+                <div class="card-header card-header-gradient py-3">
+                    <div class="d-flex align-items-center">
+                        <div>
+                            <h2 class="h4 mb-1">
+                                <i class="fas fa-plus-circle me-2"></i>Información del Tipo
+                            </h2>
+                            <p class="mb-0 opacity-75">Completa todos los campos requeridos</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card Body -->
+                <div class="card-body p-4 p-md-5">
+                    <form asp-action="Create" id="typeForm" class="needs-validation" novalidate>
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                        <!-- Image Preview & URL Section -->
+                        <div class="row mb-5">
+                            <div class="col-lg-8">
+                                <!-- URL Input -->
+                                <div class="mb-4">
+                                    <label asp-for="ImagenUrl" class="form-label fw-semibold">
+                                        <i class="fas fa-link me-2 text-info"></i>URL de Imagen Representativa
+                                    </label>
+
+                                    <input asp-for="ImagenUrl"
+                                           class="form-control"
+                                           placeholder="https://ejemplo.com/imagen-tipo.jpg"
+                                           id="imageUrlInput"
+                                           type="url">
+
+                                    <span asp-validation-for="ImagenUrl" class="text-danger small mt-1 d-block"></span>
+                                    <div class="form-text">
+                                        <i class="fas fa-lightbulb me-1"></i>
+                                        URL de una imagen que represente este tipo de sitio (playas, montañas, museos, etc.)
+                                    </div>
+                                </div>
+
+                                <!-- Real-time URL validation feedback -->
+                                <div class="alert alert-light border d-none" id="urlFeedback">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-spinner fa-spin me-2 text-info" id="loadingIcon"></i>
+                                        <span id="urlFeedbackText"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Image Preview -->
+                            <div class="col-lg-4">
+                                <div class="card h-100 border">
+                                    <div class="preview-header border-bottom py-2 px-3">
+                                        <h6 class="mb-0 text-dark">
+                                            <i class="fas fa-eye me-1"></i>Vista Previa
+                                        </h6>
+                                    </div>
+                                    <div class="card-body d-flex align-items-center justify-content-center p-4">
+                                        <div class="text-center">
+                                            <div class="ratio ratio-1x1 mb-3" style="max-width: 200px; margin: 0 auto;">
+                                                <img src="https://via.placeholder.com/200/6c757d/ffffff?text=Preview"
+                                                     class="img-fluid rounded shadow-sm object-fit-cover"
+                                                     id="imagePreview"
+                                                     alt="Vista previa de la imagen"
+                                                     onerror="this.src='https://via.placeholder.com/200/6c757d/ffffff?text=Error+de+imagen'">
+                                            </div>
+                                            <small class="text-muted d-block">
+                                                La vista previa se actualizará automáticamente
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Names Section -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h4 class="h5 fw-semibold text-dark mb-3 section-title">
+                                    <i class="fas fa-language me-2"></i>Nombres del Tipo
+                                </h4>
+                            </div>
+
+                            <!-- Spanish Name -->
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="Nombre" class="form-label fw-medium">
+                                    Nombre en Español
+                                </label>
+                                <input asp-for="Nombre"
+                                       class="form-control"
+                                       placeholder="Ej: Playa, Museo, Parque"
+                                       required
+                                       id="Nombre"
+                                       maxlength="50">
+                                <span asp-validation-for="Nombre" class="text-danger small mt-1 d-block"></span>
+                                <div class="form-text">
+                                    <span id="nombreCounter">0/50</span> - Nombre en español (requerido)
+                                </div>
+                            </div>
+
+                            <!-- English Name -->
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="NombreIngles" class="form-label fw-medium">
+                                    Nombre en Inglés
+                                </label>
+                                <input asp-for="NombreIngles"
+                                       class="form-control"
+                                       placeholder="Ej: Beach, Museum, Park"
+                                       id="NombreIngles"
+                                       maxlength="50">
+                                <span asp-validation-for="NombreIngles" class="text-danger small mt-1 d-block"></span>
+                                <div class="form-text">
+                                    <span id="nombreInglesCounter">0/50</span> - Nombre en inglés (opcional)
+                                </div>
+                            </div>
+
+                            <!-- Portuguese Name -->
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="NombrePortugues" class="form-label fw-medium">
+                                    Nombre en Portugués
+                                </label>
+                                <input asp-for="NombrePortugues"
+                                       class="form-control"
+                                       placeholder="Ej: Praia, Museu, Parque"
+                                       id="NombrePortugues"
+                                       maxlength="50">
+                                <span asp-validation-for="NombrePortugues" class="text-danger small mt-1 d-block"></span>
+                                <div class="form-text">
+                                    <span id="nombrePortuguesCounter">0/50</span> - Nombre en portugués (opcional)
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Descriptions Section -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h4 class="h5 fw-semibold text-dark mb-3 section-title">
+                                    <i class="fas fa-align-left me-2"></i>Descripciones
+                                </h4>
+                                <p class="text-muted small mb-4">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Proporciona una breve descripción de este tipo de sitio turístico
+                                </p>
+                            </div>
+
+                            <!-- Spanish Description -->
+                            <div class="col-md-4 mb-4">
+                                <label asp-for="Descripcion" class="form-label fw-medium">
+                                    Descripción en Español
+                                </label>
+                                <div class="position-relative">
+                                    <textarea asp-for="Descripcion"
+                                              class="form-control"
+                                              rows="4"
+                                              placeholder="Describe este tipo de sitio turístico en español..."
+                                              maxlength="500"
+                                              id="Descripcion"></textarea>
+                                    <div class="char-counter">0/500</div>
+                                </div>
+                                <span asp-validation-for="Descripcion" class="text-danger small mt-1 d-block"></span>
+                            </div>
+
+                            <!-- English Description -->
+                            <div class="col-md-4 mb-4">
+                                <label asp-for="DescripcionIngles" class="form-label fw-medium">
+                                    Descripción en Inglés
+                                </label>
+                                <div class="position-relative">
+                                    <textarea asp-for="DescripcionIngles"
+                                              class="form-control"
+                                              rows="4"
+                                              placeholder="Describe this type of tourist site in English..."
+                                              maxlength="500"
+                                              id="DescripcionIngles"></textarea>
+                                    <div class="char-counter">0/500</div>
+                                </div>
+                                <span asp-validation-for="DescripcionIngles" class="text-danger small mt-1 d-block"></span>
+                            </div>
+
+                            <!-- Portuguese Description -->
+                            <div class="col-md-4 mb-4">
+                                <label asp-for="DescripcionPortugues" class="form-label fw-medium">
+                                    Descripción en Portugues
+                                </label>
+                                <div class="position-relative">
+                                    <textarea asp-for="DescripcionPortugues"
+                                              class="form-control"
+                                              rows="4"
+                                              placeholder="Descreva este tipo de local turístico em português..."
+                                              maxlength="500"
+                                              id="DescripcionPortugues"></textarea>
+                                    <div class="char-counter">0/500</div>
+                                </div>
+                                <span asp-validation-for="DescripcionPortugues" class="text-danger small mt-1 d-block"></span>
+                            </div>
+                        </div>
+
+                        <!-- Auto-translation helper -->
+                        <div class="alert alert-info mb-4">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-robot fa-2x me-3 text-info"></i>
+                                <div>
+                                    <h6 class="fw-semibold mb-1">Asistente de traducción</h6>
+                                    <p class="mb-0 small">
+                                        ¿Necesitas ayuda con las traducciones?
+                                        <button type="button"
+                                                class="btn btn-sm btn-outline-primary ms-2"
+                                                onclick="translationHelper.suggestTranslations()">
+                                            <i class="fas fa-magic me-1"></i>Generar sugerencias
+                                        </button>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="border-top pt-4 mt-4">
+                            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+                                <div class="text-center text-md-start">
+                                    <h5 class="fw-semibold mb-1">¿Estás listo para guardar?</h5>
+                                    <p class="text-muted small mb-0">
+                                        Verifica que toda la información sea correcta antes de continuar
+                                    </p>
+                                </div>
+
+                                <div class="d-flex gap-3">
+                                    <button type="button" class="btn btn-primary btn-lg px-5" onclick="formManager.resetForm()">
+                                        <i class="fas fa-redo me-2"></i>Limpiar
+                                    </button>
+                                    <button type="submit" class="btn btn-primary btn-lg px-5" id="submitBtn">
+                                        <i class="fas fa-save me-2"></i>Crear Sitio
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="NombrePortugues" class="control-label"></label>
-                <input asp-for="NombrePortugues" class="form-control" />
-                <span asp-validation-for="NombrePortugues" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Descripcion" class="control-label"></label>
-                <input asp-for="Descripcion" class="form-control" />
-                <span asp-validation-for="Descripcion" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DescripcionIngles" class="control-label"></label>
-                <input asp-for="DescripcionIngles" class="form-control" />
-                <span asp-validation-for="DescripcionIngles" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DescripcionPortugues" class="control-label"></label>
-                <input asp-for="DescripcionPortugues" class="form-control" />
-                <span asp-validation-for="DescripcionPortugues" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ImagenUrl" class="control-label"></label>
-                <input asp-for="ImagenUrl" class="form-control" />
-                <span asp-validation-for="ImagenUrl" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="~/js/translationHelper.js" asp-append-version="true"></script>
+    <script>
+        // Módulo para manejo del formulario de tipos
+        const typeFormManager = {
+            init() {
+                this.initCharCounters();
+                this.initImagePreview();
+                this.initFormValidation();
+                this.initTooltips();
+                this.initAutoCapitalize();
+                this.cleanLocalStorage(); // Limpiar cualquier dato previo
+            },
+
+            initCharCounters() {
+                const fields = [
+                    { id: 'Nombre', counterId: 'nombreCounter', max: 50 },
+                    { id: 'NombreIngles', counterId: 'nombreInglesCounter', max: 50 },
+                    { id: 'NombrePortugues', counterId: 'nombrePortuguesCounter', max: 50 },
+                    { id: 'Descripcion', max: 500 },
+                    { id: 'DescripcionIngles', max: 500 },
+                    { id: 'DescripcionPortugues', max: 500 }
+                ];
+
+                fields.forEach(field => {
+                    const element = document.getElementById(field.id);
+                    if (element) {
+                        const counter = field.counterId ?
+                            document.getElementById(field.counterId) :
+                            element.parentNode.querySelector('.char-counter');
+
+                        const updateCounter = () => {
+                            const length = element.value.length;
+                            if (counter) {
+                                counter.textContent = `${length}/${field.max}`;
+                                if (length > field.max * 0.9) {
+                                    counter.style.color = 'var(--warning-color)';
+                                } else if (length > field.max) {
+                                    counter.style.color = 'var(--danger-color)';
+                                } else {
+                                    counter.style.color = 'var(--neutral-dark)';
+                                }
+                            }
+
+                            if (length > field.max) {
+                                element.classList.add('is-invalid');
+                            } else {
+                                element.classList.remove('is-invalid');
+                            }
+                        };
+
+                        element.addEventListener('input', updateCounter);
+                        element.addEventListener('blur', updateCounter);
+                        updateCounter();
+                    }
+                });
+            },
+
+            initImagePreview() {
+                const imageUrlInput = document.getElementById('imageUrlInput');
+                const imagePreview = document.getElementById('imagePreview');
+                const urlFeedback = document.getElementById('urlFeedback');
+                const urlFeedbackText = document.getElementById('urlFeedbackText');
+                const loadingIcon = document.getElementById('loadingIcon');
+                let debounceTimer;
+
+                const showUrlFeedback = (message, type) => {
+                    urlFeedbackText.textContent = message;
+                    loadingIcon.className = 'fas fa-spinner fa-spin me-2 d-none';
+
+                    switch(type) {
+                        case 'success':
+                            urlFeedback.className = 'alert alert-success d-flex align-items-center';
+                            break;
+                        case 'warning':
+                            urlFeedback.className = 'alert alert-warning d-flex align-items-center';
+                            break;
+                        case 'danger':
+                            urlFeedback.className = 'alert alert-danger d-flex align-items-center';
+                            break;
+                        default:
+                            urlFeedback.className = 'alert alert-light border d-flex align-items-center';
+                    }
+
+                    if (type === 'success') {
+                        setTimeout(() => {
+                            urlFeedback.classList.add('d-none');
+                        }, 3000);
+                    }
+                };
+
+                const validateAndPreviewImage = (url) => {
+                    try {
+                        const urlObj = new URL(url);
+                        const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg'];
+                        const isImage = imageExtensions.some(ext =>
+                            urlObj.pathname.toLowerCase().endsWith(ext)
+                        );
+
+                        if (!isImage) {
+                            showUrlFeedback('La URL no parece ser una imagen válida', 'warning');
+                            imagePreview.src = 'https://via.placeholder.com/200/dc3545/ffffff?text=URL+inválida';
+                            imageUrlInput.classList.remove('is-valid');
+                            imageUrlInput.classList.add('is-invalid');
+                            return;
+                        }
+
+                        const testImage = new Image();
+                        testImage.onload = () => {
+                            showUrlFeedback('✅ Imagen válida - Vista previa actualizada', 'success');
+                            imagePreview.src = url;
+                            imageUrlInput.classList.remove('is-invalid');
+                            imageUrlInput.classList.add('is-valid');
+                            imagePreview.onerror = () => {
+                                imagePreview.src = 'https://via.placeholder.com/200/dc3545/ffffff?text=Error+cargando';
+                                imageUrlInput.classList.remove('is-valid');
+                                imageUrlInput.classList.add('is-invalid');
+                            };
+                        };
+
+                        testImage.onerror = () => {
+                            showUrlFeedback('⚠️ La imagen no se pudo cargar (puede ser temporal)', 'warning');
+                            imagePreview.src = 'https://via.placeholder.com/200/ffc107/000000?text=Error+carga';
+                            imageUrlInput.classList.remove('is-valid');
+                            imageUrlInput.classList.add('is-invalid');
+                        };
+
+                        testImage.src = url;
+
+                    } catch (error) {
+                        showUrlFeedback('❌ URL inválida - Formato incorrecto', 'danger');
+                        imagePreview.src = 'https://via.placeholder.com/200/dc3545/ffffff?text=URL+inválida';
+                        imageUrlInput.classList.remove('is-valid');
+                        imageUrlInput.classList.add('is-invalid');
+                    }
+                };
+
+                imageUrlInput.addEventListener('input', function() {
+                    clearTimeout(debounceTimer);
+                    const url = this.value.trim();
+
+                    if (!url) {
+                        imagePreview.src = 'https://via.placeholder.com/200/6c757d/ffffff?text=Preview';
+                        urlFeedback.classList.add('d-none');
+                        this.classList.remove('is-valid', 'is-invalid');
+                        return;
+                    }
+
+                    urlFeedback.classList.remove('d-none');
+                    urlFeedback.className = 'alert alert-light border d-flex align-items-center';
+                    loadingIcon.className = 'fas fa-spinner fa-spin me-2 text-info';
+                    urlFeedbackText.textContent = 'Validando URL...';
+
+                    debounceTimer = setTimeout(() => {
+                        validateAndPreviewImage(url);
+                    }, 800);
+                });
+
+                // También validar al perder el foco
+                imageUrlInput.addEventListener('blur', function() {
+                    if (this.value.trim()) {
+                        validateAndPreviewImage(this.value.trim());
+                    }
+                });
+            },
+
+            initFormValidation() {
+                const form = document.getElementById('typeForm');
+                const submitBtn = document.getElementById('submitBtn');
+
+                form.addEventListener('submit', (e) => {
+                    // Validar nombre en español (campo requerido)
+                    const spanishNameInput = document.getElementById('Nombre');
+                    if (!spanishNameInput.value.trim()) {
+                        e.preventDefault();
+                        this.showValidationError('El nombre en español es requerido', spanishNameInput);
+                        return false;
+                    }
+
+                    // Validar URL de imagen si se proporciona
+                    const imageUrl = document.getElementById('imageUrlInput').value.trim();
+                    if (imageUrl) {
+                        try {
+                            new URL(imageUrl);
+                        } catch (error) {
+                            e.preventDefault();
+                            this.showValidationError('La URL de la imagen no es válida', document.getElementById('imageUrlInput'));
+                            return false;
+                        }
+                    }
+
+                    // Validar límites de caracteres
+                    const textareas = ['Descripcion', 'DescripcionIngles', 'DescripcionPortugues'];
+                    for (const id of textareas) {
+                        const element = document.getElementById(id);
+                        if (element && element.value.length > 500) {
+                            e.preventDefault();
+                            if (typeof translationHelper !== 'undefined' && translationHelper.showGlobalToast) {
+                                translationHelper.showGlobalToast('Las descripciones no deben exceder los 500 caracteres', 'danger');
+                            } else {
+                                alert('Las descripciones no deben exceder los 500 caracteres');
+                            }
+                            return false;
+                        }
+                    }
+
+                    // Mostrar estado de carga
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Creando...';
+                    submitBtn.disabled = true;
+                    submitBtn.classList.add('btn-loading');
+                    return true;
+                });
+            },
+
+            showValidationError(message, element) {
+                element.classList.add('is-invalid');
+                if (typeof translationHelper !== 'undefined' && translationHelper.showGlobalToast) {
+                    translationHelper.showGlobalToast(message, 'danger');
+                } else {
+                    alert(message);
+                }
+                element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                element.focus();
+            },
+
+            initTooltips() {
+                const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+                tooltipTriggerList.map(function (tooltipTriggerEl) {
+                    return new bootstrap.Tooltip(tooltipTriggerEl);
+                });
+            },
+
+            initAutoCapitalize() {
+                const nameInputs = ['Nombre', 'NombreIngles', 'NombrePortugues'];
+                nameInputs.forEach(id => {
+                    const input = document.getElementById(id);
+                    if (input) {
+                        input.addEventListener('blur', function() {
+                            if (this.value.trim()) {
+                                this.value = this.value.trim().charAt(0).toUpperCase() + this.value.trim().slice(1);
+                            }
+                        });
+                    }
+                });
+            },
+
+            cleanLocalStorage() {
+                // Eliminar cualquier dato de borrador previo
+                localStorage.removeItem('tipoSitioDraft');
+                // También eliminar otros posibles borradores relacionados
+                const keys = Object.keys(localStorage);
+                keys.forEach(key => {
+                    if (key.includes('tipo') || key.includes('borrador') || key.includes('draft')) {
+                        localStorage.removeItem(key);
+                    }
+                });
+            },
+
+            resetForm() {
+                if (confirm('¿Estás seguro de que deseas limpiar todos los campos? Se perderán los datos no guardados.')) {
+                    document.getElementById('typeForm').reset();
+                    document.getElementById('imagePreview').src = 'https://via.placeholder.com/200/6c757d/ffffff?text=Preview';
+                    const urlFeedback = document.getElementById('urlFeedback');
+                    if (urlFeedback) {
+                        urlFeedback.classList.add('d-none');
+                    }
+
+                    document.querySelectorAll('.is-valid, .is-invalid').forEach(el => {
+                        el.classList.remove('is-valid', 'is-invalid');
+                    });
+
+                    const submitBtn = document.getElementById('submitBtn');
+                    submitBtn.innerHTML = '<i class="fas fa-save me-2"></i>Crear Tipo';
+                    submitBtn.disabled = false;
+                    submitBtn.classList.remove('btn-loading');
+
+                    if (typeof translationHelper !== 'undefined' && translationHelper.showGlobalToast) {
+                        translationHelper.showGlobalToast('Formulario restablecido', 'info');
+                    } else {
+                        alert('Formulario restablecido');
+                    }
+
+                    this.initCharCounters();
+                }
+            }
+        };
+
+        // Inicialización cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', function() {
+            typeFormManager.init();
+            // NO hay llamada a loadDraft() - se eliminó completamente
+        });
+    </script>
 }
