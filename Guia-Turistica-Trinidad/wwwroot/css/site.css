@@ -791,3 +791,95 @@ textarea::-webkit-scrollbar-thumb {
         height: 40px;
     }
 }
+/* ===== TABLAS GLOBALES ===== */
+.table {
+    width: 100%;
+    table-layout: fixed; /* FIJAR ESTO ES CLAVE */
+    border-collapse: collapse;
+}
+
+    /* Estilos generales para celdas */
+    .table td,
+    .table th {
+        padding: 0.75rem;
+        vertical-align: top;
+        border: 1px solid var(--border-color);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        min-width: 60px; /* Ancho mínimo para evitar colapsar */
+    }
+
+    /* Cabeceras de tabla */
+    .table thead th {
+        vertical-align: bottom;
+        background-color: rgba(46, 139, 87, 0.1);
+        font-weight: 600;
+        color: var(--verde-oscuro);
+        border-bottom: 2px solid var(--border-color);
+    }
+
+    /* Asegurar que todas las celdas usen truncado */
+    .table td:not(.no-truncate) {
+        max-width: 0; /* Importante para el truncado con table-layout: fixed */
+    }
+
+    /* Columnas específicas con diferentes comportamientos */
+    .table .col-acciones {
+        width: 120px; /* Solo para columnas de acciones */
+        min-width: 120px;
+    }
+
+    /* Columnas de texto que pueden ser más estrechas */
+    .table .col-corto {
+        width: 100px;
+        min-width: 100px;
+    }
+
+/* Contenedor de la tabla */
+.table-responsive {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Para el tooltip - opcional si necesitas mostrar texto completo */
+.table td[data-tooltip] {
+    position: relative;
+    cursor: help;
+}
+
+    .table td[data-tooltip]:hover::after {
+        content: attr(data-tooltip);
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--neutral-dark);
+        color: white;
+        padding: 0.5rem;
+        border-radius: 4px;
+        font-size: 0.875rem;
+        white-space: normal;
+        max-width: 300px;
+        z-index: 1000;
+        word-wrap: break-word;
+    }
+
+/* Si quieres que algunas columnas NO se trunquen */
+.table td.no-truncate {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    max-width: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .table td,
+    .table th {
+        padding: 0.5rem;
+        font-size: 0.875rem;
+    }
+}
