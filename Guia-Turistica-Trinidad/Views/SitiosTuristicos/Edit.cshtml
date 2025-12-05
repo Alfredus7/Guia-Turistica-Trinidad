@@ -4,55 +4,6 @@
     ViewData["Title"] = "Editar Sitio Turístico";
 }
 
-<style>
-    /* Estilos específicos para esta vista */
-    .bg-primary-gradient {
-        background: var(--gradient-verde) !important;
-    }
-
-    .bg-panel {
-        background-color: #f8f9fa;
-    }
-
-    .bg-light-subtle {
-        background-color: #f8f9fa !important;
-    }
-
-    .card-header-gradient {
-        background: var(--gradient-verde) !important;
-        color: white;
-    }
-
-    .bg-transparent {
-        background-color: transparent !important;
-    }
-
-    .badge-success {
-        background-color: var(--verde-amazonico) !important;
-    }
-
-    .badge-warning {
-        background-color: var(--warning-color) !important;
-    }
-
-    /* Estilos para el mapa */
-    #map {
-        cursor: crosshair;
-        border-radius: 0;
-    }
-
-    /* Estilo para ID del sitio */
-    .site-id-badge {
-        background-color: #6f42c1 !important;
-        font-size: 0.9rem;
-    }
-
-    /* Animaciones para cambios */
-    .changed-field {
-        animation: pulse-highlight 1.5s ease-in-out;
-    }
-</style>
-
 <div class="container py-4">
     <!-- Header con navegación -->
     <div class="bg-primary-gradient text-white py-4">
@@ -62,10 +13,7 @@
                     <h1 class="display-6 fw-bold mb-1">
                         <i class="fas fa-edit me-2"></i>Editar Sitio Turístico
                     </h1>
-                    <p class="lead mb-0 opacity-75">
-                        Actualiza la información del sitio
-                        <span class="badge site-id-badge ms-2">ID: @Model.Id</span>
-                    </p>
+                    <p class="lead mb-0 opacity-75">Modifica la información del sitio turístico seleccionado</p>
                 </div>
                 <a asp-action="Index" class="btn btn-outline-light btn-lg">
                     <i class="fas fa-arrow-left me-2"></i>Volver al Listado
@@ -77,28 +25,15 @@
     <!-- Formulario Principal -->
     <div class="container py-4">
         <form asp-action="Edit" id="siteForm" class="needs-validation" novalidate>
-            @Html.AntiForgeryToken()
-            <input type="hidden" asp-for="Id" />
-
             <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+            <input type="hidden" asp-for="Id" />
 
             <!-- Sección del Mapa -->
             <div class="card shadow-lg mb-5 border-0 overflow-hidden">
                 <div class="card-header card-header-gradient py-3">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div>
-                            <h3 class="h5 mb-1">
-                                <i class="fas fa-map me-2"></i>Ubicación en el Mapa
-                            </h3>
-                            <p class="mb-0 opacity-75 small">Actualiza la posición si es necesario</p>
-                        </div>
-                        <div class="text-end">
-                            <span class="badge bg-light text-dark">
-                                <i class="fas fa-calendar-alt me-1"></i>
-                                Última actualización: @DateTime.Now.ToString("dd/MM/yyyy")
-                            </span>
-                        </div>
-                    </div>
+                    <h3 class="h5 mb-0">
+                        <i class="fas fa-map me-2"></i>Ubicación en el Mapa
+                    </h3>
                 </div>
                 <div class="card-body p-0">
                     <div class="row g-0">
@@ -111,28 +46,28 @@
                         <div class="col-lg-4 border-start bg-panel">
                             <div class="p-4">
                                 <h5 class="fw-semibold mb-3">
-                                    <i class="fas fa-crosshairs me-2 text-primary"></i>Selección de Ubicación
+                                    <i class="fas fa-crosshairs me-2 text-primary"></i>Actualizar Ubicación
                                 </h5>
 
                                 <div class="mb-4">
                                     <div class="alert alert-info mb-3">
                                         <small>
                                             <i class="fas fa-info-circle me-2"></i>
-                                            <strong>Instrucciones:</strong> Haz clic en el mapa para colocar el marcador.
-                                            Puedes arrastrarlo para ajustar la posición.
+                                            <strong>Instrucciones:</strong> Haz clic en el mapa para cambiar la ubicación.
+                                            Puedes arrastrar el marcador para ajustar la posición.
                                         </small>
                                     </div>
 
                                     <div class="d-grid gap-2">
                                         <button type="button"
                                                 class="btn btn-outline-primary"
-                                                onclick="centerToOriginalLocation()">
-                                            <i class="fas fa-location-arrow me-2"></i>Ubicación Original
+                                                onclick="mapManager.centerToTrinidad()">
+                                            <i class="fas fa-home me-2"></i>Centrar en Trinidad
                                         </button>
                                         <button type="button"
                                                 class="btn btn-outline-secondary"
-                                                onclick="centerToTrinidad()">
-                                            <i class="fas fa-home me-2"></i>Centrar en Trinidad
+                                                onclick="mapManager.restoreOriginalLocation()">
+                                            <i class="fas fa-undo me-2"></i>Restaurar ubicación original
                                         </button>
                                     </div>
                                 </div>
@@ -153,7 +88,7 @@
                                                 <input type="text"
                                                        id="latDisplay"
                                                        class="form-control form-control-sm"
-                                                       value="@Model.Latitud.ToString("0.######")"
+                                                       value="@Model.Latitud.ToString("0.000000")"
                                                        readonly>
                                             </div>
                                         </div>
@@ -166,7 +101,7 @@
                                                 <input type="text"
                                                        id="lngDisplay"
                                                        class="form-control form-control-sm"
-                                                       value="@Model.Longitud.ToString("0.######")"
+                                                       value="@Model.Longitud.ToString("0.000000")"
                                                        readonly>
                                             </div>
                                         </div>
@@ -177,23 +112,14 @@
                                         <span class="badge badge-success px-3 py-2" id="locationStatus">
                                             <i class="fas fa-check-circle me-1"></i>Ubicación establecida
                                         </span>
+                                        <span class="badge badge-info px-3 py-2 ms-2" id="originalLocationBadge" style="display: none;">
+                                            <i class="fas fa-history me-1"></i>Ubicación original
+                                        </span>
                                     </div>
 
                                     <!-- Campos ocultos -->
                                     <input type="hidden" asp-for="Latitud" id="Latitud" value="@Model.Latitud" />
                                     <input type="hidden" asp-for="Longitud" id="Longitud" value="@Model.Longitud" />
-                                </div>
-
-                                <!-- Indicador de cambios -->
-                                <div class="mt-4 pt-3 border-top">
-                                    <div class="d-flex align-items-center">
-                                        <div class="form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" id="showChanges" checked>
-                                            <label class="form-check-label small text-muted" for="showChanges">
-                                                Resaltar cambios realizados
-                                            </label>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -220,21 +146,28 @@
                                        class="form-control"
                                        placeholder="Ej: Catedral de la Santísima Trinidad"
                                        required
-                                       id="nombreInput">
+                                       id="nombreInput"
+                                       maxlength="100">
                                 <span asp-validation-for="Nombre" class="text-danger small mt-1 d-block"></span>
-                                <div class="form-text">Nombre oficial del sitio turístico</div>
+                                <div class="form-text">
+                                    <span id="nombreCounter">@Model.Nombre?.Length/100</span> - Nombre oficial del sitio turístico
+                                </div>
                             </div>
 
                             <div class="mb-4">
                                 <label asp-for="Descripcion" class="form-label fw-semibold">
                                     <i class="fas fa-align-left me-2 text-muted"></i>Descripción
                                 </label>
-                                <textarea asp-for="Descripcion"
-                                          class="form-control"
-                                          rows="5"
-                                          placeholder="Describe el sitio turístico, su historia, características principales..."
-                                          required
-                                          id="descripcionInput"></textarea>
+                                <div class="position-relative">
+                                    <textarea asp-for="Descripcion"
+                                              class="form-control"
+                                              rows="5"
+                                              placeholder="Describe el sitio turístico, su historia, características principales..."
+                                              required
+                                              id="descripcionInput"
+                                              maxlength="1000"></textarea>
+                                    <div class="char-counter">@Model.Descripcion?.Length/1000</div>
+                                </div>
                                 <span asp-validation-for="Descripcion" class="text-danger small mt-1 d-block"></span>
                                 <div class="form-text">Información detallada para los visitantes</div>
                             </div>
@@ -246,9 +179,12 @@
                                 <input asp-for="Direccion"
                                        class="form-control"
                                        placeholder="Ej: Plaza Principal, Trinidad, Beni"
-                                       id="direccionInput">
+                                       id="direccionInput"
+                                       maxlength="200">
                                 <span asp-validation-for="Direccion" class="text-danger small mt-1 d-block"></span>
-                                <div class="form-text">Dirección exacta para visitantes</div>
+                                <div class="form-text">
+                                    <span id="direccionCounter">@Model.Direccion?.Length/200</span> - Dirección exacta para visitantes
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -300,19 +236,27 @@
                                         <input asp-for="NombreIngles"
                                                class="form-control"
                                                placeholder="Ej: Holy Trinity Cathedral"
-                                               id="nombreInglesInput">
+                                               id="nombreInglesInput"
+                                               maxlength="100">
                                         <span asp-validation-for="NombreIngles" class="text-danger small mt-1 d-block"></span>
+                                        <div class="form-text">
+                                            <span id="nombreInglesCounter">@Model.NombreIngles?.Length/100</span>
+                                        </div>
                                     </div>
 
                                     <div>
                                         <label asp-for="DescripcionIngles" class="form-label fw-semibold">
                                             Descripción en Inglés
                                         </label>
-                                        <textarea asp-for="DescripcionIngles"
-                                                  class="form-control"
-                                                  rows="4"
-                                                  placeholder="Description in English..."
-                                                  id="descripcionInglesInput"></textarea>
+                                        <div class="position-relative">
+                                            <textarea asp-for="DescripcionIngles"
+                                                      class="form-control"
+                                                      rows="4"
+                                                      placeholder="Description in English..."
+                                                      id="descripcionInglesInput"
+                                                      maxlength="1000"></textarea>
+                                            <div class="char-counter">@Model.DescripcionIngles?.Length/1000</div>
+                                        </div>
                                         <span asp-validation-for="DescripcionIngles" class="text-danger small mt-1 d-block"></span>
                                     </div>
                                 </div>
@@ -329,19 +273,27 @@
                                         <input asp-for="NombrePortugues"
                                                class="form-control"
                                                placeholder="Ej: Catedral da Santíssima Trindade"
-                                               id="nombrePortuguesInput">
+                                               id="nombrePortuguesInput"
+                                               maxlength="100">
                                         <span asp-validation-for="NombrePortugues" class="text-danger small mt-1 d-block"></span>
+                                        <div class="form-text">
+                                            <span id="nombrePortuguesCounter">@Model.NombrePortugues?.Length/100</span>
+                                        </div>
                                     </div>
 
                                     <div>
                                         <label asp-for="DescripcionPortugues" class="form-label fw-semibold">
                                             Descripción en Portugués
                                         </label>
-                                        <textarea asp-for="DescripcionPortugues"
-                                                  class="form-control"
-                                                  rows="4"
-                                                  placeholder="Descrição em português..."
-                                                  id="descripcionPortuguesInput"></textarea>
+                                        <div class="position-relative">
+                                            <textarea asp-for="DescripcionPortugues"
+                                                      class="form-control"
+                                                      rows="4"
+                                                      placeholder="Descrição em português..."
+                                                      id="descripcionPortuguesInput"
+                                                      maxlength="1000"></textarea>
+                                            <div class="char-counter">@Model.DescripcionPortugues?.Length/1000</div>
+                                        </div>
                                         <span asp-validation-for="DescripcionPortugues" class="text-danger small mt-1 d-block"></span>
                                     </div>
                                 </div>
@@ -355,8 +307,9 @@
                                 <select asp-for="TipoId"
                                         class="form-select"
                                         asp-items="ViewBag.TipoId"
-                                        required>
-                                    <option value="" disabled>Selecciona un tipo</option>
+                                        required
+                                        id="tipoSelect">
+                                    <option value="" selected disabled>Selecciona un tipo</option>
                                 </select>
                                 <span asp-validation-for="TipoId" class="text-danger small mt-1 d-block"></span>
                                 <div class="form-text">Categoría del sitio turístico</div>
@@ -371,12 +324,12 @@
                 <div class="d-flex align-items-center">
                     <i class="fas fa-robot fa-2x me-3 text-info"></i>
                     <div>
-                        <h6 class="fw-semibold mb-1">Sugerencia de traducción</h6>
+                        <h6 class="fw-semibold mb-1">Asistente de traducción</h6>
                         <p class="mb-0 small">
                             ¿Necesitas ayuda con las traducciones?
                             <button type="button"
                                     class="btn btn-sm btn-outline-primary ms-2"
-                                    onclick="suggestTranslations()">
+                                    onclick="translationHelper.suggestTranslations()">
                                 <i class="fas fa-magic me-1"></i>Generar sugerencias
                             </button>
                         </p>
@@ -389,63 +342,24 @@
                 <div class="card-body p-4">
                     <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
                         <div class="text-center text-md-start">
-                            <h5 class="fw-semibold mb-1">Actualizar información</h5>
+                            <h5 class="fw-semibold mb-1">¿Estás listo para guardar los cambios?</h5>
                             <p class="text-muted small mb-0">
-                                Verifica que toda la información sea correcta antes de guardar
+                                Verifica que toda la información sea correcta antes de actualizar
                             </p>
                         </div>
 
                         <div class="d-flex gap-3">
-                            <button type="button" class="btn btn-outline-danger" onclick="confirmDelete()">
-                                <i class="fas fa-trash-alt me-2"></i>Eliminar
-                            </button>
-                            <button type="button" class="btn btn-outline-secondary btn-lg px-4" onclick="resetToOriginal()">
-                                <i class="fas fa-undo me-2"></i>Restaurar
+                            <button type="button" class="btn btn-warning btn-lg px-5" onclick="formManager.restoreOriginal()">
+                                <i class="fas fa-undo me-2"></i>Restaurar Original
                             </button>
                             <button type="submit" class="btn btn-primary btn-lg px-5" id="submitBtn">
-                                <i class="fas fa-save me-2"></i>Guardar Cambios
+                                <i class="fas fa-save me-2"></i>Actualizar Sitio
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
         </form>
-    </div>
-</div>
-
-<!-- Modal de confirmación de eliminación -->
-<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header bg-danger text-white">
-                <h5 class="modal-title" id="deleteModalLabel">
-                    <i class="fas fa-exclamation-triangle me-2"></i>Confirmar Eliminación
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="alert alert-warning">
-                    <i class="fas fa-exclamation-circle me-2"></i>
-                    <strong>¡Advertencia!</strong> Esta acción no se puede deshacer.
-                </div>
-                <p>¿Estás seguro de que deseas eliminar el sitio turístico <strong>"@Model.Nombre"</strong>?</p>
-                <p class="small text-muted">
-                    <i class="fas fa-info-circle me-1"></i>
-                    Esta acción eliminará permanentemente este sitio turístico y todos sus datos asociados.
-                </p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                    <i class="fas fa-times me-1"></i>Cancelar
-                </button>
-                <form asp-action="Delete" method="post" style="display: inline;">
-                    <input type="hidden" name="id" value="@Model.Id" />
-                    <button type="submit" class="btn btn-danger">
-                        <i class="fas fa-trash-alt me-1"></i>Eliminar
-                    </button>
-                </form>
-            </div>
-        </div>
     </div>
 </div>
 
@@ -457,439 +371,344 @@
     <!-- Leaflet CSS & JS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
+    <script src="~/js/translationHelper.js" asp-append-version="true"></script>
     <script>
-        // Variables globales
-        let map;
-        let marker;
-        const trinidadLat = -14.8350;
-        const trinidadLng = -64.9030;
+        // Módulo para manejo del mapa
+        const mapManager = {
+            map: null,
+            marker: null,
+            trinidadLat: -14.8350,
+            trinidadLng: -64.9030,
+            originalLat: @Model.Latitud,
+            originalLng: @Model.Longitud,
+            hasLocationChanged: false,
 
-        // Almacenar valores originales
-        const originalValues = {
-            Nombre: '@Html.Raw(Model.Nombre)',
-            NombreIngles: '@Html.Raw(Model.NombreIngles)',
-            NombrePortugues: '@Html.Raw(Model.NombrePortugues)',
-            Descripcion: '@Html.Raw(Model.Descripcion)',
-            DescripcionIngles: '@Html.Raw(Model.DescripcionIngles)',
-            DescripcionPortugues: '@Html.Raw(Model.DescripcionPortugues)',
-            Direccion: '@Html.Raw(Model.Direccion)',
-            TipoId: '@Model.TipoId',
-            Latitud: '@Model.Latitud',
-            Longitud: '@Model.Longitud'
-        };
-
-        // Diccionario de traducciones (el mismo que en Create)
-        const translationDictionary = {
-            'catedral': { en: 'Cathedral', pt: 'Catedral' },
-            'iglesia': { en: 'Church', pt: 'Igreja' },
-            'plaza': { en: 'Square', pt: 'Praça' },
-            'parque': { en: 'Park', pt: 'Parque' },
-            'museo': { en: 'Museum', pt: 'Museu' },
-            'mercado': { en: 'Market', pt: 'Mercado' },
-            'playa': { en: 'Beach', pt: 'Praia' },
-            'río': { en: 'River', pt: 'Rio' },
-            'lago': { en: 'Lake', pt: 'Lago' },
-            'montaña': { en: 'Mountain', pt: 'Montanha' },
-            'cerro': { en: 'Hill', pt: 'Colina' },
-            'valle': { en: 'Valley', pt: 'Vale' },
-            'bosque': { en: 'Forest', pt: 'Floresta' },
-            'selva': { en: 'Jungle', pt: 'Selva' },
-            'reserva': { en: 'Reserve', pt: 'Reserva' },
-            'natural': { en: 'Natural', pt: 'Natural' },
-            'nacional': { en: 'National', pt: 'Nacional' },
-            'regional': { en: 'Regional', pt: 'Regional' },
-            'municipal': { en: 'Municipal', pt: 'Municipal' },
-            'comunidad': { en: 'Community', pt: 'Comunidade' },
-            'centro': { en: 'Center', pt: 'Centro' },
-            'histórico': { en: 'Historical', pt: 'Histórico' },
-            'cultural': { en: 'Cultural', pt: 'Cultural' },
-            'turístico': { en: 'Tourist', pt: 'Turístico' },
-            'santísima': { en: 'Holy', pt: 'Santíssima' },
-            'santa': { en: 'Saint', pt: 'Santa' },
-            'santo': { en: 'Saint', pt: 'Santo' },
-            'virgen': { en: 'Virgin', pt: 'Virgem' },
-            'jesús': { en: 'Jesus', pt: 'Jesus' },
-            'maría': { en: 'Mary', pt: 'Maria' },
-            'josé': { en: 'Joseph', pt: 'José' },
-            'principal': { en: 'Main', pt: 'Principal' },
-            'central': { en: 'Central', pt: 'Central' },
-            'mayor': { en: 'Major', pt: 'Maior' },
-            'menor': { en: 'Minor', pt: 'Menor' },
-            'nuevo': { en: 'New', pt: 'Novo' },
-            'viejo': { en: 'Old', pt: 'Velho' },
-            'grande': { en: 'Big', pt: 'Grande' },
-            'pequeño': { en: 'Small', pt: 'Pequeno' }
-        };
-
-        document.addEventListener('DOMContentLoaded', function() {
-            initializeMap();
-            initializeFormValidation();
-            initializeTranslationHelper();
-            initializeChangeTracking();
-        });
-
-        function initializeMap() {
-            // Coordenadas del sitio actual
-            const siteLat = @Model.Latitud;
-            const siteLng = @Model.Longitud;
-
-            // Crear mapa centrado en la ubicación del sitio
-            map = L.map('map', {
-                center: [siteLat, siteLng],
-                zoom: 15,
-                zoomControl: true
-            });
-
-            // Capa de mapa
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-                maxZoom: 19
-            }).addTo(map);
-
-            // Marcador en la ubicación actual del sitio
-            marker = L.marker([siteLat, siteLng], {
-                draggable: true,
-                title: 'Ubicación del sitio',
-                alt: 'Marcador de ubicación'
-            }).addTo(map);
-
-            // Evento para hacer clic en el mapa
-            map.on('click', function(e) {
-                updateMarkerPosition(e.latlng);
-            });
-
-            // Evento para arrastrar el marcador
-            marker.on('dragend', function(e) {
-                updateMarkerPosition(e.target.getLatLng());
-            });
-
-            // Círculo de referencia para Trinidad (opcional, si está cerca)
-            if (distanceBetween(siteLat, siteLng, trinidadLat, trinidadLng) < 50) {
-                L.circle([trinidadLat, trinidadLng], {
-                    color: 'var(--verde-amazonico)',
-                    fillColor: 'var(--verde-amazonico)',
-                    fillOpacity: 0.1,
-                    radius: 1000
-                }).addTo(map)
-                  .bindPopup('<h3>Trinidad, Beni</h3><p>Ubicación principal de referencia</p>');
-            }
-
-            // Actualizar controles visuales
-            updateCoordinatesDisplay(siteLat, siteLng);
-        }
-
-        function updateMarkerPosition(latlng) {
-            // Mover marcador
-            marker.setLatLng(latlng);
-
-            // Actualizar coordenadas
-            updateCoordinatesDisplay(latlng.lat, latlng.lng);
-
-            // Actualizar campos ocultos
-            document.getElementById('Latitud').value = latlng.lat.toFixed(6);
-            document.getElementById('Longitud').value = latlng.lng.toFixed(6);
-
-            // Mostrar feedback
-            showLocationFeedback('Ubicación actualizada: ' + latlng.lat.toFixed(6) + ', ' + latlng.lng.toFixed(6));
-
-            // Resaltar cambio
-            highlightField(document.getElementById('Latitud'));
-            highlightField(document.getElementById('Longitud'));
-        }
-
-        function updateCoordinatesDisplay(lat, lng) {
-            document.getElementById('latDisplay').value = lat.toFixed(6);
-            document.getElementById('lngDisplay').value = lng.toFixed(6);
-        }
-
-        window.centerToOriginalLocation = function() {
-            const originalLat = parseFloat(originalValues.Latitud);
-            const originalLng = parseFloat(originalValues.Longitud);
-
-            map.setView([originalLat, originalLng], 15);
-            updateMarkerPosition({ lat: originalLat, lng: originalLng });
-            showLocationFeedback('Centrado en ubicación original');
-        };
-
-        window.centerToTrinidad = function() {
-            map.setView([trinidadLat, trinidadLng], 13);
-            updateMarkerPosition({ lat: trinidadLat, lng: trinidadLng });
-            showLocationFeedback('Centrado en Trinidad, Beni');
-        };
-
-        function showLocationFeedback(message, type = 'success') {
-            const statusBadge = document.getElementById('locationStatus');
-
-            // Actualizar badge
-            if (type === 'error') {
-                statusBadge.className = 'badge bg-danger px-3 py-2';
-                statusBadge.innerHTML = '<i class="fas fa-exclamation-circle me-1"></i>' + message;
-            } else {
-                statusBadge.className = 'badge badge-success px-3 py-2';
-                statusBadge.innerHTML = '<i class="fas fa-check-circle me-1"></i>' + message;
-
-                // Volver a normal después de 3 segundos
-                setTimeout(() => {
-                    statusBadge.className = 'badge badge-success px-3 py-2';
-                    statusBadge.innerHTML = '<i class="fas fa-check-circle me-1"></i>Ubicación establecida';
-                }, 3000);
-            }
-
-            // Animación
-            statusBadge.style.transform = 'scale(1.05)';
-            setTimeout(() => {
-                statusBadge.style.transform = 'scale(1)';
-            }, 300);
-        }
-
-        function initializeFormValidation() {
-            const form = document.getElementById('siteForm');
-            const submitBtn = document.getElementById('submitBtn');
-
-            // Validación antes de enviar
-            form.addEventListener('submit', function(e) {
-                // Validar coordenadas
-                const lat = document.getElementById('Latitud').value;
-                const lng = document.getElementById('Longitud').value;
-
-                if (!lat || !lng) {
-                    e.preventDefault();
-                    showToast('Por favor, selecciona una ubicación en el mapa', 'danger');
-                    return false;
-                }
-
-                // Mostrar estado de carga
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Guardando...';
-                submitBtn.disabled = true;
-                submitBtn.classList.add('btn-loading');
-
-                return true;
-            });
-        }
-
-        function initializeTranslationHelper() {
-            // Auto-sugerir traducciones cuando se sale del campo nombre
-            document.getElementById('nombreInput').addEventListener('blur', function() {
-                const nombre = this.value.trim();
-
-                // Si hay nombre en español pero no en otros idiomas, sugerir automáticamente
-                if (nombre && !document.getElementById('nombreInglesInput').value) {
-                    // Esperar un poco para no interrumpir al usuario
-                    setTimeout(() => {
-                        const shouldTranslate = confirm('¿Deseas generar traducciones automáticas para inglés y portugués?');
-                        if (shouldTranslate) {
-                            suggestTranslations(false); // false para no mostrar toast redundante
-                        }
-                    }, 300);
-                }
-            });
-        }
-
-        function initializeChangeTracking() {
-            // Detectar cambios en los campos
-            const inputs = document.querySelectorAll('input, textarea, select');
-            inputs.forEach(input => {
-                input.addEventListener('change', function() {
-                    highlightField(this);
+            init() {
+                // Crear mapa centrado en la ubicación original del sitio
+                this.map = L.map('map', {
+                    center: [this.originalLat, this.originalLng],
+                    zoom: 13,
+                    zoomControl: true
                 });
-            });
 
-            // Controlar el switch de mostrar cambios
-            const showChangesSwitch = document.getElementById('showChanges');
-            showChangesSwitch.addEventListener('change', function() {
-                if (!this.checked) {
-                    // Remover todas las clases de resaltado
-                    document.querySelectorAll('.changed-field').forEach(el => {
-                        el.classList.remove('changed-field');
-                    });
-                }
-            });
-        }
+                // Capa de mapa
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+                    maxZoom: 19
+                }).addTo(this.map);
 
-        function highlightField(field) {
-            const showChanges = document.getElementById('showChanges').checked;
+                // Marcador en la ubicación original
+                this.marker = L.marker([this.originalLat, this.originalLng], {
+                    draggable: true,
+                    title: 'Ubicación del sitio',
+                    alt: 'Marcador de ubicación'
+                }).addTo(this.map);
 
-            if (showChanges && field.id) {
-                field.classList.add('changed-field');
+                // Eventos
+                this.map.on('click', (e) => {
+                    this.updateMarkerPosition(e.latlng);
+                    this.hasLocationChanged = true;
+                    this.updateLocationBadge();
+                });
 
-                // Remover la clase después de la animación
-                setTimeout(() => {
-                    field.classList.remove('changed-field');
-                }, 1500);
-            }
-        }
+                this.marker.on('dragend', (e) => {
+                    this.updateMarkerPosition(e.target.getLatLng());
+                    this.hasLocationChanged = true;
+                    this.updateLocationBadge();
+                });
 
-        // Función para sugerir traducciones
-        window.suggestTranslations = function(showNotification = true) {
-            const spanishName = document.getElementById('nombreInput').value.trim();
-            const spanishDesc = document.getElementById('descripcionInput').value.trim();
+                // Estado inicial
+                this.updateCoordinatesDisplay(this.originalLat, this.originalLng);
+                this.updateLocationBadge();
+            },
 
-            if (!spanishName) {
-                showToast('Por favor, primero ingresa el nombre en español', 'warning');
-                document.getElementById('nombreInput').focus();
-                return;
-            }
+            updateMarkerPosition(latlng) {
+                this.marker.setLatLng(latlng);
+                this.updateCoordinatesDisplay(latlng.lat, latlng.lng);
 
-            // Traducir el nombre palabra por palabra
-            const translatedName = translateText(spanishName);
+                document.getElementById('Latitud').value = latlng.lat.toFixed(6);
+                document.getElementById('Longitud').value = latlng.lng.toFixed(6);
 
-            // Actualizar campos de nombre si están vacíos
-            if (!document.getElementById('nombreInglesInput').value) {
-                document.getElementById('nombreInglesInput').value = translatedName.en;
-                highlightField(document.getElementById('nombreInglesInput'));
-            }
-            if (!document.getElementById('nombrePortuguesInput').value) {
-                document.getElementById('nombrePortuguesInput').value = translatedName.pt;
-                highlightField(document.getElementById('nombrePortuguesInput'));
-            }
+                this.showLocationFeedback(`Ubicación actualizada: ${latlng.lat.toFixed(6)}, ${latlng.lng.toFixed(6)}`);
+                this.map.panTo(latlng);
+            },
 
-            // También sugerir descripciones si están vacías
-            if (spanishDesc && !document.getElementById('descripcionInglesInput').value) {
-                document.getElementById('descripcionInglesInput').value =
-                    generateGenericDescription(translatedName.en, 'en');
-                highlightField(document.getElementById('descripcionInglesInput'));
-            }
+            updateCoordinatesDisplay(lat, lng) {
+                document.getElementById('latDisplay').value = lat.toFixed(6);
+                document.getElementById('lngDisplay').value = lng.toFixed(6);
+            },
 
-            if (spanishDesc && !document.getElementById('descripcionPortuguesInput').value) {
-                document.getElementById('descripcionPortuguesInput').value =
-                    generateGenericDescription(translatedName.pt, 'pt');
-                highlightField(document.getElementById('descripcionPortuguesInput'));
-            }
+            centerToTrinidad() {
+                this.map.setView([this.trinidadLat, this.trinidadLng], 13);
+                this.updateMarkerPosition({ lat: this.trinidadLat, lng: this.trinidadLng });
+                this.hasLocationChanged = true;
+                this.updateLocationBadge();
+                this.showLocationFeedback('Centrado en Trinidad, Beni');
+            },
 
-            if (showNotification) {
-                showToast('Traducciones sugeridas generadas', 'success');
-            }
-        };
+            restoreOriginalLocation() {
+                this.map.setView([this.originalLat, this.originalLng], 13);
+                this.updateMarkerPosition({ lat: this.originalLat, lng: this.originalLng });
+                this.hasLocationChanged = false;
+                this.updateLocationBadge();
+                this.showLocationFeedback('Ubicación restaurada a la original');
+            },
 
-        // Función para traducir texto palabra por palabra
-        function translateText(text) {
-            const words = text.toLowerCase().split(' ');
-            let englishWords = [];
-            let portugueseWords = [];
-
-            words.forEach(word => {
-                // Limpiar la palabra de signos de puntuación
-                const cleanWord = word.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, '');
-
-                if (translationDictionary[cleanWord]) {
-                    englishWords.push(translationDictionary[cleanWord].en);
-                    portugueseWords.push(translationDictionary[cleanWord].pt);
+            updateLocationBadge() {
+                const originalBadge = document.getElementById('originalLocationBadge');
+                if (this.hasLocationChanged) {
+                    originalBadge.style.display = 'inline-block';
                 } else {
-                    // Si no hay traducción, mantener la palabra original
-                    englishWords.push(capitalizeFirstLetter(cleanWord));
-                    portugueseWords.push(capitalizeFirstLetter(cleanWord));
+                    originalBadge.style.display = 'none';
                 }
-            });
+            },
 
-            return {
-                en: englishWords.join(' '),
-                pt: portugueseWords.join(' ')
-            };
-        }
+            showLocationFeedback(message, type = 'success') {
+                const statusBadge = document.getElementById('locationStatus');
 
-        // Función para generar descripciones genéricas
-        function generateGenericDescription(name, language) {
-            const templates = {
-                en: `The ${name} is a tourist destination in Trinidad, Beni, offering unique experiences for visitors.`,
-                pt: `O ${name} é um destino turístico em Trinidad, Beni, que oferece experiências únicas para os visitantes.`
-            };
+                if (type === 'error') {
+                    statusBadge.className = 'badge bg-danger px-3 py-2';
+                    statusBadge.innerHTML = `<i class="fas fa-exclamation-circle me-1"></i>${message}`;
+                } else {
+                    statusBadge.className = 'badge badge-success px-3 py-2';
+                    statusBadge.innerHTML = `<i class="fas fa-check-circle me-1"></i>${message}`;
 
-            return templates[language] || `Tourist site: ${name}`;
-        }
+                    setTimeout(() => {
+                        statusBadge.className = 'badge badge-success px-3 py-2';
+                        statusBadge.innerHTML = '<i class="fas fa-check-circle me-1"></i>Ubicación establecida';
+                    }, 3000);
+                }
 
-        // Función auxiliar para capitalizar la primera letra
-        function capitalizeFirstLetter(string) {
-            return string.charAt(0).toUpperCase() + string.slice(1);
-        }
-
-        // Función para calcular distancia entre dos puntos (en km)
-        function distanceBetween(lat1, lon1, lat2, lon2) {
-            const R = 6371; // Radio de la Tierra en km
-            const dLat = (lat2 - lat1) * Math.PI / 180;
-            const dLon = (lon2 - lon1) * Math.PI / 180;
-            const a =
-                Math.sin(dLat/2) * Math.sin(dLat/2) +
-                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-                Math.sin(dLon/2) * Math.sin(dLon/2);
-            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-            return R * c;
-        }
-
-        function showToast(message, type = 'info') {
-            // Remove existing toasts
-            document.querySelectorAll('.toast').forEach(toast => toast.remove());
-
-            const toastHtml = `
-                <div class="toast align-items-center text-bg-${type} border-0 fade show"
-                     role="alert" style="position: fixed; top: 20px; right: 20px; z-index: 1050;">
-                    <div class="d-flex">
-                        <div class="toast-body">
-                            <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'danger' ? 'exclamation-circle' : 'info-circle'} me-2"></i>
-                            ${message}
-                        </div>
-                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-                    </div>
-                </div>
-            `;
-
-            document.body.insertAdjacentHTML('beforeend', toastHtml);
-
-            // Auto remove after 5 seconds
-            setTimeout(() => {
-                const toast = document.querySelector('.toast');
-                if (toast) toast.remove();
-            }, 5000);
-        }
-
-        // Restaurar valores originales
-        window.resetToOriginal = function() {
-            if (confirm('¿Restaurar los valores originales? Se perderán los cambios no guardados.')) {
-                document.getElementById('nombreInput').value = originalValues.Nombre;
-                document.getElementById('nombreInglesInput').value = originalValues.NombreIngles;
-                document.getElementById('nombrePortuguesInput').value = originalValues.NombrePortugues;
-                document.getElementById('descripcionInput').value = originalValues.Descripcion;
-                document.getElementById('descripcionInglesInput').value = originalValues.DescripcionIngles;
-                document.getElementById('descripcionPortuguesInput').value = originalValues.DescripcionPortugues;
-                document.getElementById('direccionInput').value = originalValues.Direccion;
-                document.getElementById('TipoId').value = originalValues.TipoId;
-
-                // Restaurar coordenadas
-                const originalLat = parseFloat(originalValues.Latitud);
-                const originalLng = parseFloat(originalValues.Longitud);
-                updateMarkerPosition({ lat: originalLat, lng: originalLng });
-
-                showToast('Valores restaurados a los originales', 'info');
+                statusBadge.style.transform = 'scale(1.05)';
+                setTimeout(() => statusBadge.style.transform = 'scale(1)', 300);
             }
         };
 
-        // Confirmar eliminación
-        window.confirmDelete = function() {
-            const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
-            deleteModal.show();
+        // Módulo para manejo del formulario
+        const formManager = {
+            originalData: {},
+            formModified: false,
+
+            init() {
+                // Guardar datos originales
+                this.saveOriginalData();
+                this.initCharCounters();
+                this.initFormValidation();
+                this.initTooltips();
+                this.initChangeDetection();
+                this.cleanLocalStorage();
+            },
+
+            saveOriginalData() {
+                // Guardar todos los valores originales del formulario
+                const form = document.getElementById('siteForm');
+                const formData = new FormData(form);
+                this.originalData = {};
+
+                for (let [key, value] of formData.entries()) {
+                    this.originalData[key] = value;
+                }
+
+                // Guardar también coordenadas
+                this.originalData['Latitud'] = @Model.Latitud;
+                this.originalData['Longitud'] = @Model.Longitud;
+            },
+
+            initCharCounters() {
+                const fields = [
+                    { id: 'nombreInput', counterId: 'nombreCounter', max: 100 },
+                    { id: 'direccionInput', counterId: 'direccionCounter', max: 200 },
+                    { id: 'nombreInglesInput', counterId: 'nombreInglesCounter', max: 100 },
+                    { id: 'nombrePortuguesInput', counterId: 'nombrePortuguesCounter', max: 100 },
+                    { id: 'descripcionInput', max: 1000 },
+                    { id: 'descripcionInglesInput', max: 1000 },
+                    { id: 'descripcionPortuguesInput', max: 1000 }
+                ];
+
+                fields.forEach(field => {
+                    const element = document.getElementById(field.id);
+                    if (element) {
+                        const counter = field.counterId ?
+                            document.getElementById(field.counterId) :
+                            element.parentNode.querySelector('.char-counter');
+
+                        const updateCounter = () => {
+                            const length = element.value.length;
+                            if (counter) {
+                                counter.textContent = `${length}/${field.max}`;
+                                if (length > field.max * 0.9) {
+                                    counter.style.color = 'var(--warning-color)';
+                                } else if (length > field.max) {
+                                    counter.style.color = 'var(--danger-color)';
+                                } else {
+                                    counter.style.color = 'var(--neutral-dark)';
+                                }
+                            }
+
+                            if (length > field.max) {
+                                element.classList.add('is-invalid');
+                            } else {
+                                element.classList.remove('is-invalid');
+                            }
+
+                            // Detectar cambios
+                            this.checkForChanges();
+                        };
+
+                        element.addEventListener('input', updateCounter);
+                        element.addEventListener('blur', updateCounter);
+                        updateCounter();
+                    }
+                });
+            },
+
+            initChangeDetection() {
+                // Detectar cambios en todos los campos
+                const form = document.getElementById('siteForm');
+                const inputs = form.querySelectorAll('input, textarea, select');
+
+                inputs.forEach(input => {
+                    input.addEventListener('input', () => this.checkForChanges());
+                    input.addEventListener('change', () => this.checkForChanges());
+                });
+            },
+
+            checkForChanges() {
+                let hasChanges = false;
+                const form = document.getElementById('siteForm');
+                const formData = new FormData(form);
+
+                for (let [key, value] of formData.entries()) {
+                    if (this.originalData[key] !== value) {
+                        hasChanges = true;
+                        break;
+                    }
+                }
+
+                // Verificar coordenadas
+                const currentLat = document.getElementById('Latitud').value;
+                const currentLng = document.getElementById('Longitud').value;
+                if (currentLat != this.originalData['Latitud'] || currentLng != this.originalData['Longitud']) {
+                    hasChanges = true;
+                }
+
+                this.formModified = hasChanges;
+                return hasChanges;
+            },
+
+            initFormValidation() {
+                const form = document.getElementById('siteForm');
+                const submitBtn = document.getElementById('submitBtn');
+
+                form.addEventListener('submit', (e) => {
+                    // Validar coordenadas
+                    const lat = document.getElementById('Latitud').value;
+                    const lng = document.getElementById('Longitud').value;
+
+                    if (!lat || !lng) {
+                        e.preventDefault();
+                        translationHelper.showGlobalToast('Por favor, selecciona una ubicación en el mapa', 'danger');
+
+                        const mapContainer = document.querySelector('.card');
+                        mapContainer.style.borderColor = 'var(--danger-color)';
+                        mapContainer.style.boxShadow = '0 0 0 0.25rem rgba(220,53,69,.25)';
+
+                        setTimeout(() => {
+                            mapContainer.style.borderColor = '';
+                            mapContainer.style.boxShadow = '';
+                        }, 2000);
+                        return false;
+                    }
+
+                    // Validar campos requeridos
+                    const requiredFields = form.querySelectorAll('[required]');
+                    let isValid = true;
+                    requiredFields.forEach(field => {
+                        if (!field.value.trim()) {
+                            field.classList.add('is-invalid');
+                            isValid = false;
+                        }
+                    });
+
+                    if (!isValid) {
+                        e.preventDefault();
+                        translationHelper.showGlobalToast('Por favor, completa todos los campos requeridos', 'danger');
+                        return false;
+                    }
+
+                    // Mostrar estado de carga
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Actualizando...';
+                    submitBtn.disabled = true;
+                    submitBtn.classList.add('btn-loading');
+                    return true;
+                });
+            },
+
+            initTooltips() {
+                const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+                tooltipTriggerList.map(function (tooltipTriggerEl) {
+                    return new bootstrap.Tooltip(tooltipTriggerEl);
+                });
+            },
+
+            cleanLocalStorage() {
+                // Eliminar cualquier dato de borrador previo
+                localStorage.removeItem('sitioTuristicoEditDraft');
+                // También eliminar otros posibles borradores relacionados
+                const keys = Object.keys(localStorage);
+                keys.forEach(key => {
+                    if (key.includes('sitio') || key.includes('borrador') || key.includes('draft')) {
+                        localStorage.removeItem(key);
+                    }
+                });
+            },
+
+            restoreOriginal() {
+                if (this.checkForChanges()) {
+                    if (!confirm('¿Estás seguro de que deseas restaurar los valores originales? Se perderán todos los cambios no guardados.')) {
+                        return;
+                    }
+                }
+
+                // Restaurar valores del formulario desde originalData
+                for (const [key, value] of Object.entries(this.originalData)) {
+                    const element = document.querySelector(`[name="${key}"]`);
+                    if (element) {
+                        element.value = value;
+                    }
+                }
+
+                // Restaurar coordenadas específicamente
+                document.getElementById('Latitud').value = this.originalData['Latitud'];
+                document.getElementById('Longitud').value = this.originalData['Longitud'];
+                document.getElementById('latDisplay').value = parseFloat(this.originalData['Latitud']).toFixed(6);
+                document.getElementById('lngDisplay').value = parseFloat(this.originalData['Longitud']).toFixed(6);
+
+                // Restaurar ubicación en el mapa
+                mapManager.restoreOriginalLocation();
+
+                // Restaurar contadores
+                this.initCharCounters();
+
+                // Limpiar validaciones
+                document.querySelectorAll('.is-valid, .is-invalid').forEach(el => {
+                    el.classList.remove('is-valid', 'is-invalid');
+                });
+
+                const submitBtn = document.getElementById('submitBtn');
+                submitBtn.innerHTML = '<i class="fas fa-save me-2"></i>Actualizar Sitio';
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('btn-loading');
+
+                translationHelper.showGlobalToast('Valores originales restaurados', 'info');
+                this.formModified = false;
+            }
         };
 
-        // Prevenir salida si hay cambios sin guardar
-        window.addEventListener('beforeunload', function(e) {
-            const hasChanges = checkForChanges();
-
-            if (hasChanges) {
-                e.preventDefault();
-                e.returnValue = 'Tienes cambios sin guardar. ¿Estás seguro de que quieres salir?';
-            }
+        // Inicialización cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', function() {
+            mapManager.init();
+            formManager.init();
         });
-
-        function checkForChanges() {
-            return document.getElementById('nombreInput').value !== originalValues.Nombre ||
-                   document.getElementById('nombreInglesInput').value !== originalValues.NombreIngles ||
-                   document.getElementById('nombrePortuguesInput').value !== originalValues.NombrePortugues ||
-                   document.getElementById('descripcionInput').value !== originalValues.Descripcion ||
-                   document.getElementById('descripcionInglesInput').value !== originalValues.DescripcionIngles ||
-                   document.getElementById('descripcionPortuguesInput').value !== originalValues.DescripcionPortugues ||
-                   document.getElementById('direccionInput').value !== originalValues.Direccion ||
-                   document.getElementById('TipoId').value !== originalValues.TipoId ||
-                   document.getElementById('Latitud').value !== originalValues.Latitud ||
-                   document.getElementById('Longitud').value !== originalValues.Longitud;
-        }
     </script>
 }

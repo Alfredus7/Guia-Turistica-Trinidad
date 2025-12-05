@@ -4,69 +4,8 @@
     ViewData["Title"] = "Editar Tipo de Sitio Turístico";
 }
 
-<style>
-    /* Estilos específicos para esta vista que no están en el global */
-    .bg-primary-gradient {
-        background: var(--gradient-verde) !important;
-    }
-
-    .preview-header {
-        background-color: #f8f9fa !important;
-        border-bottom: 1px solid var(--border-color);
-    }
-
-    .input-group-custom {
-        background-color: #f8f9fa !important;
-        border: 1px solid var(--border-color);
-        border-right: none;
-    }
-
-    .section-title {
-        border-bottom: 2px solid var(--verde-amazonico);
-        padding-bottom: 0.5rem;
-    }
-
-    .badge-espanol {
-        background-color: #dc3545 !important;
-    }
-
-    .badge-ingles {
-        background-color: #0d6efd !important;
-    }
-
-    .badge-portugues {
-        background-color: #198754 !important;
-    }
-
-    .card-header-gradient {
-        background: var(--gradient-verde) !important;
-        color: white;
-    }
-
-    /* Ajustes específicos para el preview de imagen */
-    .ratio-1x1 {
-        --bs-aspect-ratio: 100%;
-    }
-
-    /* Asegurar que los contadores se muestren correctamente */
-    .position-relative {
-        position: relative;
-    }
-
-    /* Estilos para textareas con contador */
-    textarea.form-control {
-        padding-bottom: 2rem !important;
-    }
-
-    /* Estilo para ID del tipo */
-    .type-id-badge {
-        background-color: #6f42c1 !important;
-        font-size: 0.9rem;
-    }
-</style>
-
 <div class="container py-4">
-    <!-- Header con navegación -->
+    <!-- Header con navegación - COHERENTE -->
     <div class="bg-primary-gradient text-white py-4">
         <div class="container">
             <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
@@ -74,10 +13,7 @@
                     <h1 class="display-6 fw-bold mb-1">
                         <i class="fas fa-edit me-2"></i>Editar Tipo de Sitio Turístico
                     </h1>
-                    <p class="lead mb-0 opacity-75">
-                        Actualiza la información del tipo
-                        <span class="badge type-id-badge ms-2">ID: @Model.TipoId</span>
-                    </p>
+                    <p class="lead mb-0 opacity-75">Modifica la información de esta categoría de sitios turísticos</p>
                 </div>
                 <a asp-action="Index" class="btn btn-outline-light btn-lg">
                     <i class="fas fa-arrow-left me-2"></i>Volver al Listado
@@ -86,284 +22,298 @@
         </div>
     </div>
 
-    <!-- Form Container -->
-    <div class="row justify-content-center mt-4">
-        <div class="col-lg-10 col-xl-9">
-            <div class="card shadow-lg border-0 rounded-3 overflow-hidden">
-                <!-- Card Header -->
+    <!-- Formulario Principal - ESTRUCTURA COHERENTE -->
+    <div class="container py-4">
+        <form asp-action="Edit" id="typeForm" class="needs-validation" novalidate>
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+            <input type="hidden" asp-for="TipoId" />
+
+            <!-- Sección de Imagen - ESTRUCTURA SIMILAR AL MAPA -->
+            <div class="card shadow-lg mb-5 border-0 overflow-hidden">
                 <div class="card-header card-header-gradient py-3">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div>
-                            <h2 class="h4 mb-1">
-                                <i class="fas fa-pencil-alt me-2"></i>Información del Tipo
-                            </h2>
-                            <p class="mb-0 opacity-75">Modifica los campos que necesites actualizar</p>
-                        </div>
-                        <div class="text-end">
-                            <span class="badge bg-light text-dark">
-                                <i class="fas fa-calendar-alt me-1"></i>
-                                Última actualización: @DateTime.Now.ToString("dd/MM/yyyy")
-                            </span>
-                        </div>
-                    </div>
+                    <h3 class="h5 mb-0">
+                        <i class="fas fa-image me-2"></i>Imagen Representativa
+                    </h3>
                 </div>
+                <div class="card-body p-0">
+                    <div class="row g-0">
+                        <!-- URL de Imagen -->
+                        <div class="col-lg-8">
+                            <div class="p-4">
+                                <h5 class="fw-semibold mb-3">
+                                    <i class="fas fa-link me-2 text-primary"></i>URL de la Imagen
+                                </h5>
 
-                <!-- Card Body -->
-                <div class="card-body p-4 p-md-5">
-                    <form asp-action="Edit" id="typeForm" class="needs-validation" novalidate>
-                        @Html.AntiForgeryToken()
-                        <input type="hidden" asp-for="TipoId" />
-
-                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
-
-                        <!-- Image Preview & URL Section -->
-                        <div class="row mb-5">
-                            <div class="col-lg-8">
-                                <!-- URL Input -->
                                 <div class="mb-4">
-                                    <label asp-for="ImagenUrl" class="form-label fw-semibold">
-                                        <i class="fas fa-link me-2 text-info"></i>URL de Imagen Representativa
-                                    </label>
-                                    <div class="input-group input-group-lg">
-                                        <span class="input-group-text input-group-custom">
-                                            <i class="fas fa-image text-muted"></i>
-                                        </span>
+                                    <div class="alert alert-info mb-3">
+                                        <small>
+                                            <i class="fas fa-info-circle me-2"></i>
+                                            <strong>Instrucciones:</strong> Modifica la URL de la imagen que representa este tipo de sitio turístico. La vista previa se actualizará automáticamente.
+                                        </small>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label asp-for="ImagenUrl" class="form-label fw-semibold">
+                                            URL de Imagen
+                                        </label>
                                         <input asp-for="ImagenUrl"
-                                               class="form-control"
+                                               class="form-control form-control-lg"
                                                placeholder="https://ejemplo.com/imagen-tipo.jpg"
                                                id="imageUrlInput"
                                                type="url">
+                                        <span asp-validation-for="ImagenUrl" class="text-danger small mt-1 d-block"></span>
+                                        <div class="form-text">
+                                            URL de una imagen que represente este tipo de sitio (playas, montañas, museos, etc.)
+                                        </div>
                                     </div>
-                                    <span asp-validation-for="ImagenUrl" class="text-danger small mt-1 d-block"></span>
-                                    <div class="form-text">
-                                        <i class="fas fa-lightbulb me-1"></i>
-                                        URL de una imagen que represente este tipo de sitio (playas, montañas, museos, etc.)
-                                    </div>
-                                </div>
 
-                                <!-- Real-time URL validation feedback -->
-                                <div class="alert alert-light border d-none" id="urlFeedback">
-                                    <div class="d-flex align-items-center">
-                                        <i class="fas fa-spinner fa-spin me-2 text-info" id="loadingIcon"></i>
-                                        <span id="urlFeedbackText"></span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Image Preview -->
-                            <div class="col-lg-4">
-                                <div class="card h-100 border">
-                                    <div class="preview-header border-bottom py-2 px-3">
-                                        <h6 class="mb-0 text-dark">
-                                            <i class="fas fa-eye me-1"></i>Vista Previa Actual
-                                        </h6>
-                                    </div>
-                                    <div class="card-body d-flex align-items-center justify-content-center p-4">
-                                        <div class="text-center">
-                                            <div class="ratio ratio-1x1 mb-3" style="max-width: 200px; margin: 0 auto;">
-                                                <img src="@(string.IsNullOrEmpty(Model.ImagenUrl) ? "https://via.placeholder.com/200/6c757d/ffffff?text=Sin+imagen" : Model.ImagenUrl)"
-                                                     class="img-fluid rounded shadow-sm object-fit-cover"
-                                                     id="imagePreview"
-                                                     alt="Vista previa de la imagen"
-                                                     onerror="this.src='https://via.placeholder.com/200/6c757d/ffffff?text=Error+de+imagen'">
-                                            </div>
-                                            <small class="text-muted d-block">
-                                                La vista previa se actualizará automáticamente
-                                            </small>
+                                    <!-- Feedback en tiempo real -->
+                                    <div class="alert alert-light border mt-3 d-none" id="urlFeedback">
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-spinner fa-spin me-2 text-info" id="loadingIcon"></i>
+                                            <span id="urlFeedbackText"></span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Names Section -->
-                        <div class="row mb-4">
-                            <div class="col-12">
-                                <h4 class="h5 fw-semibold text-dark mb-3 section-title">
-                                    <i class="fas fa-language me-2"></i>Nombres del Tipo
-                                </h4>
-                            </div>
+                        <!-- Panel de Vista Previa -->
+                        <div class="col-lg-4 border-start bg-panel">
+                            <div class="p-4">
+                                <h5 class="fw-semibold mb-3">
+                                    <i class="fas fa-eye me-2 text-primary"></i>Vista Previa
+                                </h5>
 
-                            <!-- Spanish Name -->
-                            <div class="col-md-4 mb-3">
-                                <label asp-for="Nombre" class="form-label fw-medium">
-                                    <span class="badge badge-espanol">ES</span> Español
+                                <div class="border rounded-3 p-3 bg-light-subtle">
+                                    <h6 class="fw-semibold mb-2 text-dark">
+                                        <i class="fas fa-image me-2 text-success"></i>Imagen del Tipo
+                                    </h6>
+
+                                    <div class="ratio ratio-1x1 mb-3">
+                                        <img src="@(!string.IsNullOrEmpty(Model.ImagenUrl) ? Model.ImagenUrl : "https://via.placeholder.com/400/6c757d/ffffff?text=Preview")"
+                                             class="img-fluid rounded shadow-sm object-fit-cover"
+                                             id="imagePreview"
+                                             alt="Vista previa de la imagen"
+                                             onerror="this.src='https://via.placeholder.com/400/6c757d/ffffff?text=Error+de+imagen'">
+                                    </div>
+
+                                    <div class="mt-3">
+                                        <span class="badge badge-success px-3 py-2" id="imageStatus">
+                                            <i class="fas fa-check-circle me-1"></i>Imagen cargada
+                                        </span>
+                                        <span class="badge badge-info px-3 py-2 ms-2" id="originalImageBadge" style="display: none;">
+                                            <i class="fas fa-history me-1"></i>Imagen original
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Información Principal del Tipo - ESTRUCTURA DE 2 COLUMNAS COHERENTE -->
+            <div class="row g-4 mb-4">
+                <!-- Columna Izquierda - Información en Español -->
+                <div class="col-lg-6">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-header border-bottom py-3">
+                            <h4 class="h5 mb-0">
+                                <i class="fas fa-flag me-2"></i>Información en Español
+                            </h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-4">
+                                <label asp-for="Nombre" class="form-label fw-semibold">
+                                    <i class="fas fa-signature me-2 text-muted"></i>Nombre del Tipo
                                 </label>
                                 <input asp-for="Nombre"
                                        class="form-control"
                                        placeholder="Ej: Playa, Museo, Parque"
-                                       required>
+                                       required
+                                       id="nombreInput"
+                                       maxlength="50">
                                 <span asp-validation-for="Nombre" class="text-danger small mt-1 d-block"></span>
-                                <div class="form-text">Nombre en español (requerido)</div>
+                                <div class="form-text">
+                                    <span id="nombreCounter">@Model.Nombre?.Length/50</span> - Nombre en español del tipo de sitio
+                                </div>
                             </div>
 
-                            <!-- English Name -->
-                            <div class="col-md-4 mb-3">
-                                <label asp-for="NombreIngles" class="form-label fw-medium">
-                                    <span class="badge badge-ingles">EN</span> Inglés
-                                </label>
-                                <input asp-for="NombreIngles"
-                                       class="form-control"
-                                       placeholder="Ej: Beach, Museum, Park">
-                                <span asp-validation-for="NombreIngles" class="text-danger small mt-1 d-block"></span>
-                                <div class="form-text">Nombre en inglés (opcional)</div>
-                            </div>
-
-                            <!-- Portuguese Name -->
-                            <div class="col-md-4 mb-3">
-                                <label asp-for="NombrePortugues" class="form-label fw-medium">
-                                    <span class="badge badge-portugues">PT</span> Portugués
-                                </label>
-                                <input asp-for="NombrePortugues"
-                                       class="form-control"
-                                       placeholder="Ej: Praia, Museu, Parque">
-                                <span asp-validation-for="NombrePortugues" class="text-danger small mt-1 d-block"></span>
-                                <div class="form-text">Nombre en portugués (opcional)</div>
-                            </div>
-                        </div>
-
-                        <!-- Descriptions Section -->
-                        <div class="row mb-4">
-                            <div class="col-12">
-                                <h4 class="h5 fw-semibold text-dark mb-3 section-title">
-                                    <i class="fas fa-align-left me-2"></i>Descripciones
-                                </h4>
-                                <p class="text-muted small mb-4">
-                                    <i class="fas fa-info-circle me-1"></i>
-                                    Modifica las descripciones de este tipo de sitio turístico
-                                </p>
-                            </div>
-
-                            <!-- Spanish Description -->
-                            <div class="col-md-4 mb-4">
-                                <label asp-for="Descripcion" class="form-label fw-medium">
-                                    <span class="badge badge-espanol">ES</span> Descripción
+                            <div class="mb-0">
+                                <label asp-for="Descripcion" class="form-label fw-semibold">
+                                    <i class="fas fa-align-left me-2 text-muted"></i>Descripción
                                 </label>
                                 <div class="position-relative">
                                     <textarea asp-for="Descripcion"
                                               class="form-control"
-                                              rows="4"
+                                              rows="5"
                                               placeholder="Describe este tipo de sitio turístico en español..."
+                                              id="descripcionInput"
                                               maxlength="500"></textarea>
-                                    <div class="char-counter">@(Model.Descripcion?.Length ?? 0)/500</div>
+                                    <div class="char-counter">@Model.Descripcion?.Length/500</div>
                                 </div>
                                 <span asp-validation-for="Descripcion" class="text-danger small mt-1 d-block"></span>
-                            </div>
-
-                            <!-- English Description -->
-                            <div class="col-md-4 mb-4">
-                                <label asp-for="DescripcionIngles" class="form-label fw-medium">
-                                    <span class="badge badge-ingles">EN</span> Description
-                                </label>
-                                <div class="position-relative">
-                                    <textarea asp-for="DescripcionIngles"
-                                              class="form-control"
-                                              rows="4"
-                                              placeholder="Describe this type of tourist site in English..."
-                                              maxlength="500"></textarea>
-                                    <div class="char-counter">@(Model.DescripcionIngles?.Length ?? 0)/500</div>
-                                </div>
-                                <span asp-validation-for="DescripcionIngles" class="text-danger small mt-1 d-block"></span>
-                            </div>
-
-                            <!-- Portuguese Description -->
-                            <div class="col-md-4 mb-4">
-                                <label asp-for="DescripcionPortugues" class="form-label fw-medium">
-                                    <span class="badge badge-portugues">PT</span> Descrição
-                                </label>
-                                <div class="position-relative">
-                                    <textarea asp-for="DescripcionPortugues"
-                                              class="form-control"
-                                              rows="4"
-                                              placeholder="Descreva este tipo de local turístico em português..."
-                                              maxlength="500"></textarea>
-                                    <div class="char-counter">@(Model.DescripcionPortugues?.Length ?? 0)/500</div>
-                                </div>
-                                <span asp-validation-for="DescripcionPortugues" class="text-danger small mt-1 d-block"></span>
+                                <div class="form-text">Información detallada sobre este tipo de sitio</div>
                             </div>
                         </div>
+                    </div>
+                </div>
 
-                        <!-- Auto-translation helper -->
-                        <div class="alert alert-info mb-4">
-                            <div class="d-flex align-items-center">
-                                <i class="fas fa-robot fa-2x me-3 text-info"></i>
-                                <div>
-                                    <h6 class="fw-semibold mb-1">Sugerencia de traducción</h6>
-                                    <p class="mb-0 small">
-                                        ¿Necesitas ayuda con las traducciones?
-                                        <button type="button"
-                                                class="btn btn-sm btn-outline-primary ms-2"
-                                                onclick="suggestTranslations()">
-                                            <i class="fas fa-magic me-1"></i>Generar sugerencias
-                                        </button>
-                                    </p>
-                                </div>
-                            </div>
+                <!-- Columna Derecha - Traducciones -->
+                <div class="col-lg-6">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-header border-bottom py-3">
+                            <h4 class="h5 mb-0">
+                                <i class="fas fa-language me-2"></i>Información Multilingüe
+                            </h4>
                         </div>
+                        <div class="card-body">
+                            <!-- Pestañas para idiomas - COHERENTE CON SITIOS -->
+                            <ul class="nav nav-tabs mb-4" id="langTabs" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active text-dark"
+                                            id="english-tab"
+                                            data-bs-toggle="tab"
+                                            data-bs-target="#english"
+                                            type="button"
+                                            role="tab">
+                                        <i class="fas fa-language me-1"></i> Inglés
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link text-dark"
+                                            id="portuguese-tab"
+                                            data-bs-toggle="tab"
+                                            data-bs-target="#portuguese"
+                                            type="button"
+                                            role="tab">
+                                        <i class="fas fa-language me-1"></i> Portugués
+                                    </button>
+                                </li>
+                            </ul>
 
-                        <!-- Form Actions -->
-                        <div class="border-top pt-4 mt-4">
-                            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
-                                <div class="d-flex flex-column flex-md-row gap-3">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="validateForm" checked>
-                                        <label class="form-check-label small text-muted" for="validateForm">
-                                            Validar información antes de guardar
+                            <div class="tab-content" id="langTabsContent">
+                                <!-- Inglés -->
+                                <div class="tab-pane fade show active"
+                                     id="english"
+                                     role="tabpanel"
+                                     tabindex="0">
+                                    <div class="mb-4">
+                                        <label asp-for="NombreIngles" class="form-label fw-semibold">
+                                            Nombre en Inglés
                                         </label>
+                                        <input asp-for="NombreIngles"
+                                               class="form-control"
+                                               placeholder="Ej: Beach, Museum, Park"
+                                               id="nombreInglesInput"
+                                               maxlength="50">
+                                        <span asp-validation-for="NombreIngles" class="text-danger small mt-1 d-block"></span>
+                                        <div class="form-text">
+                                            <span id="nombreInglesCounter">@Model.NombreIngles?.Length/50</span>
+                                        </div>
                                     </div>
-                              
+
+                                    <div>
+                                        <label asp-for="DescripcionIngles" class="form-label fw-semibold">
+                                            Descripción en Inglés
+                                        </label>
+                                        <div class="position-relative">
+                                            <textarea asp-for="DescripcionIngles"
+                                                      class="form-control"
+                                                      rows="4"
+                                                      placeholder="Description in English..."
+                                                      id="descripcionInglesInput"
+                                                      maxlength="500"></textarea>
+                                            <div class="char-counter">@Model.DescripcionIngles?.Length/500</div>
+                                        </div>
+                                        <span asp-validation-for="DescripcionIngles" class="text-danger small mt-1 d-block"></span>
+                                    </div>
                                 </div>
 
-                                <div class="d-flex gap-3">
-                                    <button type="button" class="btn btn-primary btn-lg px-5" onclick="resetToOriginal()">
-                                        <i class="fas fa-undo me-2"></i>Restaurar
-                                    </button>
-                                    <button type="submit" class="btn btn-primary btn-lg px-5" id="submitBtn">
-                                        <i class="fas fa-save me-2"></i>Guardar Cambios
-                                    </button>
+                                <!-- Portugués -->
+                                <div class="tab-pane fade"
+                                     id="portuguese"
+                                     role="tabpanel"
+                                     tabindex="0">
+                                    <div class="mb-4">
+                                        <label asp-for="NombrePortugues" class="form-label fw-semibold">
+                                            Nombre en Portugués
+                                        </label>
+                                        <input asp-for="NombrePortugues"
+                                               class="form-control"
+                                               placeholder="Ej: Praia, Museu, Parque"
+                                               id="nombrePortuguesInput"
+                                               maxlength="50">
+                                        <span asp-validation-for="NombrePortugues" class="text-danger small mt-1 d-block"></span>
+                                        <div class="form-text">
+                                            <span id="nombrePortuguesCounter">@Model.NombrePortugues?.Length/50</span>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label asp-for="DescripcionPortugues" class="form-label fw-semibold">
+                                            Descripción en Portugués
+                                        </label>
+                                        <div class="position-relative">
+                                            <textarea asp-for="DescripcionPortugues"
+                                                      class="form-control"
+                                                      rows="4"
+                                                      placeholder="Descrição em português..."
+                                                      id="descripcionPortuguesInput"
+                                                      maxlength="500"></textarea>
+                                            <div class="char-counter">@Model.DescripcionPortugues?.Length/500</div>
+                                        </div>
+                                        <span asp-validation-for="DescripcionPortugues" class="text-danger small mt-1 d-block"></span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
 
-<!-- Modal de confirmación de eliminación -->
-<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header bg-danger text-white">
-                <h5 class="modal-title" id="deleteModalLabel">
-                    <i class="fas fa-exclamation-triangle me-2"></i>Confirmar Eliminación
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="alert alert-warning">
-                    <i class="fas fa-exclamation-circle me-2"></i>
-                    <strong>¡Advertencia!</strong> Esta acción no se puede deshacer.
+            <!-- Auto-translation helper - COHERENTE -->
+            <div class="alert alert-info mb-4">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-robot fa-2x me-3 text-info"></i>
+                    <div>
+                        <h6 class="fw-semibold mb-1">Asistente de traducción</h6>
+                        <p class="mb-0 small">
+                            ¿Necesitas ayuda con las traducciones?
+                            <button type="button"
+                                    class="btn btn-sm btn-outline-primary ms-2"
+                                    onclick="translationHelper.suggestTranslations()">
+                                <i class="fas fa-magic me-1"></i>Generar sugerencias
+                            </button>
+                        </p>
+                    </div>
                 </div>
-                <p>¿Estás seguro de que deseas eliminar el tipo <strong>"@Model.Nombre"</strong>?</p>
-                <p class="small text-muted">
-                    <i class="fas fa-info-circle me-1"></i>
-                    Esta acción eliminará permanentemente este tipo de sitio turístico.
-                </p>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                    <i class="fas fa-times me-1"></i>Cancelar
-                </button>
-                <form asp-action="Delete" method="post" style="display: inline;">
-                    <input type="hidden" name="id" value="@Model.TipoId" />
-                    <button type="submit" class="btn btn-danger">
-                        <i class="fas fa-trash-alt me-1"></i>Eliminar
-                    </button>
-                </form>
+
+            <!-- Acciones - COHERENTE -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+                        <div class="text-center text-md-start">
+                            <h5 class="fw-semibold mb-1">¿Estás listo para guardar los cambios?</h5>
+                            <p class="text-muted small mb-0">
+                                Verifica que toda la información sea correcta antes de actualizar
+                            </p>
+                        </div>
+
+                        <div class="d-flex gap-3">
+                            <button type="button" class="btn btn-warning btn-lg px-5" onclick="formManager.restoreOriginal()">
+                                <i class="fas fa-undo me-2"></i>Restaurar Original
+                            </button>
+                            <button type="submit" class="btn btn-primary btn-lg px-5" id="submitBtn">
+                                <i class="fas fa-save me-2"></i>Actualizar Tipo
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
+        </form>
     </div>
 </div>
 
@@ -371,380 +321,294 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-
+    <script src="~/js/translationHelper.js" asp-append-version="true"></script>
+    <script src="~/js/imageUrlValidator.js" asp-append-version="true"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Store original values for reset functionality
-            const originalValues = {
-                Nombre: '@Html.Raw(Model.Nombre)',
-                NombreIngles: '@Html.Raw(Model.NombreIngles)',
-                NombrePortugues: '@Html.Raw(Model.NombrePortugues)',
-                Descripcion: '@Html.Raw(Model.Descripcion)',
-                DescripcionIngles: '@Html.Raw(Model.DescripcionIngles)',
-                DescripcionPortugues: '@Html.Raw(Model.DescripcionPortugues)',
-                ImagenUrl: '@Html.Raw(Model.ImagenUrl)'
-            };
+        // Módulo para manejo del formulario de tipos - COHERENTE
+        const formManager = {
+            originalData: {},
+            formModified: false,
+            imageChanged: false,
 
-            // Elements
-            const imageUrlInput = document.getElementById('imageUrlInput');
-            const imagePreview = document.getElementById('imagePreview');
-            const urlFeedback = document.getElementById('urlFeedback');
-            const urlFeedbackText = document.getElementById('urlFeedbackText');
-            const loadingIcon = document.getElementById('loadingIcon');
-            const submitBtn = document.getElementById('submitBtn');
-            const typeForm = document.getElementById('typeForm');
-            const spanishNameInput = document.getElementById('Nombre');
-            const englishNameInput = document.getElementById('NombreIngles');
-            const portugueseNameInput = document.getElementById('NombrePortugues');
-            const spanishDescInput = document.getElementById('Descripcion');
-            const englishDescInput = document.getElementById('DescripcionIngles');
-            const portugueseDescInput = document.getElementById('DescripcionPortugues');
+            init() {
+                // Guardar datos originales
+                this.saveOriginalData();
+                this.initCharCounters();
+                this.initImagePreview();
+                this.initFormValidation();
+                this.initTooltips();
+                this.initAutoCapitalize();
+                this.initChangeDetection();
+                this.cleanLocalStorage();
+            },
 
-            // Inicializar contadores de caracteres
-            function initCharCounters() {
-                const textareas = [spanishDescInput, englishDescInput, portugueseDescInput];
-                textareas.forEach(textarea => {
-                    const counter = textarea.parentNode.querySelector('.char-counter');
+            saveOriginalData() {
+                // Guardar todos los valores originales del formulario
+                const form = document.getElementById('typeForm');
+                const formData = new FormData(form);
+                this.originalData = {};
 
-                    const updateCounter = function() {
-                        const length = this.value.length;
-                        counter.textContent = `${length}/500`;
-
-                        if (length > 500) {
-                            counter.style.color = 'var(--danger-color, #dc3545)';
-                            this.classList.add('is-invalid');
-                        } else if (length > 450) {
-                            counter.style.color = 'var(--warning-color, #ffc107)';
-                            this.classList.remove('is-invalid');
-                        } else {
-                            counter.style.color = 'var(--neutral-dark, #6c757d)';
-                            this.classList.remove('is-invalid');
-                        }
-                    };
-
-                    textarea.addEventListener('input', updateCounter);
-                    updateCounter.call(textarea);
-                });
-            }
-
-            // Debounce function for URL validation
-            let debounceTimer;
-
-            // Real-time image URL validation and preview
-            imageUrlInput.addEventListener('input', function() {
-                clearTimeout(debounceTimer);
-                const url = this.value.trim();
-
-                if (!url) {
-                    // Reset to placeholder
-                    imagePreview.src = 'https://via.placeholder.com/200/6c757d/ffffff?text=Preview';
-                    urlFeedback.classList.add('d-none');
-                    this.classList.remove('is-valid', 'is-invalid');
-                    return;
+                for (let [key, value] of formData.entries()) {
+                    this.originalData[key] = value;
                 }
 
-                // Show loading
-                urlFeedback.classList.remove('d-none');
-                urlFeedback.className = 'alert alert-light border d-flex align-items-center';
-                loadingIcon.className = 'fas fa-spinner fa-spin me-2 text-info';
-                urlFeedbackText.textContent = 'Validando URL...';
+                // Guardar también la URL de imagen original
+                this.originalData['ImagenUrl'] = '@Model.ImagenUrl';
+            },
 
-                // Debounce to avoid too many requests
-                debounceTimer = setTimeout(() => {
-                    validateAndPreviewImage(url);
-                }, 800);
-            });
+            initCharCounters() {
+                const fields = [
+                    { id: 'nombreInput', counterId: 'nombreCounter', max: 50 },
+                    { id: 'nombreInglesInput', counterId: 'nombreInglesCounter', max: 50 },
+                    { id: 'nombrePortuguesInput', counterId: 'nombrePortuguesCounter', max: 50 },
+                    { id: 'descripcionInput', max: 500 },
+                    { id: 'descripcionInglesInput', max: 500 },
+                    { id: 'descripcionPortuguesInput', max: 500 }
+                ];
 
-            function validateAndPreviewImage(url) {
-                // Basic URL validation
-                try {
-                    const urlObj = new URL(url);
+                fields.forEach(field => {
+                    const element = document.getElementById(field.id);
+                    if (element) {
+                        const counter = field.counterId ?
+                            document.getElementById(field.counterId) :
+                            element.parentNode.querySelector('.char-counter');
 
-                    // Check if it's an image URL
-                    const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg'];
-                    const isImage = imageExtensions.some(ext =>
-                        urlObj.pathname.toLowerCase().endsWith(ext)
-                    );
+                        const updateCounter = () => {
+                            const length = element.value.length;
+                            if (counter) {
+                                counter.textContent = `${length}/${field.max}`;
+                                if (length > field.max * 0.9) {
+                                    counter.style.color = 'var(--warning-color)';
+                                } else if (length > field.max) {
+                                    counter.style.color = 'var(--danger-color)';
+                                } else {
+                                    counter.style.color = 'var(--neutral-dark)';
+                                }
+                            }
 
-                    if (!isImage) {
-                        showUrlFeedback('La URL no parece ser una imagen válida', 'warning');
-                        imagePreview.src = 'https://via.placeholder.com/200/dc3545/ffffff?text=URL+inválida';
-                        imageUrlInput.classList.remove('is-valid');
-                        imageUrlInput.classList.add('is-invalid');
-                        return;
-                    }
+                            if (length > field.max) {
+                                element.classList.add('is-invalid');
+                            } else {
+                                element.classList.remove('is-invalid');
+                            }
 
-                    // Try to load the image
-                    const testImage = new Image();
-                    testImage.onload = function() {
-                        showUrlFeedback('✅ Imagen válida - Vista previa actualizada', 'success');
-                        imagePreview.src = url;
-                        imageUrlInput.classList.remove('is-invalid');
-                        imageUrlInput.classList.add('is-valid');
-                        imagePreview.onerror = function() {
-                            this.src = 'https://via.placeholder.com/200/dc3545/ffffff?text=Error+cargando';
-                            imageUrlInput.classList.remove('is-valid');
-                            imageUrlInput.classList.add('is-invalid');
+                            // Detectar cambios
+                            this.checkForChanges();
                         };
-                    };
 
-                    testImage.onerror = function() {
-                        showUrlFeedback('⚠️ La imagen no se pudo cargar (puede ser temporal)', 'warning');
-                        imagePreview.src = 'https://via.placeholder.com/200/ffc107/000000?text=Error+carga';
-                        imageUrlInput.classList.remove('is-valid');
-                        imageUrlInput.classList.add('is-invalid');
-                    };
+                        element.addEventListener('input', updateCounter);
+                        element.addEventListener('blur', updateCounter);
+                        updateCounter();
+                    }
+                });
+            },
 
-                    testImage.src = url;
+            initImagePreview() {
+                const imageUrlInput = document.getElementById('imageUrlInput');
+                const imagePreview = document.getElementById('imagePreview');
+                const urlFeedback = document.getElementById('urlFeedback');
+                const loadingIcon = document.getElementById('loadingIcon');
+                const imageStatus = document.getElementById('imageStatus');
+                const originalImageBadge = document.getElementById('originalImageBadge');
 
-                } catch (error) {
-                    showUrlFeedback('❌ URL inválida - Formato incorrecto', 'danger');
-                    imagePreview.src = 'https://via.placeholder.com/200/dc3545/ffffff?text=URL+inválida';
-                    imageUrlInput.classList.remove('is-valid');
-                    imageUrlInput.classList.add('is-invalid');
+                // Configurar validación en tiempo real usando el validador externo
+                imageUrlValidator.setupRealTimeValidation(
+                    imageUrlInput,
+                    imagePreview,
+                    urlFeedback,
+                    loadingIcon,
+                    imageStatus
+                );
+
+                // Detectar cambios en la URL de la imagen
+                imageUrlInput.addEventListener('input', () => {
+                    this.checkForChanges();
+                    this.updateImageBadge();
+                });
+
+                // Inicializar badge de imagen
+                this.updateImageBadge();
+            },
+
+            updateImageBadge() {
+                const originalImageBadge = document.getElementById('originalImageBadge');
+                const currentImageUrl = document.getElementById('imageUrlInput').value;
+                const originalImageUrl = this.originalData['ImagenUrl'] || '';
+
+                if (currentImageUrl !== originalImageUrl && currentImageUrl.trim() !== '') {
+                    originalImageBadge.style.display = 'inline-block';
+                    this.imageChanged = true;
+                } else {
+                    originalImageBadge.style.display = 'none';
+                    this.imageChanged = false;
                 }
-            }
+            },
 
-            function showUrlFeedback(message, type) {
-                urlFeedbackText.textContent = message;
-                loadingIcon.className = 'fas fa-spinner fa-spin me-2 d-none';
+            initChangeDetection() {
+                // Detectar cambios en todos los campos
+                const form = document.getElementById('typeForm');
+                const inputs = form.querySelectorAll('input, textarea, select');
 
-                switch(type) {
-                    case 'success':
-                        urlFeedback.className = 'alert alert-success d-flex align-items-center';
-                        break;
-                    case 'warning':
-                        urlFeedback.className = 'alert alert-warning d-flex align-items-center';
-                        break;
-                    case 'danger':
-                        urlFeedback.className = 'alert alert-danger d-flex align-items-center';
-                        break;
-                    default:
-                        urlFeedback.className = 'alert alert-light border d-flex align-items-center';
-                }
+                inputs.forEach(input => {
+                    input.addEventListener('input', () => this.checkForChanges());
+                    input.addEventListener('change', () => this.checkForChanges());
+                });
+            },
 
-                // Auto-hide success messages after 3 seconds
-                if (type === 'success') {
-                    setTimeout(() => {
-                        urlFeedback.classList.add('d-none');
-                    }, 3000);
-                }
-            }
+            checkForChanges() {
+                let hasChanges = false;
+                const form = document.getElementById('typeForm');
+                const formData = new FormData(form);
 
-            // Auto-translation suggestion function (global)
-            window.suggestTranslations = function() {
-                const spanishName = spanishNameInput.value.trim();
-
-                if (!spanishName) {
-                    showToast('Por favor, primero ingresa el nombre en español', 'warning');
-                    spanishNameInput.focus();
-                    return;
-                }
-
-                // Simple translation mapping (in a real app, you might use an API)
-                const translationMap = {
-                    'playa': { en: 'Beach', pt: 'Praia' },
-                    'museo': { en: 'Museum', pt: 'Museu' },
-                    'parque': { en: 'Park', pt: 'Parque' },
-                    'iglesia': { en: 'Church', pt: 'Igreja' },
-                    'restaurante': { en: 'Restaurant', pt: 'Restaurante' },
-                    'hotel': { en: 'Hotel', pt: 'Hotel' },
-                    'montaña': { en: 'Mountain', pt: 'Montanha' },
-                    'río': { en: 'River', pt: 'Rio' },
-                    'lago': { en: 'Lake', pt: 'Lago' },
-                    'catedral': { en: 'Cathedral', pt: 'Catedral' }
-                };
-
-                const lowerSpanishName = spanishName.toLowerCase();
-                let foundTranslation = false;
-
-                // Check for exact matches or partial matches
-                for (const [key, translations] of Object.entries(translationMap)) {
-                    if (lowerSpanishName.includes(key) || key.includes(lowerSpanishName)) {
-                        if (!englishNameInput.value) {
-                            englishNameInput.value = translations.en;
-                        }
-                        if (!portugueseNameInput.value) {
-                            portugueseNameInput.value = translations.pt;
-                        }
-                        foundTranslation = true;
+                for (let [key, value] of formData.entries()) {
+                    if (this.originalData[key] !== value) {
+                        hasChanges = true;
                         break;
                     }
                 }
 
-                if (!foundTranslation) {
-                    // If no match, use the same name for other languages
-                    if (!englishNameInput.value) {
-                        englishNameInput.value = spanishName;
-                    }
-                    if (!portugueseNameInput.value) {
-                        portugueseNameInput.value = spanishName;
-                    }
+                // Verificar imagen
+                const currentImageUrl = document.getElementById('imageUrlInput').value;
+                if (currentImageUrl !== this.originalData['ImagenUrl']) {
+                    hasChanges = true;
                 }
 
-                // Suggest generic descriptions if empty
-                if (!spanishDescInput.value.trim()) {
-                    spanishDescInput.value = `Sitios turísticos del tipo "${spanishName}" que ofrecen experiencias únicas para los visitantes.`;
-                    spanishDescInput.dispatchEvent(new Event('input'));
-                }
+                this.formModified = hasChanges;
+                return hasChanges;
+            },
 
-                if (!englishDescInput.value.trim()) {
-                    englishDescInput.value = `Tourist sites of the "${englishNameInput.value || spanishName}" type offering unique experiences for visitors.`;
-                    englishDescInput.dispatchEvent(new Event('input'));
-                }
+            initFormValidation() {
+                const form = document.getElementById('typeForm');
+                const submitBtn = document.getElementById('submitBtn');
 
-                if (!portugueseDescInput.value.trim()) {
-                    portugueseDescInput.value = `Sítios turísticos do tipo "${portugueseNameInput.value || spanishName}" que oferecem experiências únicas para os visitantes.`;
-                    portugueseDescInput.dispatchEvent(new Event('input'));
-                }
-
-                showToast('Sugerencias de traducción generadas', 'success');
-            };
-
-            // Form validation before submit
-            typeForm.addEventListener('submit', function(e) {
-                const validateCheckbox = document.getElementById('validateForm');
-
-                if (validateCheckbox.checked) {
-                    // Validate required fields
+                form.addEventListener('submit', (e) => {
+                    // Validar nombre en español (campo requerido)
+                    const spanishNameInput = document.getElementById('nombreInput');
                     if (!spanishNameInput.value.trim()) {
                         e.preventDefault();
-                        showValidationError('El nombre en español es requerido', spanishNameInput);
+                        this.showValidationError('El nombre en español es requerido', spanishNameInput);
                         return false;
                     }
 
-                    // Check image URL format if provided
-                    const imageUrl = imageUrlInput.value.trim();
-                    if (imageUrl) {
-                        try {
-                            new URL(imageUrl);
-                        } catch (error) {
-                            e.preventDefault();
-                            showValidationError('La URL de la imagen no es válida', imageUrlInput);
-                            return false;
-                        }
-                    }
+                    // Mostrar estado de carga
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Actualizando...';
+                    submitBtn.disabled = true;
+                    submitBtn.classList.add('btn-loading');
+                    return true;
+                });
+            },
 
-                    // Check character limits
-                    if (spanishDescInput.value.length > 500 ||
-                        englishDescInput.value.length > 500 ||
-                        portugueseDescInput.value.length > 500) {
-                        e.preventDefault();
-                        showToast('Las descripciones no deben exceder los 500 caracteres', 'danger');
-                        return false;
-                    }
-                }
-
-                // Show loading state
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Guardando...';
-                submitBtn.disabled = true;
-                submitBtn.classList.add('btn-loading');
-
-                return true;
-            });
-
-            function showValidationError(message, element) {
-                // Add invalid class
+            showValidationError(message, element) {
                 element.classList.add('is-invalid');
-
-                showToast(message, 'danger');
-
-                // Scroll to element
-                element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-                // Focus on element
-                element.focus();
-            }
-
-            function showToast(message, type = 'info') {
-                // Remove existing toasts
-                document.querySelectorAll('.toast').forEach(toast => toast.remove());
-
-                const toastHtml = `
-                    <div class="toast align-items-center text-bg-${type} border-0 fade show"
-                         role="alert" style="position: fixed; top: 20px; right: 20px; z-index: 1050;">
-                        <div class="d-flex">
-                            <div class="toast-body">
-                                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'danger' ? 'exclamation-circle' : 'info-circle'} me-2"></i>
-                                ${message}
-                            </div>
-                            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-                        </div>
-                    </div>
-                `;
-
-                document.body.insertAdjacentHTML('beforeend', toastHtml);
-
-                // Auto remove after 5 seconds
-                setTimeout(() => {
-                    const toast = document.querySelector('.toast');
-                    if (toast) toast.remove();
-                }, 5000);
-            }
-
-            // Reset to original values function
-            window.resetToOriginal = function() {
-                if (confirm('¿Restaurar los valores originales? Se perderán los cambios no guardados.')) {
-                    spanishNameInput.value = originalValues.Nombre;
-                    englishNameInput.value = originalValues.NombreIngles;
-                    portugueseNameInput.value = originalValues.NombrePortugues;
-                    spanishDescInput.value = originalValues.Descripcion;
-                    englishDescInput.value = originalValues.DescripcionIngles;
-                    portugueseDescInput.value = originalValues.DescripcionPortugues;
-                    imageUrlInput.value = originalValues.ImagenUrl;
-
-                    // Trigger input events to update counters and preview
-                    spanishDescInput.dispatchEvent(new Event('input'));
-                    englishDescInput.dispatchEvent(new Event('input'));
-                    portugueseDescInput.dispatchEvent(new Event('input'));
-                    imageUrlInput.dispatchEvent(new Event('input'));
-
-                    // Update image preview
-                    if (originalValues.ImagenUrl) {
-                        imagePreview.src = originalValues.ImagenUrl;
-                    } else {
-                        imagePreview.src = 'https://via.placeholder.com/200/6c757d/ffffff?text=Sin+imagen';
-                    }
-
-                    showToast('Valores restaurados a los originales', 'info');
+                if (typeof translationHelper !== 'undefined' && translationHelper.showGlobalToast) {
+                    translationHelper.showGlobalToast(message, 'danger');
+                } else {
+                    alert(message);
                 }
-            };
+                element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                element.focus();
+            },
 
-            // Confirm delete function
-            window.confirmDelete = function() {
-                const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
-                deleteModal.show();
-            };
+            initTooltips() {
+                const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+                tooltipTriggerList.map(function (tooltipTriggerEl) {
+                    return new bootstrap.Tooltip(tooltipTriggerEl);
+                });
+            },
 
-            // Auto-capitalize first letter of names
-            const nameInputs = [spanishNameInput, englishNameInput, portugueseNameInput];
-            nameInputs.forEach(input => {
-                input.addEventListener('blur', function() {
-                    if (this.value.trim()) {
-                        this.value = this.value.trim().charAt(0).toUpperCase() + this.value.trim().slice(1);
+            initAutoCapitalize() {
+                const nameInputs = ['nombreInput', 'nombreInglesInput', 'nombrePortuguesInput'];
+                nameInputs.forEach(id => {
+                    const input = document.getElementById(id);
+                    if (input) {
+                        input.addEventListener('blur', function() {
+                            if (this.value.trim()) {
+                                this.value = this.value.trim().charAt(0).toUpperCase() + this.value.trim().slice(1);
+                            }
+                        });
                     }
                 });
-            });
+            },
 
-            // Check for changes before leaving page
-            window.addEventListener('beforeunload', function(e) {
-                const hasChanges =
-                    spanishNameInput.value !== originalValues.Nombre ||
-                    englishNameInput.value !== originalValues.NombreIngles ||
-                    portugueseNameInput.value !== originalValues.NombrePortugues ||
-                    spanishDescInput.value !== originalValues.Descripcion ||
-                    englishDescInput.value !== originalValues.DescripcionIngles ||
-                    portugueseDescInput.value !== originalValues.DescripcionPortugues ||
-                    imageUrlInput.value !== originalValues.ImagenUrl;
+            cleanLocalStorage() {
+                localStorage.removeItem('tipoSitioEditDraft');
+                const keys = Object.keys(localStorage);
+                keys.forEach(key => {
+                    if (key.includes('tipo') || key.includes('borrador') || key.includes('draft')) {
+                        localStorage.removeItem(key);
+                    }
+                });
+            },
 
-                if (hasChanges) {
-                    e.preventDefault();
-                    e.returnValue = 'Tienes cambios sin guardar. ¿Estás seguro de que quieres salir?';
+            restoreOriginal() {
+                if (this.checkForChanges()) {
+                    if (!confirm('¿Estás seguro de que deseas restaurar los valores originales? Se perderán todos los cambios no guardados.')) {
+                        return;
+                    }
                 }
-            });
 
-            // Initialize
-            initCharCounters();
+                // Restaurar valores del formulario desde originalData
+                for (const [key, value] of Object.entries(this.originalData)) {
+                    const element = document.querySelector(`[name="${key}"]`);
+                    if (element) {
+                        element.value = value;
+                    }
+                }
+
+                // Restaurar imagen específicamente
+                const imageUrlInput = document.getElementById('imageUrlInput');
+                const imagePreview = document.getElementById('imagePreview');
+                const originalImageUrl = this.originalData['ImagenUrl'] || '';
+
+                imageUrlInput.value = originalImageUrl;
+
+                if (originalImageUrl) {
+                    imagePreview.src = originalImageUrl;
+                    const imageStatus = document.getElementById('imageStatus');
+                    imageStatus.innerHTML = '<i class="fas fa-check-circle me-1"></i>Imagen cargada';
+                    imageStatus.className = 'badge badge-success px-3 py-2';
+                } else {
+                    imagePreview.src = 'https://via.placeholder.com/400/6c757d/ffffff?text=Preview';
+                    const imageStatus = document.getElementById('imageStatus');
+                    imageStatus.innerHTML = '<i class="fas fa-image me-1"></i>Esperando URL';
+                    imageStatus.className = 'badge badge-success px-3 py-2';
+                }
+
+                // Ocultar feedback de validación
+                const urlFeedback = document.getElementById('urlFeedback');
+                if (urlFeedback) {
+                    urlFeedback.classList.add('d-none');
+                }
+
+                // Ocultar badge de imagen original
+                const originalImageBadge = document.getElementById('originalImageBadge');
+                originalImageBadge.style.display = 'none';
+                this.imageChanged = false;
+
+                // Restaurar contadores
+                this.initCharCounters();
+
+                // Limpiar validaciones
+                document.querySelectorAll('.is-valid, .is-invalid').forEach(el => {
+                    el.classList.remove('is-valid', 'is-invalid');
+                });
+
+                const submitBtn = document.getElementById('submitBtn');
+                submitBtn.innerHTML = '<i class="fas fa-save me-2"></i>Actualizar Tipo';
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('btn-loading');
+
+                if (typeof translationHelper !== 'undefined' && translationHelper.showGlobalToast) {
+                    translationHelper.showGlobalToast('Valores originales restaurados', 'info');
+                }
+
+                this.formModified = false;
+            }
+        };
+
+        // Inicialización cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', function() {
+            formManager.init();
         });
     </script>
 }

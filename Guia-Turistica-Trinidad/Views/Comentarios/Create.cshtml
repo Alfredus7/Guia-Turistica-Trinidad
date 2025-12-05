@@ -1,51 +1,714 @@
 ﻿@model guia_turistico.Models.Comentarios
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Nuevo Comentario";
 }
 
-<h1>Create</h1>
+<div class="container py-4">
+    <!-- Header con navegación - ESTRUCTURA COHERENTE -->
+    <div class="bg-primary-gradient text-white py-4">
+        <div class="container">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+                <div class="text-center text-md-start">
+                    <h1 class="display-6 fw-bold mb-1">
+                        <i class="fas fa-comment me-2"></i>Nuevo Comentario
+                    </h1>
+                    <p class="lead mb-0 opacity-75">Agrega una reseña o comentario sobre un sitio turístico</p>
+                </div>
+                <a asp-action="Index" class="btn btn-outline-light btn-lg">
+                    <i class="fas fa-arrow-left me-2"></i>Volver al Listado
+                </a>
+            </div>
+        </div>
+    </div>
 
-<h4>Comentarios</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Texto" class="control-label"></label>
-                <input asp-for="Texto" class="form-control" />
-                <span asp-validation-for="Texto" class="text-danger"></span>
+    <!-- Formulario Principal - ESTRUCTURA COHERENTE -->
+    <div class="container py-4">
+        <form asp-action="Create" id="commentForm" class="needs-validation" novalidate>
+            <div asp-validation-summary="All" class="alert alert-danger" role="alert"></div>
+
+            <!-- Sección de Selección - ESTRUCTURA SIMILAR A MAPA/IMAGEN -->
+            <div class="card shadow-lg mb-5 border-0 overflow-hidden">
+                <div class="card-header card-header-gradient py-3">
+                    <h3 class="h5 mb-0">
+                        <i class="fas fa-map-marker-alt me-2"></i>Selección del Sitio
+                    </h3>
+                </div>
+                <div class="card-body p-0">
+                    <div class="row g-0">
+                        <!-- Información del Sitio -->
+                        <div class="col-lg-8">
+                            <div class="p-4">
+                                <h5 class="fw-semibold mb-3">
+                                    <i class="fas fa-search me-2 text-primary"></i>Buscar Sitio Turístico
+                                </h5>
+
+                                <div class="mb-4">
+                                    <div class="alert alert-info mb-3">
+                                        <small>
+                                            <i class="fas fa-info-circle me-2"></i>
+                                            <strong>Instrucciones:</strong> Selecciona el sitio turístico sobre el cual deseas comentar.
+                                            Los detalles del sitio aparecerán en el panel lateral.
+                                        </small>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label asp-for="SitioTuristicoId" class="form-label fw-semibold">
+                                            <i class="fas fa-landmark me-2 text-muted"></i>Sitio Turístico
+                                        </label>
+                                        <select asp-for="SitioTuristicoId"
+                                                class="form-select form-select-lg"
+                                                asp-items="ViewBag.SitioTuristicoId"
+                                                required
+                                                id="sitioSelect">
+                                            <option value="" selected disabled>Selecciona un sitio turístico</option>
+                                        </select>
+                                        <span asp-validation-for="SitioTuristicoId" class="text-danger small mt-1 d-block"></span>
+                                        <div class="form-text">
+                                            Sitio turístico sobre el cual estás comentando
+                                        </div>
+                                    </div>
+
+                                    <!-- Auto-selección de usuario -->
+                                    <div class="form-group mt-4">
+                                        <label asp-for="UsuarioId" class="form-label fw-semibold">
+                                            <i class="fas fa-user me-2 text-muted"></i>Usuario
+                                        </label>
+                                        <select asp-for="UsuarioId"
+                                                class="form-select"
+                                                asp-items="ViewBag.UsuarioId"
+                                                required
+                                                id="usuarioSelect">
+                                            <option value="" selected disabled>Selecciona un usuario</option>
+                                        </select>
+                                        <span asp-validation-for="UsuarioId" class="text-danger small mt-1 d-block"></span>
+                                        <div class="form-text">Usuario que realiza el comentario</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Panel de Información del Sitio -->
+                        <div class="col-lg-4 border-start bg-panel">
+                            <div class="p-4">
+                                <h5 class="fw-semibold mb-3">
+                                    <i class="fas fa-info-circle me-2 text-primary"></i>Detalles del Sitio
+                                </h5>
+
+                                <div class="border rounded-3 p-3 bg-light-subtle" id="siteInfoPanel">
+                                    <h6 class="fw-semibold mb-2 text-dark">
+                                        <i class="fas fa-landmark me-2 text-success"></i>Información del Sitio
+                                    </h6>
+
+                                    <div class="text-center py-4">
+                                        <i class="fas fa-map-marker-alt fa-3x text-muted mb-3"></i>
+                                        <p class="text-muted mb-0">Selecciona un sitio para ver sus detalles</p>
+                                    </div>
+
+                                    <!-- Los detalles se cargarán dinámicamente -->
+                                    <div id="siteDetails" class="d-none">
+                                        <div class="mb-3">
+                                            <strong class="d-block text-primary" id="siteName"></strong>
+                                            <small class="text-muted" id="siteType"></small>
+                                        </div>
+                                        <div class="small">
+                                            <p class="mb-2" id="siteDescription"></p>
+                                            <div class="d-flex align-items-center gap-2">
+                                                <i class="fas fa-map-pin text-muted"></i>
+                                                <span id="siteAddress"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Badge de estado -->
+                                <div class="mt-3">
+                                    <span class="badge badge-info px-3 py-2" id="siteSelectionStatus">
+                                        <i class="fas fa-clock me-1"></i>Esperando selección
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Puntuacion" class="control-label"></label>
-                <input asp-for="Puntuacion" class="form-control" />
-                <span asp-validation-for="Puntuacion" class="text-danger"></span>
+
+            <!-- Información del Comentario - ESTRUCTURA DE 2 COLUMNAS COHERENTE -->
+            <div class="row g-4 mb-4">
+                <!-- Columna Izquierda - Contenido del Comentario -->
+                <div class="col-lg-8">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-header border-bottom py-3">
+                            <h4 class="h5 mb-0">
+                                <i class="fas fa-comment-dots me-2"></i>Contenido del Comentario
+                            </h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-4">
+                                <label asp-for="Texto" class="form-label fw-semibold">
+                                    <i class="fas fa-align-left me-2 text-muted"></i>Comentario
+                                </label>
+                                <div class="position-relative">
+                                    <textarea asp-for="Texto"
+                                              class="form-control"
+                                              rows="6"
+                                              placeholder="Escribe tu experiencia, opinión o recomendación sobre este sitio turístico..."
+                                              required
+                                              id="textoInput"
+                                              maxlength="1000"></textarea>
+                                    <div class="char-counter">0/1000</div>
+                                </div>
+                                <span asp-validation-for="Texto" class="text-danger small mt-1 d-block"></span>
+                                <div class="form-text">Tu experiencia personal en el sitio turístico</div>
+                            </div>
+
+                            <!-- Fecha de publicación -->
+                            <div class="form-group">
+                                <label asp-for="Fecha" class="form-label fw-semibold">
+                                    <i class="fas fa-calendar-alt me-2 text-muted"></i>Fecha del Comentario
+                                </label>
+                                <input asp-for="Fecha"
+                                       class="form-control"
+                                       type="date"
+                                       required
+                                       id="fechaInput">
+                                <span asp-validation-for="Fecha" class="text-danger small mt-1 d-block"></span>
+                                <div class="form-text">Fecha en que visitaste el sitio o realizas el comentario</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Columna Derecha - Puntuación y Calificación -->
+                <div class="col-lg-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-header border-bottom py-3">
+                            <h4 class="h5 mb-0">
+                                <i class="fas fa-star me-2"></i>Calificación
+                            </h4>
+                        </div>
+                        <div class="card-body">
+                            <!-- Sistema de puntuación con estrellas -->
+                            <div class="mb-4">
+                                <label class="form-label fw-semibold d-block">
+                                    <i class="fas fa-star me-2 text-muted"></i>Puntuación
+                                </label>
+
+                                <div class="text-center mb-3">
+                                    <div class="rating-stars mb-2" id="ratingStars">
+                                        <i class="fas fa-star fa-2x star" data-value="1"></i>
+                                        <i class="fas fa-star fa-2x star" data-value="2"></i>
+                                        <i class="fas fa-star fa-2x star" data-value="3"></i>
+                                        <i class="fas fa-star fa-2x star" data-value="4"></i>
+                                        <i class="fas fa-star fa-2x star" data-value="5"></i>
+                                    </div>
+                                    <small class="text-muted" id="ratingText">Haz clic en las estrellas para calificar</small>
+                                </div>
+
+                                <input type="hidden" asp-for="Puntuacion" id="puntuacionInput" value="0" />
+                                <span asp-validation-for="Puntuacion" class="text-danger small mt-1 d-block"></span>
+
+                                <div class="form-text">
+                                    Califica tu experiencia del 1 al 5 estrellas
+                                </div>
+                            </div>
+
+                            <!-- Guía de puntuación -->
+                            <div class="border rounded-3 p-3 bg-light-subtle">
+                                <h6 class="fw-semibold mb-2">
+                                    <i class="fas fa-info-circle me-2 text-info"></i>Guía de Calificación
+                                </h6>
+                                <ul class="list-unstyled small mb-0">
+                                    <li class="mb-1">
+                                        <i class="fas fa-star text-warning"></i>
+                                        <strong>1 estrella:</strong> Mala experiencia
+                                    </li>
+                                    <li class="mb-1">
+                                        <i class="fas fa-star text-warning"></i>
+                                        <i class="fas fa-star text-warning"></i>
+                                        <strong>2 estrellas:</strong> Regular
+                                    </li>
+                                    <li class="mb-1">
+                                        <i class="fas fa-star text-warning"></i>
+                                        <i class="fas fa-star text-warning"></i>
+                                        <i class="fas fa-star text-warning"></i>
+                                        <strong>3 estrellas:</strong> Buena
+                                    </li>
+                                    <li class="mb-1">
+                                        <i class="fas fa-star text-warning"></i>
+                                        <i class="fas fa-star text-warning"></i>
+                                        <i class="fas fa-star text-warning"></i>
+                                        <i class="fas fa-star text-warning"></i>
+                                        <strong>4 estrellas:</strong> Muy buena
+                                    </li>
+                                    <li>
+                                        <i class="fas fa-star text-warning"></i>
+                                        <i class="fas fa-star text-warning"></i>
+                                        <i class="fas fa-star text-warning"></i>
+                                        <i class="fas fa-star text-warning"></i>
+                                        <i class="fas fa-star text-warning"></i>
+                                        <strong>5 estrellas:</strong> Excelente
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <!-- Preview de calificación -->
+                            <div class="mt-4">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <span class="fw-semibold">Tu calificación:</span>
+                                    <div id="selectedRating" class="text-warning">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Fecha" class="control-label"></label>
-                <input asp-for="Fecha" class="form-control" />
-                <span asp-validation-for="Fecha" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UsuarioId" class="control-label"></label>
-                <select asp-for="UsuarioId" class ="form-control" asp-items="ViewBag.UsuarioId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="SitioTuristicoId" class="control-label"></label>
-                <select asp-for="SitioTuristicoId" class ="form-control" asp-items="ViewBag.SitioTuristicoId"></select>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+
+            <!-- Acciones - COHERENTE CON OTRAS VIEWS -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+                        <div class="text-center text-md-start">
+                            <h5 class="fw-semibold mb-1">¿Listo para publicar tu comentario?</h5>
+                            <p class="text-muted small mb-0">
+                                Tu opinión ayuda a otros viajeros a descubrir los mejores sitios turísticos
+                            </p>
+                        </div>
+
+                        <div class="d-flex gap-3">
+                            <button type="button" class="btn btn-outline-primary btn-lg px-5" onclick="formManager.resetForm()">
+                                <i class="fas fa-redo me-2"></i>Limpiar
+                            </button>
+                            <button type="submit" class="btn btn-primary btn-lg px-5" id="submitBtn">
+                                <i class="fas fa-paper-plane me-2"></i>Publicar Comentario
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        // Módulo para manejo del formulario de comentarios - ESTRUCTURA COHERENTE
+        const formManager = {
+            originalData: {},
+            siteData: {}, // Datos de sitios turísticos (podría cargarse via API)
+
+            init() {
+                this.saveOriginalData();
+                this.initCharCounters();
+                this.initRatingSystem();
+                this.initFormValidation();
+                this.initSiteSelection();
+                this.initAutoDate();
+                this.initTooltips();
+                this.cleanLocalStorage();
+            },
+
+            saveOriginalData() {
+                const form = document.getElementById('commentForm');
+                const formData = new FormData(form);
+                this.originalData = {};
+
+                for (let [key, value] of formData.entries()) {
+                    this.originalData[key] = value;
+                }
+            },
+
+            initCharCounters() {
+                const fields = [
+                    { id: 'textoInput', max: 1000 }
+                ];
+
+                fields.forEach(field => {
+                    const element = document.getElementById(field.id);
+                    if (element) {
+                        const counter = element.parentNode.querySelector('.char-counter');
+
+                        const updateCounter = () => {
+                            const length = element.value.length;
+                            if (counter) {
+                                counter.textContent = `${length}/${field.max}`;
+                                if (length > field.max * 0.9) {
+                                    counter.style.color = 'var(--warning-color)';
+                                } else if (length > field.max) {
+                                    counter.style.color = 'var(--danger-color)';
+                                } else {
+                                    counter.style.color = 'var(--neutral-dark)';
+                                }
+                            }
+
+                            if (length > field.max) {
+                                element.classList.add('is-invalid');
+                            } else {
+                                element.classList.remove('is-invalid');
+                            }
+                        };
+
+                        element.addEventListener('input', updateCounter);
+                        element.addEventListener('blur', updateCounter);
+                        updateCounter();
+                    }
+                });
+            },
+
+            initRatingSystem() {
+                const stars = document.querySelectorAll('.star');
+                const puntuacionInput = document.getElementById('puntuacionInput');
+                const selectedRating = document.getElementById('selectedRating');
+                const ratingText = document.getElementById('ratingText');
+
+                const ratingMessages = {
+                    0: "Haz clic en las estrellas para calificar",
+                    1: "Mala experiencia",
+                    2: "Regular",
+                    3: "Buena",
+                    4: "Muy buena",
+                    5: "Excelente"
+                };
+
+                const updateRatingDisplay = (rating) => {
+                    // Actualizar estrellas visuales
+                    stars.forEach((star, index) => {
+                        if (index < rating) {
+                            star.classList.add('text-warning');
+                            star.classList.remove('text-muted');
+                        } else {
+                            star.classList.remove('text-warning');
+                            star.classList.add('text-muted');
+                        }
+                    });
+
+                    // Actualizar estrellas en preview
+                    selectedRating.innerHTML = '';
+                    for (let i = 0; i < 5; i++) {
+                        const star = document.createElement('i');
+                        star.className = 'fas fa-star';
+                        star.style.opacity = i < rating ? '1' : '0.3';
+                        star.style.fontSize = i < rating ? '1.2em' : '1em';
+                        selectedRating.appendChild(star);
+                    }
+
+                    // Actualizar texto
+                    ratingText.textContent = ratingMessages[rating];
+                    ratingText.className = rating >= 4 ? 'text-success' :
+                                          rating >= 3 ? 'text-primary' :
+                                          rating >= 1 ? 'text-warning' : 'text-muted';
+
+                    // Actualizar campo oculto
+                    puntuacionInput.value = rating;
+                };
+
+                // Eventos para las estrellas
+                stars.forEach(star => {
+                    star.addEventListener('click', (e) => {
+                        const rating = parseInt(e.target.dataset.value);
+                        updateRatingDisplay(rating);
+
+                        // Feedback táctil
+                        e.target.style.transform = 'scale(1.2)';
+                        setTimeout(() => {
+                            e.target.style.transform = 'scale(1)';
+                        }, 200);
+                    });
+
+                    star.addEventListener('mouseover', (e) => {
+                        const hoverRating = parseInt(e.target.dataset.value);
+                        stars.forEach((s, index) => {
+                            if (index < hoverRating) {
+                                s.style.transform = 'scale(1.1)';
+                            }
+                        });
+                    });
+
+                    star.addEventListener('mouseout', () => {
+                        stars.forEach(s => {
+                            s.style.transform = 'scale(1)';
+                        });
+                    });
+                });
+
+                // Inicializar con valor 0
+                updateRatingDisplay(0);
+            },
+
+            initSiteSelection() {
+                const sitioSelect = document.getElementById('sitioSelect');
+                const siteDetails = document.getElementById('siteDetails');
+                const siteInfoPanel = document.getElementById('siteInfoPanel');
+                const siteSelectionStatus = document.getElementById('siteSelectionStatus');
+
+                // Esto podría mejorarse con una llamada a la API para obtener datos reales
+                sitioSelect.addEventListener('change', () => {
+                    const selectedSiteId = sitioSelect.value;
+
+                    if (selectedSiteId) {
+                        // Simular carga de datos (en producción, usar fetch API)
+                        this.simulateSiteDataLoad(selectedSiteId);
+
+                        // Mostrar detalles
+                        siteDetails.classList.remove('d-none');
+                        siteInfoPanel.querySelector('.text-center').classList.add('d-none');
+
+                        // Actualizar estado
+                        siteSelectionStatus.className = 'badge badge-success px-3 py-2';
+                        siteSelectionStatus.innerHTML = '<i class="fas fa-check-circle me-1"></i>Sitio seleccionado';
+                    } else {
+                        // Ocultar detalles
+                        siteDetails.classList.add('d-none');
+                        siteInfoPanel.querySelector('.text-center').classList.remove('d-none');
+
+                        // Actualizar estado
+                        siteSelectionStatus.className = 'badge badge-info px-3 py-2';
+                        siteSelectionStatus.innerHTML = '<i class="fas fa-clock me-1"></i>Esperando selección';
+                    }
+                });
+            },
+
+            simulateSiteDataLoad(siteId) {
+                // Esta función simula la carga de datos del sitio
+                // En producción, deberías hacer una llamada AJAX a tu API
+                const siteName = document.getElementById('siteName');
+                const siteType = document.getElementById('siteType');
+                const siteDescription = document.getElementById('siteDescription');
+                const siteAddress = document.getElementById('siteAddress');
+
+                // Datos de ejemplo (deberían venir de la API)
+                const sampleData = {
+                    1: {
+                        nombre: "Catedral de la Santísima Trinidad",
+                        tipo: "Arquitectura Religiosa",
+                        descripcion: "Impresionante catedral del siglo XIX con arquitectura colonial.",
+                        direccion: "Plaza Principal, Trinidad, Beni"
+                    },
+                    2: {
+                        nombre: "Museo Etnoarqueológico",
+                        tipo: "Museo",
+                        descripcion: "Museo que muestra la cultura e historia de las etnias locales.",
+                        direccion: "Calle Bolívar #123, Trinidad"
+                    }
+                };
+
+                const data = sampleData[siteId] || {
+                    nombre: "Sitio Turístico",
+                    tipo: "Turismo",
+                    descripcion: "Descripción del sitio seleccionado.",
+                    direccion: "Dirección no disponible"
+                };
+
+                siteName.textContent = data.nombre;
+                siteType.textContent = data.tipo;
+                siteDescription.textContent = data.descripcion;
+                siteAddress.textContent = data.direccion;
+            },
+
+            initAutoDate() {
+                const fechaInput = document.getElementById('fechaInput');
+                if (!fechaInput.value) {
+                    // Establecer fecha actual por defecto
+                    const today = new Date().toISOString().split('T')[0];
+                    fechaInput.value = today;
+                }
+
+                // Validar que no sea fecha futura
+                fechaInput.addEventListener('change', () => {
+                    const selectedDate = new Date(fechaInput.value);
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+
+                    if (selectedDate > today) {
+                        fechaInput.classList.add('is-invalid');
+                        this.showToast('La fecha no puede ser futura', 'warning');
+                    } else {
+                        fechaInput.classList.remove('is-invalid');
+                    }
+                });
+            },
+
+            initFormValidation() {
+                const form = document.getElementById('commentForm');
+                const submitBtn = document.getElementById('submitBtn');
+
+                form.addEventListener('submit', (e) => {
+                    // Validar sitio seleccionado
+                    const sitioSelect = document.getElementById('sitioSelect');
+                    if (!sitioSelect.value) {
+                        e.preventDefault();
+                        this.showValidationError('Por favor, selecciona un sitio turístico', sitioSelect);
+                        return false;
+                    }
+
+                    // Validar usuario seleccionado
+                    const usuarioSelect = document.getElementById('usuarioSelect');
+                    if (!usuarioSelect.value) {
+                        e.preventDefault();
+                        this.showValidationError('Por favor, selecciona un usuario', usuarioSelect);
+                        return false;
+                    }
+
+                    // Validar puntuación
+                    const puntuacionInput = document.getElementById('puntuacionInput');
+                    if (puntuacionInput.value == "0") {
+                        e.preventDefault();
+                        this.showToast('Por favor, califica el sitio con estrellas', 'warning');
+
+                        // Resaltar las estrellas
+                        const starsContainer = document.getElementById('ratingStars');
+                        starsContainer.style.boxShadow = '0 0 0 0.25rem rgba(255,193,7,.25)';
+                        setTimeout(() => {
+                            starsContainer.style.boxShadow = '';
+                        }, 2000);
+                        return false;
+                    }
+
+                    // Validar texto del comentario
+                    const textoInput = document.getElementById('textoInput');
+                    if (!textoInput.value.trim()) {
+                        e.preventDefault();
+                        this.showValidationError('Por favor, escribe tu comentario', textoInput);
+                        return false;
+                    }
+
+                    // Validar fecha
+                    const fechaInput = document.getElementById('fechaInput');
+                    if (!fechaInput.value) {
+                        e.preventDefault();
+                        this.showValidationError('Por favor, selecciona una fecha', fechaInput);
+                        return false;
+                    }
+
+                    // Mostrar estado de carga
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Publicando...';
+                    submitBtn.disabled = true;
+                    submitBtn.classList.add('btn-loading');
+                    return true;
+                });
+            },
+
+            showValidationError(message, element) {
+                element.classList.add('is-invalid');
+                this.showToast(message, 'danger');
+                element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                element.focus();
+            },
+
+            showToast(message, type = 'info') {
+                // Crear toast al estilo Bootstrap
+                const toastContainer = document.createElement('div');
+                toastContainer.className = 'position-fixed bottom-0 end-0 p-3';
+                toastContainer.style.zIndex = '1050';
+
+                const toast = document.createElement('div');
+                toast.className = `toast align-items-center text-white bg-${type} border-0`;
+                toast.setAttribute('role', 'alert');
+                toast.setAttribute('aria-live', 'assertive');
+                toast.setAttribute('aria-atomic', 'true');
+
+                toast.innerHTML = `
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            <i class="fas fa-${type === 'success' ? 'check-circle' :
+                                            type === 'warning' ? 'exclamation-triangle' :
+                                            type === 'danger' ? 'exclamation-circle' : 'info-circle'} me-2"></i>
+                            ${message}
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                    </div>
+                `;
+
+                toastContainer.appendChild(toast);
+                document.body.appendChild(toastContainer);
+
+                const bsToast = new bootstrap.Toast(toast, { delay: 3000 });
+                bsToast.show();
+
+                // Remover después de ocultar
+                toast.addEventListener('hidden.bs.toast', () => {
+                    document.body.removeChild(toastContainer);
+                });
+            },
+
+            initTooltips() {
+                const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+                tooltipTriggerList.map(function (tooltipTriggerEl) {
+                    return new bootstrap.Tooltip(tooltipTriggerEl);
+                });
+            },
+
+            cleanLocalStorage() {
+                localStorage.removeItem('comentarioDraft');
+                const keys = Object.keys(localStorage);
+                keys.forEach(key => {
+                    if (key.includes('comentario') || key.includes('borrador') || key.includes('draft')) {
+                        localStorage.removeItem(key);
+                    }
+                });
+            },
+
+            resetForm() {
+                if (confirm('¿Estás seguro de que deseas limpiar todos los campos? Se perderán los datos no guardados.')) {
+                    document.getElementById('commentForm').reset();
+
+                    // Restaurar rating a 0
+                    document.getElementById('puntuacionInput').value = 0;
+                    const stars = document.querySelectorAll('.star');
+                    stars.forEach(star => {
+                        star.classList.remove('text-warning');
+                        star.classList.add('text-muted');
+                    });
+
+                    // Restaurar preview de rating
+                    document.getElementById('selectedRating').innerHTML = `
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    `;
+
+                    // Restaurar estado del sitio
+                    document.getElementById('siteDetails').classList.add('d-none');
+                    document.getElementById('siteInfoPanel').querySelector('.text-center').classList.remove('d-none');
+                    document.getElementById('siteSelectionStatus').className = 'badge badge-info px-3 py-2';
+                    document.getElementById('siteSelectionStatus').innerHTML = '<i class="fas fa-clock me-1"></i>Esperando selección';
+
+                    // Establecer fecha actual
+                    const today = new Date().toISOString().split('T')[0];
+                    document.getElementById('fechaInput').value = today;
+
+                    // Limpiar validaciones
+                    document.querySelectorAll('.is-valid, .is-invalid').forEach(el => {
+                        el.classList.remove('is-valid', 'is-invalid');
+                    });
+
+                    // Restaurar botón
+                    const submitBtn = document.getElementById('submitBtn');
+                    submitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>Publicar Comentario';
+                    submitBtn.disabled = false;
+                    submitBtn.classList.remove('btn-loading');
+
+                    this.showToast('Formulario restablecido', 'info');
+                    this.initCharCounters();
+                }
+            }
+        };
+
+        // Inicialización cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', function() {
+            formManager.init();
+        });
+    </script>
 }

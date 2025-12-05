@@ -30,10 +30,10 @@ namespace guia_turistico.Models
         // Usuario Identity
         [Required]
         [Display(Name = "Usuario")]
-        public string UsuarioId { get; set; }
+        public string? UsuarioId { get; set; }
 
         [ForeignKey("UsuarioId")]
-        public virtual IdentityUser Usuario { get; set; }
+        public virtual IdentityUser? Usuario { get; set; }
 
         // Sitio turístico (singular para la propiedad de navegación)
         [Required]
@@ -41,11 +41,11 @@ namespace guia_turistico.Models
         public int SitioTuristicoId { get; set; }
 
         [ForeignKey("SitioTuristicoId")]
-        public virtual SitiosTuristicos SitioTuristico { get; set; }
+        public virtual SitiosTuristicos? SitioTuristico { get; set; }
 
         // Campo no mapeado
         [NotMapped]
         [Display(Name = "Nombre de Usuario")]
-        public string NombreUsuario => Usuario?.UserName;
+        public string? NombreUsuario => Usuario?.UserName;
     }
 }
