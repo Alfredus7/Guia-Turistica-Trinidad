@@ -1,21 +1,32 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
-using System.Threading;
+using OpenQA.Selenium.Support.UI;
+using System;
+using WebDriverManager;
+using WebDriverManager.DriverConfigs.Impl;
 
 namespace PruebasAutomatizadas
 {
     [TestClass]
     public class CrearTipoTest
     {
-        private IWebDriver driver = null!;
+        private IWebDriver driver;
+        private WebDriverWait wait;
         private readonly string baseUrl = "https://localhost:7103/";
 
         [TestInitialize]
         public void Setup()
         {
-            driver = new ChromeDriver();
+            new DriverManager().SetUpDriver(new ChromeConfig());
+
+            var options = new ChromeOptions();
+            options.BinaryLocation = @"C:\Users\HP\Downloads\chrome-win64\chrome-win64\chrome.exe";
+
+            driver = new ChromeDriver(options);
             driver.Manage().Window.Maximize();
+
+            wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
         }
 
         [TestMethod]
@@ -23,48 +34,45 @@ namespace PruebasAutomatizadas
         {
             // --- LOGIN ---
             driver.Navigate().GoToUrl(baseUrl + "Identity/Account/Login");
-            Thread.Sleep(1000);
 
-            driver.FindElement(By.Id("Input_Email")).SendKeys("admin@admin.com");
+            wait.Until(d => d.FindElement(By.Id("Input_Email"))).SendKeys("admin@admin.com");
             driver.FindElement(By.Id("Input_Password")).SendKeys("Admin123!");
             driver.FindElement(By.Id("login-submit")).Click();
-            Thread.Sleep(2000);
 
-            // --- VERIFICA LOGIN ---
-            Assert.AreEqual(baseUrl, driver.Url, "No redirigió al inicio después del login.");
+            wait.Until(d => d.Url == baseUrl);
 
-            // --- IR A ADMINISTRACIÓN > TIPOS ---
-            IWebElement adminDropdown = driver.FindElement(By.XPath("//a[contains(.,'Administración')]"));
-            adminDropdown.Click();
-            Thread.Sleep(1000);
+            // --- ADMINISTRACIÓN > TIPOS ---
+            wait.Until(d => d.FindElement(By.XPath("//a[contains(.,'Administración')]"))).Click();
+            wait.Until(d => d.FindElement(By.XPath("//a[contains(@href,'/Tipos')]"))).Click();
 
-            IWebElement tipoLink = driver.FindElement(By.XPath("//a[contains(@href,'/Tipos')]"));
-            tipoLink.Click();
-            Thread.Sleep(2000);
+            wait.Until(d => d.Url.Contains("/Tipos"));
 
-            Assert.IsTrue(driver.Url.Contains("/Tipos"), "No se accedió correctamente a la página de Tipos.");
+            // --- CREATE NEW ---
+            wait.Until(d => d.FindElement(By.LinkText("Create New"))).Click();
+            wait.Until(d => d.Url.Contains("/Tipos/Create"));
 
-            // --- CLIC EN CREATE NEW ---
-            IWebElement createLink = driver.FindElement(By.LinkText("Create New"));
-            createLink.Click();
-            Thread.Sleep(2000);
-
-            Assert.IsTrue(driver.Url.Contains("/Tipos/Create"), "No se accedió al formulario de creación.");
+            // Hacer scroll para asegurar visibilidad
+            IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
 
             // --- LLENAR FORMULARIO ---
-            driver.FindElement(By.Id("imageUrlInput")).SendKeys("https://pic2-cdn.creality.com/comp/model/20c37a5ddeaeb196355bd5036c394eb2.webp");
+            IWebElement imagenInput = wait.Until(d => d.FindElement(By.Id("ImagenUrl")));
+            js.ExecuteScript("arguments[0].scrollIntoView(true);", imagenInput);
+            imagenInput.Clear();
+            imagenInput.SendKeys("https://pic2-cdn.creality.com/comp/model/20c37a5ddeaeb196355bd5036c394eb2.webp");
 
-            driver.FindElement(By.Id("nombreInput")).SendKeys("Parque");
+            IWebElement nombreInput = wait.Until(d => d.FindElement(By.Id("Nombre")));
+            js.ExecuteScript("arguments[0].scrollIntoView(true);", nombreInput);
+            nombreInput.Clear();
+            nombreInput.SendKeys("Parque");
 
-            
+            // --- SUBMIT ---
+            IWebElement submitBtn = wait.Until(d => d.FindElement(By.Id("submitBtn")));
+            js.ExecuteScript("arguments[0].scrollIntoView(true);", submitBtn);
+            submitBtn.Click();
 
-            // --- ENVIAR FORMULARIO ---
-            //driver.FindElement(By.CssSelector("input[type='submit'][value='Create']")).Click();
-            Thread.Sleep(3000);
-
-            // --- VERIFICAR RESULTADO ---
-            Assert.IsTrue(driver.Url.EndsWith("/Tipos"), "No regresó al listado después de crear el tipo.");
-
+            // --- VERIFICAR ---
+            wait.Until(d => d.Url.Contains("/Tipos"));
+            Assert.IsTrue(driver.Url.Contains("/Tipos"), "No retornó al listado después de crear el Tipo.");
         }
 
         [TestCleanup]

@@ -1,7 +1,10 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Support.UI;
 using System.Threading;
+using WebDriverManager;
+using WebDriverManager.DriverConfigs.Impl;
 
 namespace PruebasAutomatizadas
 {
@@ -9,12 +12,20 @@ namespace PruebasAutomatizadas
     public class LoginTest
     {
         private IWebDriver driver = null!;
+        private WebDriverWait wait = null!;
         private readonly string baseUrl = "https://localhost:7103/Identity/Account/Login";
 
         [TestInitialize]
         public void Setup()
         {
-            driver = new ChromeDriver();
+            // Configura automáticamente el ChromeDriver correcto
+            new DriverManager().SetUpDriver(new ChromeConfig());
+
+            // Especificar la ruta del ejecutable de Chrome si no está en la ubicación predeterminada
+            var options = new ChromeOptions();
+            options.BinaryLocation = @"C:\Users\HP\Downloads\chrome-win64\chrome-win64\chrome.exe"; // Cambia esta ruta si es necesario
+
+            driver = new ChromeDriver(options);
             driver.Manage().Window.Maximize();
         }
 
