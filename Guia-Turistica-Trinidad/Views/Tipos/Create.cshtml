@@ -268,24 +268,6 @@
                 </div>
             </div>
 
-            <!-- Auto-translation helper - COHERENTE -->
-            <div class="alert alert-info mb-4">
-                <div class="d-flex align-items-center">
-                    <i class="fas fa-robot fa-2x me-3 text-info"></i>
-                    <div>
-                        <h6 class="fw-semibold mb-1">Asistente de traducción</h6>
-                        <p class="mb-0 small">
-                            ¿Necesitas ayuda con las traducciones?
-                            <button type="button"
-                                    class="btn btn-sm btn-outline-primary ms-2"
-                                    onclick="translationHelper.suggestTranslations()">
-                                <i class="fas fa-magic me-1"></i>Generar sugerencias
-                            </button>
-                        </p>
-                    </div>
-                </div>
-            </div>
-
             <!-- Acciones - COHERENTE -->
             <div class="card border-0 shadow-sm">
                 <div class="card-body p-4">
@@ -316,7 +298,6 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-    <script src="~/js/translationHelper.js" asp-append-version="true"></script>
     <script src="~/js/imageUrlValidator.js" asp-append-version="true"></script>
     <script>
         // Módulo para manejo del formulario de tipos - COHERENTE
@@ -414,11 +395,7 @@
 
             showValidationError(message, element) {
                 element.classList.add('is-invalid');
-                if (typeof translationHelper !== 'undefined' && translationHelper.showGlobalToast) {
-                    translationHelper.showGlobalToast(message, 'danger');
-                } else {
-                    alert(message);
-                }
+                alert(message);
                 element.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 element.focus();
             },
@@ -471,10 +448,6 @@
                     submitBtn.innerHTML = '<i class="fas fa-save me-2"></i>Crear Tipo';
                     submitBtn.disabled = false;
                     submitBtn.classList.remove('btn-loading');
-
-                    if (typeof translationHelper !== 'undefined' && translationHelper.showGlobalToast) {
-                        translationHelper.showGlobalToast('Formulario restablecido', 'info');
-                    }
 
                     this.initCharCounters();
                 }

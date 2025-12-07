@@ -319,24 +319,6 @@
                 </div>
             </div>
 
-            <!-- Auto-translation helper -->
-            <div class="alert alert-info mb-4">
-                <div class="d-flex align-items-center">
-                    <i class="fas fa-robot fa-2x me-3 text-info"></i>
-                    <div>
-                        <h6 class="fw-semibold mb-1">Asistente de traducción</h6>
-                        <p class="mb-0 small">
-                            ¿Necesitas ayuda con las traducciones?
-                            <button type="button"
-                                    class="btn btn-sm btn-outline-primary ms-2"
-                                    onclick="translationHelper.suggestTranslations()">
-                                <i class="fas fa-magic me-1"></i>Generar sugerencias
-                            </button>
-                        </p>
-                    </div>
-                </div>
-            </div>
-
             <!-- Acciones -->
             <div class="card border-0 shadow-sm">
                 <div class="card-body p-4">
@@ -371,7 +353,6 @@
     <!-- Leaflet CSS & JS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="~/js/translationHelper.js" asp-append-version="true"></script>
     <script>
         // Módulo para manejo del mapa
         const mapManager = {
@@ -607,7 +588,7 @@
 
                     if (!lat || !lng) {
                         e.preventDefault();
-                        translationHelper.showGlobalToast('Por favor, selecciona una ubicación en el mapa', 'danger');
+                        alert('Por favor, selecciona una ubicación en el mapa');
 
                         const mapContainer = document.querySelector('.card');
                         mapContainer.style.borderColor = 'var(--danger-color)';
@@ -632,7 +613,7 @@
 
                     if (!isValid) {
                         e.preventDefault();
-                        translationHelper.showGlobalToast('Por favor, completa todos los campos requeridos', 'danger');
+                        alert('Por favor, completa todos los campos requeridos');
                         return false;
                     }
 
@@ -700,7 +681,7 @@
                 submitBtn.disabled = false;
                 submitBtn.classList.remove('btn-loading');
 
-                translationHelper.showGlobalToast('Valores originales restaurados', 'info');
+                alert('Valores originales restaurados');
                 this.formModified = false;
             }
         };
