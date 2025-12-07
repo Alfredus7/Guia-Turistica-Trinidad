@@ -595,3 +595,14 @@ textarea.form-control {
 .image-card:hover .btn-remove {
     opacity: 1;
 }
+
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
