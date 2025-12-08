@@ -44,58 +44,40 @@
                                     <i class="fas fa-link me-2 text-primary"></i>URL de la Imagen
                                 </h5>
 
-                                <div class="mb-4">
-                                    <div class="alert alert-info mb-3">
-                                        <small>
-                                            <i class="fas fa-info-circle me-2"></i>
-                                            <strong>Instrucciones:</strong> Selecciona un sitio turístico y agrega URLs de imágenes. Puedes agregar múltiples imágenes.
-                                        </small>
-                                    </div>
+                                <!-- Selector de Sitio -->
+                                <div class="form-group mb-4">
+                                    <label asp-for="SitioTuristicoId" class="form-label fw-semibold">
+                                        <i class="fas fa-map-marker-alt me-2 text-muted"></i>Sitio Turístico *
+                                    </label>
+                                    <select asp-for="SitioTuristicoId"
+                                            class="form-select"
+                                            asp-items="ViewBag.SitioTuristicoId"
+                                            required
+                                            id="sitioSelect"
+                                            data-bs-toggle="tooltip"
+                                            data-bs-title="Selecciona el sitio al que agregar imágenes">
+                                        <option value="" selected disabled>Selecciona un sitio turístico</option>
+                                    </select>
+                                    <span asp-validation-for="SitioTuristicoId" class="invalid-feedback d-block"></span>
+                                </div>
 
-                                    <!-- Selector de Sitio -->
-                                    <div class="form-group mb-4">
-                                        <label asp-for="SitioTuristicoId" class="form-label fw-semibold">
-                                            <i class="fas fa-map-marker-alt me-2 text-muted"></i>Sitio Turístico *
-                                        </label>
-                                        <select asp-for="SitioTuristicoId"
-                                                class="form-select"
-                                                asp-items="ViewBag.SitioTuristicoId"
-                                                required
-                                                id="sitioSelect"
-                                                data-bs-toggle="tooltip"
-                                                data-bs-title="Selecciona el sitio turístico al que agregar imágenes">
-                                            <option value="" selected disabled>Selecciona un sitio turístico</option>
-                                        </select>
-                                        <span asp-validation-for="SitioTuristicoId" class="invalid-feedback d-block"></span>
-                                        <div class="form-text">Sitio al que se asociarán las imágenes</div>
+                                <!-- Campo para agregar URL -->
+                                <div class="form-group">
+                                    <label for="imageUrlInput" class="form-label fw-semibold">
+                                        URL de Imagen
+                                    </label>
+                                    <div class="input-group">
+                                        <input type="url"
+                                               class="form-control"
+                                               placeholder="Ej: https://ejemplo.com/imagen-sitio.jpg"
+                                               id="imageUrlInput"
+                                               data-bs-toggle="tooltip"
+                                               data-bs-title="URL de imagen válida (jpg, png, gif, webp, etc.)">
+                                        <button type="button" class="btn btn-success" id="addImageBtn">
+                                            <i class="fas fa-plus-circle me-2"></i>Agregar
+                                        </button>
                                     </div>
-
-                                    <!-- Campo para agregar URL -->
-                                    <div class="form-group">
-                                        <label for="imageUrlInput" class="form-label fw-semibold">
-                                            URL de Imagen
-                                        </label>
-                                        <div class="input-group">
-                                            <input type="url"
-                                                   class="form-control"
-                                                   placeholder="https://ejemplo.com/imagen.jpg"
-                                                   id="imageUrlInput"
-                                                   data-bs-toggle="tooltip"
-                                                   data-bs-title="Ingresa la URL de una imagen válida (jpg, png, gif, etc.)">
-                                            <button type="button" class="btn btn-success" id="addImageBtn">
-                                                <i class="fas fa-plus-circle me-2"></i>Agregar
-                                            </button>
-                                        </div>
-                                        <div class="form-text">
-                                            Formato: .jpg, .png, .gif, .webp, .svg, .bmp, .avif
-                                        </div>
-                                        <div class="valid-feedback" id="urlValidFeedback">
-                                            <i class="fas fa-check-circle me-1"></i>URL de imagen válida
-                                        </div>
-                                        <div class="invalid-feedback" id="urlInvalidFeedback">
-                                            <i class="fas fa-exclamation-circle me-1"></i>URL de imagen no válida
-                                        </div>
-                                    </div>
+                                    <span asp-validation-for="Url" class="invalid-feedback d-block"></span>
                                 </div>
                             </div>
                         </div>
@@ -117,12 +99,6 @@
                                              class="img-fluid rounded shadow-sm object-fit-cover"
                                              id="imagePreview"
                                              alt="Vista previa de la imagen">
-                                    </div>
-
-                                    <div class="mt-3">
-                                        <span class="badge bg-secondary px-3 py-2" id="imageStatus">
-                                            <i class="fas fa-image me-1"></i>Esperando URL
-                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -334,9 +310,6 @@
             setupImagePreview() {
                 const imageUrlInput = this.imageUrlInput;
                 const imagePreview = document.getElementById('imagePreview');
-                const validFeedback = document.getElementById('urlValidFeedback');
-                const invalidFeedback = document.getElementById('urlInvalidFeedback');
-                const imageStatus = document.getElementById('imageStatus');
 
                 if (!imageUrlInput || !imagePreview) return;
 
@@ -355,63 +328,39 @@
                     }
 
                     validationTimeout = setTimeout(() => {
-                        this.validateImageUrl(url, imagePreview, imageUrlInput, validFeedback, invalidFeedback, imageStatus);
+                        this.validateImageUrl(url, imagePreview, imageUrlInput);
                     }, 800);
                 });
             },
 
-            validateImageUrl(url, previewElement, inputElement, validFeedback, invalidFeedback, statusElement) {
+            validateImageUrl(url, previewElement, inputElement) {
                 // Validación básica de URL
                 try {
                     new URL(url);
                 } catch {
-                    this.showImageError('URL no válida', previewElement, inputElement, validFeedback, invalidFeedback, statusElement);
+                    this.showImageError('URL no válida', previewElement, inputElement);
                     return;
                 }
-
-                // Mostrar carga
-                this.showImageLoading(previewElement, inputElement, validFeedback, invalidFeedback, statusElement);
 
                 // Intentar cargar la imagen
                 const img = new Image();
                 img.onload = () => {
-                    this.showImageSuccess(url, previewElement, inputElement, validFeedback, invalidFeedback, statusElement);
+                    this.showImageSuccess(url, previewElement, inputElement);
                 };
                 img.onerror = () => {
-                    this.showImageError('No se pudo cargar la imagen', previewElement, inputElement, validFeedback, invalidFeedback, statusElement);
+                    this.showImageError('No se pudo cargar la imagen', previewElement, inputElement);
                 };
                 img.src = url;
             },
 
-            showImageLoading(previewElement, inputElement, validFeedback, invalidFeedback, statusElement) {
-                if (statusElement) {
-                    statusElement.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Cargando...';
-                    statusElement.className = 'badge bg-info px-3 py-2';
-                }
-                if (validFeedback) validFeedback.style.display = 'none';
-                if (invalidFeedback) invalidFeedback.style.display = 'none';
-            },
-
-            showImageSuccess(url, previewElement, inputElement, validFeedback, invalidFeedback, statusElement) {
+            showImageSuccess(url, previewElement, inputElement) {
                 if (previewElement) previewElement.src = url;
-                if (statusElement) {
-                    statusElement.innerHTML = '<i class="fas fa-check-circle me-1"></i>Imagen válida';
-                    statusElement.className = 'badge bg-success px-3 py-2';
-                }
-                if (validFeedback) validFeedback.style.display = 'block';
-                if (invalidFeedback) invalidFeedback.style.display = 'none';
                 inputElement.classList.add('is-valid');
                 inputElement.classList.remove('is-invalid');
             },
 
-            showImageError(message, previewElement, inputElement, validFeedback, invalidFeedback, statusElement) {
+            showImageError(message, previewElement, inputElement) {
                 if (previewElement) previewElement.src = config.errorImage;
-                if (statusElement) {
-                    statusElement.innerHTML = `<i class="fas fa-exclamation-triangle me-1"></i>${message}`;
-                    statusElement.className = 'badge bg-danger px-3 py-2';
-                }
-                if (invalidFeedback) invalidFeedback.style.display = 'block';
-                if (validFeedback) validFeedback.style.display = 'none';
                 inputElement.classList.add('is-invalid');
                 inputElement.classList.remove('is-valid');
             },
@@ -419,17 +368,8 @@
             resetImagePreview() {
                 const preview = document.getElementById('imagePreview');
                 const input = this.imageUrlInput;
-                const validFeedback = document.getElementById('urlValidFeedback');
-                const invalidFeedback = document.getElementById('urlInvalidFeedback');
-                const statusElement = document.getElementById('imageStatus');
 
                 if (preview) preview.src = config.defaultImage;
-                if (statusElement) {
-                    statusElement.innerHTML = '<i class="fas fa-image me-1"></i>Esperando URL';
-                    statusElement.className = 'badge bg-secondary px-3 py-2';
-                }
-                if (validFeedback) validFeedback.style.display = 'none';
-                if (invalidFeedback) invalidFeedback.style.display = 'none';
                 if (input) {
                     input.classList.remove('is-valid', 'is-invalid');
                 }
@@ -800,7 +740,7 @@
             animation: fadeIn 0.3s ease-in;
         }
 
-        
+
 
         /* Mejoras para galería */
         .url-preview {

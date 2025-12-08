@@ -48,24 +48,14 @@
                                     <i class="fas fa-crosshairs me-2 text-primary"></i>Selección de Ubicación
                                 </h5>
 
-                                <div class="mb-4">
-                                    <div class="alert alert-info mb-3">
-                                        <small>
-                                            <i class="fas fa-info-circle me-2"></i>
-                                            <strong>Instrucciones:</strong> Haz clic en el mapa para colocar el marcador.
-                                            Puedes arrastrarlo para ajustar la posición.
-                                        </small>
-                                    </div>
-
-                                    <div class="d-grid gap-2">
-                                        <button type="button"
-                                                class="btn btn-outline-primary"
-                                                id="centerToTrinidadBtn"
-                                                data-bs-toggle="tooltip"
-                                                data-bs-title="Centrar mapa en Trinidad, Beni">
-                                            <i class="fas fa-home me-2"></i>Centrar en Trinidad
-                                        </button>
-                                    </div>
+                                <div class="d-grid gap-2 mb-4">
+                                    <button type="button"
+                                            class="btn btn-outline-primary"
+                                            id="centerToTrinidadBtn"
+                                            data-bs-toggle="tooltip"
+                                            data-bs-title="Centrar mapa en Trinidad, Beni">
+                                        <i class="fas fa-home me-2"></i>Centrar en Trinidad
+                                    </button>
                                 </div>
 
                                 <!-- Coordenadas actuales -->
@@ -103,13 +93,6 @@
                                         </div>
                                     </div>
 
-                                    <!-- Badge de estado -->
-                                    <div class="mt-3">
-                                        <span class="badge bg-success px-3 py-2" id="locationStatus">
-                                            <i class="fas fa-check-circle me-1"></i>Ubicación establecida
-                                        </span>
-                                    </div>
-
                                     <!-- Campos ocultos -->
                                     <input type="hidden" asp-for="Latitud" id="Latitud" value="-14.835000" />
                                     <input type="hidden" asp-for="Longitud" id="Longitud" value="-64.903000" />
@@ -141,11 +124,11 @@
                                        required
                                        maxlength="100"
                                        data-bs-toggle="tooltip"
-                                       data-bs-title="Campo requerido. Máximo 100 caracteres">
-                                <span asp-validation-for="Nombre" class="invalid-feedback"></span>
-                                <div class="form-text">
-                                    <span class="text-muted" id="nombreCounter">0/100</span> - Nombre oficial del sitio turístico
+                                       data-bs-title="Nombre oficial del sitio turístico">
+                                <div class="form-text text-end">
+                                    <span class="text-muted" id="nombreCounter">0/100</span>
                                 </div>
+                                <span asp-validation-for="Nombre" class="invalid-feedback"></span>
                             </div>
 
                             <div class="mb-4">
@@ -155,16 +138,15 @@
                                 <textarea asp-for="Descripcion"
                                           class="form-control"
                                           rows="5"
-                                          placeholder="Describe el sitio turístico, su historia, características principales..."
+                                          placeholder="Ej: La catedral más antigua de la ciudad, construida en el siglo XVIII..."
                                           required
                                           maxlength="1000"
                                           data-bs-toggle="tooltip"
-                                          data-bs-title="Campo requerido. Máximo 1000 caracteres"></textarea>
-                                <span asp-validation-for="Descripcion" class="invalid-feedback"></span>
+                                          data-bs-title="Historia y características principales del sitio"></textarea>
                                 <div class="form-text text-end">
                                     <span class="text-muted" id="descripcionCounter">0/1000</span>
                                 </div>
-                                <div class="form-text">Información detallada para los visitantes</div>
+                                <span asp-validation-for="Descripcion" class="invalid-feedback"></span>
                             </div>
 
                             <div class="mb-0">
@@ -176,11 +158,11 @@
                                        placeholder="Ej: Plaza Principal, Trinidad, Beni"
                                        maxlength="200"
                                        data-bs-toggle="tooltip"
-                                       data-bs-title="Opcional. Máximo 200 caracteres">
-                                <span asp-validation-for="Direccion" class="invalid-feedback"></span>
-                                <div class="form-text">
-                                    <span class="text-muted" id="direccionCounter">0/200</span> - Dirección exacta para visitantes
+                                       data-bs-title="Dirección exacta para visitantes">
+                                <div class="form-text text-end">
+                                    <span class="text-muted" id="direccionCounter">0/200</span>
                                 </div>
+                                <span asp-validation-for="Direccion" class="invalid-feedback"></span>
                             </div>
                         </div>
                     </div>
@@ -239,11 +221,11 @@
                                                placeholder="Ej: Holy Trinity Cathedral"
                                                maxlength="100"
                                                data-bs-toggle="tooltip"
-                                               data-bs-title="Opcional. Máximo 100 caracteres">
-                                        <span asp-validation-for="NombreIngles" class="invalid-feedback"></span>
-                                        <div class="form-text">
+                                               data-bs-title="Traducción para visitantes internacionales">
+                                        <div class="form-text text-end">
                                             <span class="text-muted" id="nombreInglesCounter">0/100</span>
                                         </div>
+                                        <span asp-validation-for="NombreIngles" class="invalid-feedback"></span>
                                     </div>
 
                                     <div>
@@ -253,14 +235,14 @@
                                         <textarea asp-for="DescripcionIngles"
                                                   class="form-control"
                                                   rows="4"
-                                                  placeholder="Description in English..."
+                                                  placeholder="Ej: The oldest cathedral in the city, built in the 18th century..."
                                                   maxlength="1000"
                                                   data-bs-toggle="tooltip"
-                                                  data-bs-title="Opcional. Máximo 1000 caracteres"></textarea>
-                                        <span asp-validation-for="DescripcionIngles" class="invalid-feedback"></span>
+                                                  data-bs-title="Description for international visitors"></textarea>
                                         <div class="form-text text-end">
                                             <span class="text-muted" id="descripcionInglesCounter">0/1000</span>
                                         </div>
+                                        <span asp-validation-for="DescripcionIngles" class="invalid-feedback"></span>
                                     </div>
                                 </div>
 
@@ -279,11 +261,11 @@
                                                placeholder="Ej: Catedral da Santíssima Trindade"
                                                maxlength="100"
                                                data-bs-toggle="tooltip"
-                                               data-bs-title="Opcional. Máximo 100 caracteres">
-                                        <span asp-validation-for="NombrePortugues" class="invalid-feedback"></span>
-                                        <div class="form-text">
+                                               data-bs-title="Tradução para visitantes brasileiros">
+                                        <div class="form-text text-end">
                                             <span class="text-muted" id="nombrePortuguesCounter">0/100</span>
                                         </div>
+                                        <span asp-validation-for="NombrePortugues" class="invalid-feedback"></span>
                                     </div>
 
                                     <div>
@@ -293,14 +275,14 @@
                                         <textarea asp-for="DescripcionPortugues"
                                                   class="form-control"
                                                   rows="4"
-                                                  placeholder="Descrição em português..."
+                                                  placeholder="Ej: A catedral mais antiga da cidade, construída no século XVIII..."
                                                   maxlength="1000"
                                                   data-bs-toggle="tooltip"
-                                                  data-bs-title="Opcional. Máximo 1000 caracteres"></textarea>
-                                        <span asp-validation-for="DescripcionPortugues" class="invalid-feedback"></span>
+                                                  data-bs-title="Descrição para visitantes lusófonos"></textarea>
                                         <div class="form-text text-end">
                                             <span class="text-muted" id="descripcionPortuguesCounter">0/1000</span>
                                         </div>
+                                        <span asp-validation-for="DescripcionPortugues" class="invalid-feedback"></span>
                                     </div>
                                 </div>
                             </div>
@@ -315,11 +297,10 @@
                                         asp-items="ViewBag.TipoId"
                                         required
                                         data-bs-toggle="tooltip"
-                                        data-bs-title="Selecciona una categoría para el sitio">
+                                        data-bs-title="Selecciona la categoría del sitio turístico">
                                     <option value="" selected disabled>Selecciona un tipo</option>
                                 </select>
                                 <span asp-validation-for="TipoId" class="invalid-feedback"></span>
-                                <div class="form-text">Categoría del sitio turístico</div>
                             </div>
                         </div>
                     </div>
@@ -534,7 +515,7 @@
                 document.getElementById('Latitud').value = latlng.lat.toFixed(6);
                 document.getElementById('Longitud').value = latlng.lng.toFixed(6);
 
-                this.showLocationFeedback(`Ubicación actualizada: ${latlng.lat.toFixed(6)}, ${latlng.lng.toFixed(6)}`);
+                this.showToast(`Ubicación actualizada: ${latlng.lat.toFixed(6)}, ${latlng.lng.toFixed(6)}`, 'info');
                 this.map.panTo(latlng);
             },
 
@@ -556,40 +537,35 @@
                     document.getElementById('Longitud').value = config.defaultLocation.lng.toFixed(6);
                 }
 
-                this.showLocationFeedback('Centrado en Trinidad, Beni', 'info');
+                this.showToast('Centrado en Trinidad, Beni', 'info');
             },
 
-            showLocationFeedback(message, type = 'success') {
-                const statusBadge = document.getElementById('locationStatus');
-                if (!statusBadge) return;
+            showToast(message, type = 'info') {
+                const toastEl = document.getElementById('liveToast');
+                const toastMsg = document.getElementById('toastMessage');
 
-                const icons = {
-                    success: 'check-circle',
-                    info: 'info-circle',
-                    warning: 'exclamation-circle',
-                    error: 'exclamation-triangle'
-                };
+                if (toastEl && toastMsg) {
+                    const iconMap = {
+                        'success': 'check-circle',
+                        'info': 'info-circle',
+                        'warning': 'exclamation-circle',
+                        'error': 'exclamation-triangle'
+                    };
 
-                const colors = {
-                    success: 'bg-success',
-                    info: 'bg-info',
-                    warning: 'bg-warning',
-                    error: 'bg-danger'
-                };
+                    const icon = toastEl.querySelector('i');
+                    if (icon) {
+                        icon.className = `fas fa-${iconMap[type] || 'info-circle'} me-2 text-${type}`;
+                    }
 
-                statusBadge.className = `badge ${colors[type] || 'bg-success'} px-3 py-2`;
-                statusBadge.innerHTML = `<i class="fas fa-${icons[type] || 'check-circle'} me-1"></i>${message}`;
+                    toastMsg.textContent = message;
 
-                // Animar suavemente
-                statusBadge.style.transform = 'scale(1.05)';
-                setTimeout(() => statusBadge.style.transform = 'scale(1)', 300);
-
-                // Resetear después de 3 segundos (solo para éxito/info)
-                if (type === 'success' || type === 'info') {
-                    setTimeout(() => {
-                        statusBadge.className = 'badge bg-success px-3 py-2';
-                        statusBadge.innerHTML = '<i class="fas fa-check-circle me-1"></i>Ubicación establecida';
-                    }, 3000);
+                    // Usar Bootstrap Toast si está disponible
+                    if (window.appToast) {
+                        window.appToast.show();
+                    } else if (!config.isTestMode) {
+                        // Fallback simple
+                        console.log(`${type.toUpperCase()}: ${message}`);
+                    }
                 }
             }
         };
@@ -765,7 +741,7 @@
                 const lng = document.getElementById('Longitud').value;
                 if (!lat || !lng) {
                     isValid = false;
-                    showMessage('Debe seleccionar una ubicación', 'danger');
+                    console.log('Debe seleccionar una ubicación');
                 }
 
                 if (!isValid) {
@@ -832,7 +808,7 @@
                 if (input && !input.value.trim()) {
                     isValid = false;
                     input.classList.add('is-invalid');
-                    showMessage(field.message, 'danger');
+                    mapManager.showToast(field.message, 'danger');
                     if (field.name === 'Nombre') input.focus();
                 }
             });
@@ -842,7 +818,7 @@
             const lng = document.getElementById('Longitud').value;
             if (!lat || !lng) {
                 isValid = false;
-                showMessage('Debe seleccionar una ubicación en el mapa', 'danger');
+                mapManager.showToast('Debe seleccionar una ubicación en el mapa', 'danger');
 
                 // Resaltar sección del mapa
                 const mapSection = document.querySelector('.card.shadow-lg');
@@ -887,7 +863,7 @@
                     const bsModal = bootstrap.Modal.getInstance(modal);
                     resetForm();
                     bsModal.hide();
-                    showMessage('Formulario limpiado correctamente', 'success');
+                    mapManager.showToast('Formulario limpiado correctamente', 'success');
                 });
             }
         }
@@ -914,34 +890,6 @@
         // ===== UTILIDADES =====
         function setupUtilities() {
             // Nada especial aquí por ahora
-        }
-
-        function showMessage(message, type = 'info') {
-            // Intentar usar toast si existe
-            const toastEl = document.getElementById('liveToast');
-            const toastMsg = document.getElementById('toastMessage');
-
-            if (toastEl && toastMsg && window.appToast) {
-                const iconMap = {
-                    'success': 'check-circle',
-                    'danger': 'exclamation-triangle',
-                    'warning': 'exclamation-circle',
-                    'info': 'info-circle'
-                };
-
-                const icon = toastEl.querySelector('i');
-                if (icon) {
-                    icon.className = `fas fa-${iconMap[type] || 'info-circle'} me-2 text-${type}`;
-                }
-
-                toastMsg.textContent = message;
-                window.appToast.show();
-            } else if (!config.isTestMode) {
-                // Solo mostrar alert en modo usuario (no en pruebas)
-                alert(`${type.toUpperCase()}: ${message}`);
-            } else {
-                console.log(`${type.toUpperCase()}: ${message}`);
-            }
         }
     </script>
 
@@ -978,14 +926,6 @@
             }
 
         /* Mejoras para contadores */
-        .character-counter {
-            position: absolute;
-            right: 10px;
-            bottom: 10px;
-            font-size: 0.75rem;
-            color: #6c757d;
-        }
-
         .form-text.text-end .text-muted {
             font-size: 0.875rem;
         }
@@ -993,11 +933,6 @@
         /* Animaciones suaves */
         .is-valid, .is-invalid {
             transition: border-color 0.3s ease;
-        }
-
-        /* Badge animado */
-        #locationStatus {
-            transition: all 0.3s ease;
         }
     </style>
 }

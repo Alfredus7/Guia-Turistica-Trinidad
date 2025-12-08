@@ -26,13 +26,15 @@ namespace PruebasAutomatizadas
             public string DescripcionIngles { get; set; }
             public string DescripcionPortugues { get; set; }
             public string Direccion { get; set; }
+            public string Latitud { get; set; }
+            public string Longitud { get; set; }
             public int TipoId { get; set; }
         }
 
         // Datos de los sitios a insertar (usando TipoId que coincida con tus datos)
         private readonly List<SitioData> sitiosData = new List<SitioData>
         {
-            // Plazas y Parques Urbanos (TipoId = 1)
+           // Plazas y Parques Urbanos (TipoId = 1)
             new SitioData
             {
                 Nombre = "Plaza Principal Mariscal José Ballivián",
@@ -42,6 +44,8 @@ namespace PruebasAutomatizadas
                 DescripcionIngles = "It is the heart of the city. Here you can visit the Cathedral, enjoy the shade of large tropical trees, and see the monument to Marshal Ballivián.",
                 DescripcionPortugues = "É o coração da cidade. Aqui você pode visitar a Catedral, desfrutar da sombra de grandes árvores tropicais e ver o monumento ao Marechal Ballivián.",
                 Direccion = "Calle La Paz esquina 18 de Noviembre",
+                Latitud = "-14.839810",
+                Longitud = "-64.903800",
                 TipoId = 1
             },
             new SitioData
@@ -53,7 +57,142 @@ namespace PruebasAutomatizadas
                 DescripcionIngles = "A tribute to Beni's main economic activity. It features the statue 'El Ganadero' and murals representing country life.",
                 DescripcionPortugues = "Uma homenagem à principal atividade econômica de Beni. Apresenta a estátua 'El Ganadero' e murais que representam a vida no campo.",
                 Direccion = "Avenida José Chávez Suárez",
+                Latitud = "-14.832900",
+                Longitud = "-64.915500",
                 TipoId = 1
+            },
+            new SitioData
+            {
+                Nombre = "Plaza de la Tradición",
+                NombreIngles = "Tradition Square",
+                NombrePortugues = "Praça da Tradição",
+                Descripcion = "Un espacio cultural que tiene murales y esculturas sobre las costumbres locales, como el 'jocheo de toros' y el 'palo encebao'.",
+                DescripcionIngles = "A cultural space with murals and sculptures about local customs, such as 'jocheo de toros' and 'palo encebao'.",
+                DescripcionPortugues = "Um espaço cultural com murais e esculturas sobre costumes locais, como o 'jocheo de toros' e o 'palo encebao'.",
+                Direccion = "Av. 6 de Agosto",
+                Latitud = "-14.845000",
+                Longitud = "-64.901500",
+                TipoId = 1
+            },
+            new SitioData
+            {
+                Nombre = "Plazuela Doris Natusch",
+                NombreIngles = "Doris Natusch Plaza",
+                NombrePortugues = "Praça Doris Natusch",
+                Descripcion = "Un rincón histórico y artístico que rinde homenaje a la cultura beniana, ideal para una pausa tranquila.",
+                DescripcionIngles = "A historical and artistic corner that pays homage to the Benian culture, ideal for a quiet break.",
+                DescripcionPortugues = "Um canto histórico e artístico que homenageia a cultura beniana, ideal para uma pausa tranquila.",
+                Direccion = "Cerca de la Av. Germán Busch",
+                Latitud = "-14.835500",
+                Longitud = "-64.908000",
+                TipoId = 1
+            },
+            new SitioData
+            {
+                Nombre = "Parque Pantanal",
+                NombreIngles = "Pantanal Park",
+                NombrePortugues = "Parque Pantanal",
+                Descripcion = "Un parque tipo zoológico urbano donde se pueden observar animales de la región (capibaras, caimanes) en un entorno semi-natural.",
+                DescripcionIngles = "An urban zoo-like park where you can observe regional animals (capybaras, caimans) in a semi-natural environment.",
+                DescripcionPortugues = "Um parque urbano tipo zoológico onde você pode observar animais da região (capivaras, jacarés) em um ambiente semi-natural.",
+                Direccion = "Cruce Av. Ganadero y Av. Circunvalación",
+                Latitud = "-14.825000",
+                Longitud = "-64.920000",
+                TipoId = 4
+            },
+            // Puertos Turísticos y Balnearios (TipoId = 2)
+            new SitioData
+            {
+                Nombre = "Puerto Almacén",
+                NombreIngles = "Almacén Port",
+                NombrePortugues = "Porto Almacén",
+                Descripcion = "Famoso por sus restaurantes rústicos donde sirven deliciosos platos de pescado de río y por los paseos en canoa entre la selva de galería.",
+                DescripcionIngles = "Famous for its rustic restaurants serving delicious river fish dishes and for canoe trips through the gallery forest.",
+                DescripcionPortugues = "Famoso por seus restaurantes rústicos que servem deliciosos pratos de peixe de rio e pelos passeios de canoa pela mata ciliar.",
+                Direccion = "A orillas del Río Ibare, a 8km de Trinidad",
+                Latitud = "-14.870000",
+                Longitud = "-64.880000",
+                TipoId = 2
+            },
+            new SitioData
+            {
+                Nombre = "Puerto Ballivián",
+                NombreIngles = "Ballivián Port",
+                NombrePortugues = "Porto Ballivián",
+                Descripcion = "Lugar histórico y muy tranquilo a orillas del río Ibare, ideal para caminar por su costanera turística y refrescarse. Cerca de Loma Suárez.",
+                DescripcionIngles = "A quiet and historic spot on the banks of the Ibare River, ideal for walking along its tourist promenade and cooling off. Near Loma Suárez.",
+                DescripcionPortugues = "Um lugar tranquilo e histórico às margens do Rio Ibare, ideal para passear pela sua orla turística e se refrescar. Perto de Loma Suárez.",
+                Direccion = "A orillas del Río Ibare, cerca de Loma Suárez",
+                Latitud = "-14.855000",
+                Longitud = "-64.885000",
+                TipoId = 2
+            },
+            new SitioData
+            {
+                Nombre = "Puerto Varador",
+                NombreIngles = "Varador Port",
+                NombrePortugues = "Porto Varador",
+                Descripcion = "Puerto comercial y turístico a orillas del majestuoso río Mamoré. En época seca, se forman playas de arena donde la gente va a bañarse.",
+                DescripcionIngles = "Commercial and tourist port on the banks of the majestic Mamoré River. In the dry season, sand beaches form where people go swimming.",
+                DescripcionPortugues = "Porto comercial e turístico às margens do majestoso Rio Mamoré. Na estação seca, formam-se praias de areia onde as pessoas vão nadar.",
+                Direccion = "A orillas del Río Mamoré, a 13km de Trinidad",
+                Latitud = "-14.800000",
+                Longitud = "-64.980000",
+                TipoId = 2
+            },
+            new SitioData
+            {
+                Nombre = "Laguna Suárez",
+                NombreIngles = "Suárez Lagoon",
+                NombrePortugues = "Lagoa Suárez",
+                Descripcion = "Laguna artificial construida por la antigua cultura de los Moxos. Es el balneario principal de la ciudad, con restaurantes a la orilla del agua.",
+                DescripcionIngles = "Artificial lagoon built by the ancient Moxos culture. It is the city's main spa, with restaurants on the water's edge.",
+                DescripcionPortugues = "Lagoa artificial construída pela antiga cultura Moxos. É o principal balneário da cidade, com restaurantes à beira d'água.",
+                Direccion = "Zona Oeste de Trinidad",
+                Latitud = "-14.850000",
+                Longitud = "-64.915000",
+                TipoId = 2
+            },
+            // Museos y Cultura (TipoId = 3)
+            new SitioData
+            {
+                Nombre = "Museo Ictícola",
+                NombreIngles = "Ichthyological Museum (Fish Museum)",
+                NombrePortugues = "Museu Ictícola (Museu de Peixes)",
+                Descripcion = "Ubicado en el campus de la UAB. Tiene una de las colecciones de peces de agua dulce más grandes de Sudamérica, incluyendo el famoso bufeo disecado.",
+                DescripcionIngles = "Located on the UAB campus. It has one of the largest freshwater fish collections in South America, including the famous stuffed pink dolphin.",
+                DescripcionPortugues = "Localizado no campus da UAB. Possui uma das maiores coleções de peixes de água doce da América do Sul, incluindo o famoso golfinho rosa dissecado.",
+                Direccion = "Campus UAB, Av. Ganadero",
+                Latitud = "-14.815000",
+                Longitud = "-64.905000",
+                TipoId = 3
+            },
+            new SitioData
+            {
+                Nombre = "Museo Etno-Arqueológico 'Kenneth Lee'",
+                NombreIngles = "Kenneth Lee Ethno-Archaeological Museum",
+                NombrePortugues = "Museu Etno-Arqueológico 'Kenneth Lee'",
+                Descripcion = "Imprescindible para conocer la 'Cultura Hidráulica de Moxos'. Explica cómo los antiguos habitantes manejaban las inundaciones con lomas y camellones.",
+                DescripcionIngles = "Essential for understanding the 'Hydraulic Culture of Moxos'. It explains how ancient inhabitants managed floods with mounds and raised fields.",
+                DescripcionPortugues = "Essencial para entender a 'Cultura Hidráulica de Moxos'. Explica como os antigos habitantes gerenciavam as inundações com montes e campos elevados.",
+                Direccion = "Cerca de la Plazuela Doris Natusch",
+                Latitud = "-14.840000",
+                Longitud = "-64.905000",
+                TipoId = 3
+            },
+            // Naturaleza y Ecoturismo (TipoId = 4)
+            new SitioData
+            {
+                Nombre = "Santuario Ecológico Chuchini",
+                NombreIngles = "Chuchini Ecological Sanctuary",
+                NombrePortugues = "Santuário Ecológico Chuchini",
+                Descripcion = "Refugio de vida silvestre y sitio arqueológico donde puedes hacer caminatas por la selva, ver lagartos y aves, y navegar por los canales.",
+                DescripcionIngles = "Wildlife refuge and archaeological site where you can hike through the jungle, see alligators and birds, and navigate the channels.",
+                DescripcionPortugues = "Refúgio de vida selvagem e sítio arqueológico onde você pode fazer caminhadas na selva, ver jacarés e pássaros, e navegar pelos canais.",
+                Direccion = "A 14 km de Trinidad por el río Ibare",
+                Latitud = "-14.890000",
+                Longitud = "-64.870000",
+                TipoId = 4
             }
         };
 
@@ -197,11 +336,12 @@ namespace PruebasAutomatizadas
 
         private void NavegarASitios()
         {
-            // Ir directamente a la URL de Sitios
-            driver.Navigate().GoToUrl(baseUrl + "SitiosTuristicos");
+            Console.WriteLine("[2] Navegando a SitiosTuristicos...");
+            wait.Until(d => d.FindElement(By.XPath("//a[contains(.,'Administración')]"))).Click();
+            wait.Until(d => d.FindElement(By.XPath("//a[contains(@href,'/SitiosTuristicos')]"))).Click();
+
             wait.Until(d => d.Url.Contains("/SitiosTuristicos"));
-            System.Threading.Thread.Sleep(2000);
-            Console.WriteLine("  ✓ En página de Sitios Turísticos");
+            Console.WriteLine("✓ En página de Tipos");
         }
 
         private void NavegarAFormularioCreacion()
@@ -244,6 +384,18 @@ namespace PruebasAutomatizadas
                     input.oninput = null;
                 });
                 
+                // Simplificar el mapa para pruebas
+                const mapElement = document.getElementById('map');
+                if (mapElement && mapElement.innerHTML.includes('Leaflet')) {
+                    // Si hay mapa, asegurar que las coordenadas sean editables
+                    const latInput = document.getElementById('Latitud');
+                    const lngInput = document.getElementById('Longitud');
+                    if (latInput && lngInput) {
+                        latInput.readOnly = false;
+                        lngInput.readOnly = false;
+                    }
+                }
+                
                 console.log('Página preparada para pruebas Selenium');
             ");
 
@@ -276,7 +428,24 @@ namespace PruebasAutomatizadas
                 document.querySelector('[name=""Descripcion""]').value = '{EscapeJavaScript(sitio.Descripcion)}';
                 document.querySelector('[name=""Direccion""]').value = '{EscapeJavaScript(sitio.Direccion)}';
                 
-                // Coordenadas (ya están establecidas por defecto en la vista)
+                // Coordenadas (actualizar ambos: campos ocultos y de visualización)
+                var latInput = document.getElementById('Latitud');
+                var lngInput = document.getElementById('Longitud');
+                var latDisplay = document.getElementById('latDisplay');
+                var lngDisplay = document.getElementById('lngDisplay');
+                
+                if (latInput && lngInput) {{
+                    latInput.value = '{sitio.Latitud}';
+                    lngInput.value = '{sitio.Longitud}';
+                    
+                    // Actualizar campos de visualización si existen
+                    if (latDisplay) latDisplay.value = '{sitio.Latitud}';
+                    if (lngDisplay) lngDisplay.value = '{sitio.Longitud}';
+                    
+                    // Disparar evento de cambio si el mapa está en modo interactivo
+                    latInput.dispatchEvent(new Event('change'));
+                    lngInput.dispatchEvent(new Event('change'));
+                }}
                 
                 // Tipo
                 var tipoSelect = document.querySelector('[name=""TipoId""]');
@@ -307,7 +476,7 @@ namespace PruebasAutomatizadas
                     }}, 200);
                 }}
                 
-                return 'Valores establecidos con JavaScript';
+                return 'Valores establecidos con JavaScript, incluyendo coordenadas: {sitio.Latitud}, {sitio.Longitud}';
             ";
 
             var result = ((IJavaScriptExecutor)driver).ExecuteScript(script);
@@ -340,7 +509,56 @@ namespace PruebasAutomatizadas
                 System.Threading.Thread.Sleep(300);
             }
 
-            // 4. Seleccionar Tipo
+            // 4. Coordenadas (campos ocultos y de visualización)
+            try
+            {
+                // Campos ocultos (se envían al servidor)
+                var latHidden = FindElementWithFallback("Latitud", "Latitud");
+                var lngHidden = FindElementWithFallback("Longitud", "Longitud");
+
+                // Campos de visualización (solo lectura)
+                var latDisplay = FindElementWithFallback("latDisplay", "latDisplay");
+                var lngDisplay = FindElementWithFallback("lngDisplay", "lngDisplay");
+
+                if (latHidden != null)
+                {
+                    SetElementValue(latHidden, sitio.Latitud);
+                    Console.WriteLine($"  ✓ Latitud establecida: {sitio.Latitud}");
+                }
+                else
+                {
+                    Console.WriteLine("  ⚠ No se encontró campo oculto Latitud");
+                }
+
+                if (lngHidden != null)
+                {
+                    SetElementValue(lngHidden, sitio.Longitud);
+                    Console.WriteLine($"  ✓ Longitud establecida: {sitio.Longitud}");
+                }
+                else
+                {
+                    Console.WriteLine("  ⚠ No se encontró campo oculto Longitud");
+                }
+
+                // Actualizar campos de visualización si existen
+                if (latDisplay != null) SetElementValue(latDisplay, sitio.Latitud);
+                if (lngDisplay != null) SetElementValue(lngDisplay, sitio.Longitud);
+
+                // Verificar que se establecieron correctamente
+                if (latHidden != null && lngHidden != null)
+                {
+                    var latValue = latHidden.GetAttribute("value");
+                    var lngValue = lngHidden.GetAttribute("value");
+                    Console.WriteLine($"  ✓ Coordenadas verificadas: {latValue}, {lngValue}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"  ⚠ Error al establecer coordenadas: {ex.Message}");
+                Console.WriteLine("  ⚠ Continuando con la prueba...");
+            }
+
+            // 5. Seleccionar Tipo
             var tipoSelect = FindElementWithFallback("TipoId", "TipoId", "tipoSelect");
             if (tipoSelect != null)
             {
@@ -357,9 +575,10 @@ namespace PruebasAutomatizadas
                     selectElement.SelectByIndex(sitio.TipoId);
                 }
                 System.Threading.Thread.Sleep(300);
+                Console.WriteLine($"  ✓ Tipo seleccionado: {sitio.TipoId}");
             }
 
-            // 5. Pestaña Inglés
+            // 6. Pestaña Inglés
             try
             {
                 var englishTab = driver.FindElement(By.CssSelector("#english-tab, [data-bs-target='#english']"));
@@ -370,17 +589,19 @@ namespace PruebasAutomatizadas
                 if (nombreInglesInput != null)
                 {
                     ClearAndSendKeys(nombreInglesInput, sitio.NombreIngles);
+                    Console.WriteLine("  ✓ Nombre en inglés establecido");
                 }
 
                 var descripcionInglesInput = FindElementWithFallback("DescripcionIngles", "DescripcionIngles", "descripcionInglesInput");
                 if (descripcionInglesInput != null)
                 {
                     ClearAndSendKeys(descripcionInglesInput, sitio.DescripcionIngles);
+                    Console.WriteLine("  ✓ Descripción en inglés establecida");
                 }
             }
             catch { Console.WriteLine("  ⚠ Pestaña inglés no encontrada"); }
 
-            // 6. Pestaña Portugués
+            // 7. Pestaña Portugués
             try
             {
                 var portuguesTab = driver.FindElement(By.CssSelector("#portuguese-tab, [data-bs-target='#portuguese']"));
@@ -391,12 +612,14 @@ namespace PruebasAutomatizadas
                 if (nombrePortuguesInput != null)
                 {
                     ClearAndSendKeys(nombrePortuguesInput, sitio.NombrePortugues);
+                    Console.WriteLine("  ✓ Nombre en portugués establecido");
                 }
 
                 var descripcionPortuguesInput = FindElementWithFallback("DescripcionPortugues", "DescripcionPortugues", "descripcionPortuguesInput");
                 if (descripcionPortuguesInput != null)
                 {
                     ClearAndSendKeys(descripcionPortuguesInput, sitio.DescripcionPortugues);
+                    Console.WriteLine("  ✓ Descripción en portugués establecida");
                 }
             }
             catch { Console.WriteLine("  ⚠ Pestaña portugués no encontrada"); }
@@ -553,7 +776,16 @@ namespace PruebasAutomatizadas
                     {
                         return driver.FindElement(By.Id(oldId));
                     }
-                    throw;
+
+                    // Intentar por selector CSS
+                    try
+                    {
+                        return driver.FindElement(By.CssSelector($"[id*='{id}'], [name*='{name}']"));
+                    }
+                    catch
+                    {
+                        throw new Exception($"No se pudo encontrar el elemento con id='{id}' o name='{name}'");
+                    }
                 }
             }
         }
@@ -582,6 +814,39 @@ namespace PruebasAutomatizadas
             }
         }
 
+        private void SetElementValue(IWebElement element, string value)
+        {
+            try
+            {
+                // Usar JavaScript para establecer el valor
+                ((IJavaScriptExecutor)driver).ExecuteScript(
+                    "arguments[0].value = arguments[1];",
+                    element,
+                    value
+                );
+
+                // Disparar evento de cambio
+                ((IJavaScriptExecutor)driver).ExecuteScript(
+                    "arguments[0].dispatchEvent(new Event('change'));",
+                    element
+                );
+
+                // También disparar evento input por si acaso
+                ((IJavaScriptExecutor)driver).ExecuteScript(
+                    "arguments[0].dispatchEvent(new Event('input'));",
+                    element
+                );
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"  ⚠ Error en SetElementValue: {ex.Message}");
+                // Fallback: intentar con Clear y SendKeys
+                element.Clear();
+                element.SendKeys(value);
+                element.SendKeys(Keys.Tab);
+            }
+        }
+
         private void ClickWithJavaScript(IWebElement element)
         {
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", element);
@@ -590,7 +855,13 @@ namespace PruebasAutomatizadas
         private string EscapeJavaScript(string text)
         {
             if (string.IsNullOrEmpty(text)) return "";
-            return text.Replace("'", "\\'").Replace("\"", "\\\"").Replace("\r", "").Replace("\n", "\\n");
+            return text
+                .Replace("\\", "\\\\")
+                .Replace("'", "\\'")
+                .Replace("\"", "\\\"")
+                .Replace("\r", "\\r")
+                .Replace("\n", "\\n")
+                .Replace("\t", "\\t");
         }
 
         private void TomarScreenshot(string nombre)

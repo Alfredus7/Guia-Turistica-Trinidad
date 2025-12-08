@@ -34,7 +34,7 @@ namespace PruebasAutomatizadas
             new TipoData
             {
                 Nombre = "Plazas",
-                NombreIngles = "Squares",
+                NombreIngles = "Plazas",
                 NombrePortugues = "Praças",
                 Descripcion = "Lugares ideales para pasear, ver la vida local y disfrutar de la brisa en moto o a pie.",
                 DescripcionIngles = "Ideal places for walking, observing local life, and enjoying the breeze on a motorcycle or on foot.",
@@ -43,13 +43,33 @@ namespace PruebasAutomatizadas
             },
             new TipoData
             {
-                Nombre = "Puertos Turísticos",
-                NombreIngles = "Tourist Ports",
-                NombrePortugues = "Portos Turísticos",
-                Descripcion = "Sitios a orillas de los ríos perfectos para comer pescado fresco, nadar o pasear en barco.",
-                DescripcionIngles = "Sites on the banks of the rivers perfect for eating fresh fish, swimming, or boat riding.",
-                DescripcionPortugues = "Locais às margens dos rios perfeitos para comer peixe fresco, nadar ou andar de barco.",
+                Nombre = "Puertos Turísticos y Balnearios",
+                NombreIngles = "Tourist Ports and Resorts",
+                NombrePortugues = "Portos Turísticos e Balneários",
+                Descripcion = "Sitios a orillas de los ríos (Ibare y Mamoré) perfectos para comer pescado fresco, nadar o pasear en barco.",
+                DescripcionIngles = "Sites on the banks of the rivers (Ibare and Mamoré) perfect for eating fresh fish, swimming, or boat riding.",
+                DescripcionPortugues = "Locais às margens dos rios (Ibare e Mamoré) perfeitos para comer peixe fresco, nadar ou andar de barco.",
                 ImagenUrl = "https://trinidadtevajaenamorar.com.bo/Imageneslugares/PATRIMONIOURBANOARQUITECTONICOYARTISTICO/11/galeria/2023-05-29-_DSC1592.JPG"
+            },
+            new TipoData
+            {
+                Nombre = "Museos y Cultura",
+                NombreIngles = "Museums and Culture",
+                NombrePortugues = "Museus e Cultura",
+                Descripcion = "Espacios para entender la rica historia, la arqueología y la biodiversidad de la Amazonía boliviana.",
+                DescripcionIngles = "Spaces to understand the rich history, archaeology, and biodiversity of the Bolivian Amazon.",
+                DescripcionPortugues = "Espaços para entender a rica história, a arqueologia e a biodiversidade da Amazônia boliviana.",
+                ImagenUrl = "https://trinidadtevajaenamorar.com.bo/Imageneslugares/MUSEOS%20DEL%20MUNICIPIO%20DE%20TRINIDAD/79/galeria/2023-05-23-_DSC4328-min.JPG"
+            },
+            new TipoData
+            {
+                Nombre = "Naturaleza",
+                NombreIngles = "Nature",
+                NombrePortugues = "Natureza",
+                Descripcion = "Refugios de vida silvestre y sitios arqueológicos donde puedes hacer caminatas por la selva y ver fauna.",
+                DescripcionIngles = "Wildlife refuges and archaeological sites where you can hike through the jungle and observe fauna.",
+                DescripcionPortugues = "Refúgios de vida selvagem e sítios arqueológicos onde você pode fazer caminhadas na selva e observar a fauna.",
+                ImagenUrl = "https://trinidadtevajaenamorar.com.bo/Imageneslugares/PATRIMONIOURBANOARQUITECTONICOYARTISTICO/11/galeria/2023-07-05-pantanal2.jpg"
             }
         };
 
@@ -190,13 +210,12 @@ namespace PruebasAutomatizadas
 
         private void NavegarATipos()
         {
-            // Ir directamente a la URL de Tipos
-            driver.Navigate().GoToUrl(baseUrl + "Tipos");
-            wait.Until(d => d.Url.Contains("/Tipos") &&
-                           (d.FindElements(By.LinkText("Create New")).Count > 0 ||
-                            d.FindElements(By.TagName("table")).Count > 0));
-            System.Threading.Thread.Sleep(2000);
-            Console.WriteLine("  ✓ En página de Tipos");
+            Console.WriteLine("[2] Navegando a Tipos...");
+            wait.Until(d => d.FindElement(By.XPath("//a[contains(.,'Administración')]"))).Click();
+            wait.Until(d => d.FindElement(By.XPath("//a[contains(@href,'/Tipos')]"))).Click();
+
+            wait.Until(d => d.Url.Contains("/Tipos"));
+            Console.WriteLine("✓ En página de Tipos");
         }
 
         private void NavegarAFormularioCreacion()
