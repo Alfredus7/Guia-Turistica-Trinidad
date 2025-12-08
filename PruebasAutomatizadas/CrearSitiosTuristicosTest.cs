@@ -35,168 +35,168 @@ namespace PruebasAutomatizadas
         private readonly List<SitioData> sitiosData = new List<SitioData>
 {
     // Plazas (TipoId = 1)
-    new SitioData
-    {
-        Nombre = "Plaza Principal Mariscal José Ballivián",
-        NombreIngles = "Mariscal José Ballivián Main Square",
-        NombrePortugues = "Praça Principal Mariscal José Ballivián",
-        Descripcion = "Es el corazón de la ciudad. Aquí puedes visitar la Catedral, disfrutar de la sombra de grandes árboles tropicales y ver el monumento al Mariscal Ballivián.",
-        DescripcionIngles = "It is the heart of the city. Here you can visit the Cathedral, enjoy the shade of large tropical trees, and see the monument to Marshal Ballivián.",
-        DescripcionPortugues = "É o coração da cidade. Aqui você pode visitar a Catedral, desfrutar da sombra de grandes árvores tropicais e ver o monumento ao Marechal Ballivián.",
-        Direccion = "Calle La Paz esquina 18 de Noviembre",
-        Latitud = "-14.839810",
-        Longitud = "-64.903800",
-        TipoId = 1
-    },
-    new SitioData
-    {
-        Nombre = "Plaza del Ganadero",
-        NombreIngles = "Cattle Rancher Square",
-        NombrePortugues = "Praça do Fazendeiro",
-        Descripcion = "Un homenaje a la principal actividad económica del Beni. Cuenta con la estatua 'El Ganadero' y murales que representan la vida de campo.",
-        DescripcionIngles = "A tribute to Beni's main economic activity. It features the statue 'El Ganadero' and murals representing country life.",
-        DescripcionPortugues = "Uma homenagem à principal atividade econômica de Beni. Apresenta a estátua 'El Ganadero' e murais que representam a vida no campo.",
-        Direccion = "Avenida José Chávez Suárez",
-        Latitud = "-14.832900",
-        Longitud = "-64.915500",
-        TipoId = 1
-    },
-    new SitioData
-    {
-        Nombre = "Plaza de la Tradición",
-        NombreIngles = "Tradition Square",
-        NombrePortugues = "Praça da Tradição",
-        Descripcion = "Un espacio cultural que tiene murales y esculturas sobre las costumbres locales, como el 'jocheo de toros' y el 'palo encebao'.",
-        DescripcionIngles = "A cultural space with murals and sculptures about local customs, such as 'jocheo de toros' and 'palo encebao'.",
-        DescripcionPortugues = "Um espaço cultural com murais e esculturas sobre costumes locais, como o 'jocheo de toros' e o 'palo encebao'.",
-        Direccion = "Av. 6 de Agosto",
-        Latitud = "-14.845000",
-        Longitud = "-64.901500",
-        TipoId = 1
-    },
-    new SitioData
-    {
-        Nombre = "Plazuela Doris Natusch",
-        NombreIngles = "Doris Natusch Plaza",
-        NombrePortugues = "Praça Doris Natusch",
-        Descripcion = "Un rincón histórico y artístico que rinde homenaje a la cultura beniana, ideal para una pausa tranquila.",
-        DescripcionIngles = "A historical and artistic corner that pays homage to the Benian culture, ideal for a quiet break.",
-        DescripcionPortugues = "Um canto histórico e artístico que homenageia a cultura beniana, ideal para uma pausa tranquila.",
-        Direccion = "Cerca de la Av. Germán Busch",
-        Latitud = "-14.835500",
-        Longitud = "-64.908000",
-        TipoId = 1
-    },
+new SitioData
+{
+    Nombre = "Plaza Principal Mariscal José Ballivián",
+    NombreIngles = "Mariscal José Ballivián Main Square",
+    NombrePortugues = "Praça Principal Mariscal José Ballivián",
+    Descripcion = "Es el corazón de la ciudad. Aquí puedes visitar la Catedral, disfrutar de la sombra de grandes árboles tropicales y ver el monumento al Mariscal Ballivián.",
+    DescripcionIngles = "It is the heart of the city. Here you can visit the Cathedral, enjoy the shade of large tropical trees, and see the monument to Marshal Ballivián.",
+    DescripcionPortugues = "É o coração da cidade. Aqui você pode visitar a Catedral, desfrutar da sombra de grandes árvores tropicais e ver o monumento ao Marechal Ballivián.",
+    Direccion = "Calle La Paz esquina 18 de Noviembre",
+    Latitud = "-14.834971",
+    Longitud = "-64.903659",
+    TipoId = 1
+},
+new SitioData
+{
+    Nombre = "Plaza del Ganadero",
+    NombreIngles = "Cattle Rancher Square",
+    NombrePortugues = "Praça do Fazendeiro",
+    Descripcion = "Un homenaje a la principal actividad económica del Beni. Cuenta con la estatua 'El Ganadero' y murales que representan la vida de campo.",
+    DescripcionIngles = "A tribute to Beni's main economic activity. It features the statue 'El Ganadero' and murals representing country life.",
+    DescripcionPortugues = "Uma homenagem à principal atividade econômica de Beni. Apresenta a estátua 'El Ganadero' e murais que representam a vida no campo.",
+    Direccion = "Avenida José Chávez Suárez",
+    Latitud = "-14.829906",
+    Longitud = "-64.910263",
+    TipoId = 1
+},
+new SitioData
+{
+    Nombre = "Plaza de la Tradición",
+    NombreIngles = "Tradition Square",
+    NombrePortugues = "Praça da Tradição",
+    Descripcion = "Un espacio cultural que tiene murales y esculturas sobre las costumbres locales, como el 'jocheo de toros' y el 'palo encebao'.",
+    DescripcionIngles = "A cultural space with murals and sculptures about local customs, such as 'jocheo de toros' and 'palo encebao'.",
+    DescripcionPortugues = "Um espaço cultural com murais e esculturas sobre costumes locais, como o 'jocheo de toros' e o 'palo encebao'.",
+    Direccion = "Av. 6 de Agosto",
+    Latitud = "-14.822098",
+    Longitud = "-64.889642",
+    TipoId = 1
+},
+new SitioData
+{
+    Nombre = "Plazuela Doris Natusch",
+    NombreIngles = "Doris Natusch Plaza",
+    NombrePortugues = "Praça Doris Natusch",
+    Descripcion = "Un rincón histórico y artístico que rinde homenaje a la cultura beniana, ideal para una pausa tranquila.",
+    DescripcionIngles = "A historical and artistic corner that pays homage to the Benian culture, ideal for a quiet break.",
+    DescripcionPortugues = "Um canto histórico e artístico que homenageia a cultura beniana, ideal para uma pausa tranquila.",
+    Direccion = "Cerca de la Av. Germán Busch",
+    Latitud = "-14.831091",
+    Longitud = "-64.904121",
+    TipoId = 1
+},
 
-    // Puertos Turísticos y Balnearios (TipoId = 2)
-    new SitioData
-    {
-        Nombre = "Puerto Almacén",
-        NombreIngles = "Almacén Port",
-        NombrePortugues = "Porto Almacén",
-        Descripcion = "Famoso por sus restaurantes rústicos donde sirven deliciosos platos de pescado de río y por los paseos en canoa entre la selva de galería.",
-        DescripcionIngles = "Famous for its rustic restaurants serving delicious river fish dishes and for canoe trips through the gallery forest.",
-        DescripcionPortugues = "Famoso por seus restaurantes rústicos que servem deliciosos pratos de peixe de rio e pelos passeios de canoa pela mata ciliar.",
-        Direccion = "A orillas del Río Ibare, a 8km de Trinidad",
-        Latitud = "-14.870000",
-        Longitud = "-64.880000",
-        TipoId = 2
-    },
-    new SitioData
-    {
-        Nombre = "Puerto Ballivián",
-        NombreIngles = "Ballivián Port",
-        NombrePortugues = "Porto Ballivián",
-        Descripcion = "Lugar histórico y muy tranquilo a orillas del río Ibare, ideal para caminar por su costanera turística y refrescarse. Cerca de Loma Suárez.",
-        DescripcionIngles = "A quiet and historic spot on the banks of the Ibare River, ideal for walking along its tourist promenade and cooling off. Near Loma Suárez.",
-        DescripcionPortugues = "Um lugar tranquilo e histórico às margens do Rio Ibare, ideal para passear pela sua orla turística e se refrescar. Perto de Loma Suárez.",
-        Direccion = "A orillas del Río Ibare, cerca de Loma Suárez",
-        Latitud = "-14.855000",
-        Longitud = "-64.885000",
-        TipoId = 2
-    },
-    new SitioData
-    {
-        Nombre = "Puerto Varador",
-        NombreIngles = "Varador Port",
-        NombrePortugues = "Porto Varador",
-        Descripcion = "Puerto comercial y turístico a orillas del majestuoso río Mamoré. En época seca, se forman playas de arena donde la gente va a bañarse.",
-        DescripcionIngles = "Commercial and tourist port on the banks of the majestic Mamoré River. In the dry season, sand beaches form where people go swimming.",
-        DescripcionPortugues = "Porto comercial e turístico às margens do majestoso Rio Mamoré. Na estação seca, formam-se praias de areia onde as pessoas vão nadar.",
-        Direccion = "A orillas del Río Mamoré, a 13km de Trinidad",
-        Latitud = "-14.800000",
-        Longitud = "-64.980000",
-        TipoId = 2
-    },
-    new SitioData
-    {
-        Nombre = "Laguna Suárez",
-        NombreIngles = "Suárez Lagoon",
-        NombrePortugues = "Lagoa Suárez",
-        Descripcion = "Laguna artificial construida por la antigua cultura de los Moxos. Es el balneario principal de la ciudad, con restaurantes a la orilla del agua.",
-        DescripcionIngles = "Artificial lagoon built by the ancient Moxos culture. It is the city's main spa, with restaurants on the water's edge.",
-        DescripcionPortugues = "Lagoa artificial construída pela antiga cultura Moxos. É o principal balneário da cidade, com restaurantes à beira d'água.",
-        Direccion = "Zona Oeste de Trinidad",
-        Latitud = "-14.850000",
-        Longitud = "-64.915000",
-        TipoId = 2
-    },
+// Puertos Turísticos y Balnearios (TipoId = 2)
+new SitioData
+{
+    Nombre = "Puerto Almacén",
+    NombreIngles = "Almacén Port",
+    NombrePortugues = "Porto Almacén",
+    Descripcion = "Famoso por sus restaurantes rústicos donde sirven deliciosos platos de pescado de río y por los paseos en canoa entre la selva de galería.",
+    DescripcionIngles = "Famous for its rustic restaurants serving delicious river fish dishes and for canoe trips through the gallery forest.",
+    DescripcionPortugues = "Famoso por seus restaurantes rústicos que servem deliciosos pratos de peixe de rio e pelos passeios de canoa pela mata ciliar.",
+    Direccion = "A orillas del Río Ibare, a 8km de Trinidad",
+    Latitud = "-14.870481",
+    Longitud = "-64.965591",
+    TipoId = 2
+},
+new SitioData
+{
+    Nombre = "Puerto Ballivián",
+    NombreIngles = "Ballivián Port",
+    NombrePortugues = "Porto Ballivián",
+    Descripcion = "Lugar histórico y muy tranquilo a orillas del río Ibare, ideal para caminar por su costanera turística y refrescarse. Cerca de Loma Suárez.",
+    DescripcionIngles = "A quiet and historic spot on the banks of the Ibare River, ideal for walking along its tourist promenade and cooling off. Near Loma Suárez.",
+    DescripcionPortugues = "Um lugar tranquilo e histórico às margens do Rio Ibare, ideal para passear pela sua orla turística e se refrescar. Perto de Loma Suárez.",
+    Direccion = "A orillas del Río Ibare, cerca de Loma Suárez",
+    Latitud = "-14.793941",
+    Longitud = "-64.972436",
+    TipoId = 2
+},
+new SitioData
+{
+    Nombre = "Puerto Varador",
+    NombreIngles = "Varador Port",
+    NombrePortugues = "Porto Varador",
+    Descripcion = "Puerto comercial y turístico a orillas del majestuoso río Mamoré. En época seca, se forman playas de arena donde la gente va a bañarse.",
+    DescripcionIngles = "Commercial and tourist port on the banks of the majestic Mamoré River. In the dry season, sand beaches form where people go swimming.",
+    DescripcionPortugues = "Porto comercial e turístico às margens do majestoso Rio Mamoré. Na estação seca, formam-se praias de areia onde as pessoas vão nadar.",
+    Direccion = "A orillas del Río Mamoré, a 13km de Trinidad",
+    Latitud = "-14.877844",
+    Longitud = "-64.997456",
+    TipoId = 2
+},
+new SitioData
+{
+    Nombre = "Laguna Suárez",
+    NombreIngles = "Suárez Lagoon",
+    NombrePortugues = "Lagoa Suárez",
+    Descripcion = "Laguna artificial construida por la antigua cultura de los Moxos. Es el balneario principal de la ciudad, con restaurantes a la orilla del agua.",
+    DescripcionIngles = "Artificial lagoon built by the ancient Moxos culture. It is the city's main spa, with restaurants on the water's edge.",
+    DescripcionPortugues = "Lagoa artificial construída pela antiga cultura Moxos. É o principal balneário da cidade, com restaurantes à beira d'água.",
+    Direccion = "Zona Oeste de Trinidad",
+    Latitud = "-14.883144",
+    Longitud = "-64.876284",
+    TipoId = 2
+},
 
-    // Museos (TipoId = 3)
-    new SitioData
-    {
-        Nombre = "Museo Ictícola",
-        NombreIngles = "Ichthyological Museum (Fish Museum)",
-        NombrePortugues = "Museu Ictícola (Museu de Peixes)",
-        Descripcion = "Ubicado en el campus de la UAB. Tiene una de las colecciones de peces de agua dulce más grandes de Sudamérica, incluyendo el famoso bufeo disecado.",
-        DescripcionIngles = "Located on the UAB campus. It has one of the largest freshwater fish collections in South America, including the famous stuffed pink dolphin.",
-        DescripcionPortugues = "Localizado no campus da UAB. Possui uma das maiores coleções de peixes de água doce da América do Sul, incluindo o famoso golfinho rosa dissecado.",
-        Direccion = "Campus UAB, Av. Ganadero",
-        Latitud = "-14.815000",
-        Longitud = "-64.905000",
-        TipoId = 3
-    },
-    new SitioData
-    {
-        Nombre = "Museo Etno-Arqueológico 'Kenneth Lee'",
-        NombreIngles = "Kenneth Lee Ethno-Archaeological Museum",
-        NombrePortugues = "Museu Etno-Arqueológico 'Kenneth Lee'",
-        Descripcion = "Imprescindible para conocer la 'Cultura Hidráulica de Moxos'. Explica cómo los antiguos habitantes manejaban las inundaciones con lomas y camellones.",
-        DescripcionIngles = "Essential for understanding the 'Hydraulic Culture of Moxos'. It explains how ancient inhabitants managed floods with mounds and raised fields.",
-        DescripcionPortugues = "Essencial para entender a 'Cultura Hidráulica de Moxos'. Explica como os antigos habitantes gerenciavam as inundações com montes e campos elevados.",
-        Direccion = "Cerca de la Plazuela Doris Natusch",
-        Latitud = "-14.840000",
-        Longitud = "-64.905000",
-        TipoId = 3
-    },
+// Museos (TipoId = 3)
+new SitioData
+{
+    Nombre = "Museo Ictícola",
+    NombreIngles = "Ichthyological Museum (Fish Museum)",
+    NombrePortugues = "Museu Ictícola (Museu de Peixes)",
+    Descripcion = "Ubicado en el campus de la UAB. Tiene una de las colecciones de peces de agua dulce más grandes de Sudamérica, incluyendo el famoso bufeo disecado.",
+    DescripcionIngles = "Located on the UAB campus. It has one of the largest freshwater fish collections in South America, including the famous stuffed pink dolphin.",
+    DescripcionPortugues = "Localizado no campus da UAB. Possui uma das maiores coleções de peixes de água doce da América do Sul, incluindo o famoso golfinho rosa dissecado.",
+    Direccion = "Campus UAB, Av. Ganadero",
+    Latitud = "-14.811714",
+    Longitud = "-64.895929",
+    TipoId = 3
+},
+new SitioData
+{
+    Nombre = "Museo Etno-Arqueológico 'Kenneth Lee'",
+    NombreIngles = "Kenneth Lee Ethno-Archaeological Museum",
+    NombrePortugues = "Museu Etno-Arqueológico 'Kenneth Lee'",
+    Descripcion = "Imprescindible para conocer la 'Cultura Hidráulica de Moxos'. Explica cómo los antiguos habitantes manejaban las inundaciones con lomas y camellones.",
+    DescripcionIngles = "Essential for understanding the 'Hydraulic Culture of Moxos'. It explains how ancient inhabitants managed floods with mounds and raised fields.",
+    DescripcionPortugues = "Essencial para entender a 'Cultura Hidráulica de Moxos'. Explica como os antigos habitantes gerenciavam as inundações com montes e campos elevados.",
+    Direccion = "Cerca de la Plazuela Doris Natusch",
+    Latitud = "-14.816744",
+    Longitud = "-64.904362",
+    TipoId = 3
+},
 
-    // Naturaleza (TipoId = 4)
-    new SitioData
-    {
-        Nombre = "Santuario Ecológico Chuchini",
-        NombreIngles = "Chuchini Ecological Sanctuary",
-        NombrePortugues = "Santuário Ecológico Chuchini",
-        Descripcion = "Refugio de vida silvestre y sitio arqueológico donde puedes hacer caminatas por la selva, ver lagartos y aves, y navegar por los canales.",
-        DescripcionIngles = "Wildlife refuge and archaeological site where you can hike through the jungle, see alligators and birds, and navigate the channels.",
-        DescripcionPortugues = "Refúgio de vida selvagem e sítio arqueológico onde você pode fazer caminhadas na selva, ver jacarés e pássaros, e navegar pelos canais.",
-        Direccion = "A 14 km de Trinidad por el río Ibare",
-        Latitud = "-14.890000",
-        Longitud = "-64.870000",
-        TipoId = 4
-    },
-    new SitioData
-    {
-        Nombre = "Parque Pantanal",
-        NombreIngles = "Pantanal Park",
-        NombrePortugues = "Parque Pantanal",
-        Descripcion = "Un parque tipo zoológico urbano donde se pueden observar animales de la región (capibaras, caimanes) en un entorno semi-natural.",
-        DescripcionIngles = "An urban zoo-like park where you can observe regional animals (capybaras, caimans) in a semi-natural environment.",
-        DescripcionPortugues = "Um parque urbano tipo zoológico onde você pode observar animais da região (capivaras, jacarés) em um ambiente semi-natural.",
-        Direccion = "Cruce Av. Ganadero y Av. Circunvalación",
-        Latitud = "-14.825000",
-        Longitud = "-64.920000",
-        TipoId = 4
-    }
+// Naturaleza (TipoId = 4)
+new SitioData
+{
+    Nombre = "Santuario Ecológico Chuchini",
+    NombreIngles = "Chuchini Ecological Sanctuary",
+    NombrePortugues = "Santuário Ecológico Chuchini",
+    Descripcion = "Refugio de vida silvestre y sitio arqueológico donde puedes hacer caminatas por la selva, ver lagartos y aves, y navegar por los canales.",
+    DescripcionIngles = "Wildlife refuge and archaeological site where you can hike through the jungle, see alligators and birds, and navigate the channels.",
+    DescripcionPortugues = "Refúgio de vida selvagem e sítio arqueológico onde você pode fazer caminhadas na selva, ver jacarés e pássaros, e navegar pelos canais.",
+    Direccion = "A 14 km de Trinidad por el río Ibare",
+    Latitud = "-14.720067",
+    Longitud = "-64.949455",
+    TipoId = 4
+},
+new SitioData
+{
+    Nombre = "Parque Pantanal",
+    NombreIngles = "Pantanal Park",
+    NombrePortugues = "Parque Pantanal",
+    Descripcion = "Un parque tipo zoológico urbano donde se pueden observar animales de la región (capibaras, caimanes) en un entorno semi-natural.",
+    DescripcionIngles = "An urban zoo-like park where you can observe regional animals (capybaras, caimans) in a semi-natural environment.",
+    DescripcionPortugues = "Um parque urbano tipo zoológico onde você pode observar animais da região (capivaras, jacarés) em um ambiente semi-natural.",
+    Direccion = "Cruce Av. Ganadero y Av. Circunvalación",
+    Latitud = "-14.828918",
+    Longitud = "-64.912339",
+    TipoId = 4
+}
 };
 
 
