@@ -222,7 +222,7 @@ namespace PruebasAutomatizadas
         {
             // Buscar enlace de creación
             var createLink = wait.Until(d =>
-                d.FindElement(By.LinkText("Create New")) ??
+                d.FindElement(By.LinkText("Crear Nuevo")) ??
                 d.FindElement(By.XPath("//a[contains(text(),'Nuevo')]")) ??
                 d.FindElement(By.XPath("//a[contains(@href,'/Create')]"))
             );

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Guía Turística</title>
 
-    <!-- METADATOS PARA EVITAR TRADUCCIÓN AUTOMÁTICA -->
+    <!-- Evitar traducción automática -->
     <meta name="google" content="notranslate">
     <meta name="robots" content="notranslate">
 
@@ -14,56 +14,63 @@
     <link rel="stylesheet" href="~/guia_turistico.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body class="d-flex flex-column min-vh-100">
-    <!-- Barra de navegación -->
-    <nav class="navbar navbar-expand-lg navbar-dark">
+
+<body class="d-flex flex-column min-vh-100 bg-light">
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm py-3">
         <div class="container">
-            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+            <a class="navbar-brand fw-bold" asp-area="" asp-controller="Home" asp-action="Index">
                 <i class="fas fa-map-marked-alt me-2"></i>Guía Turística de Trinidad
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarNav" aria-controls="navbarNav"
+                    aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
+
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav ms-auto align-items-center">
+
                     <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
+                        <a class="nav-link" asp-controller="Home" asp-action="Index">
                             <i class="fas fa-home me-1"></i>Inicio
                         </a>
                     </li>
+
                     <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Mapa">
+                        <a class="nav-link" asp-controller="Home" asp-action="Mapa">
                             <i class="fas fa-map me-1"></i>Mapa
                         </a>
                     </li>
 
-                    <!-- 🔒 Sección visible solo para Admin -->
                     @if (User.IsInRole("Admin"))
                     {
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle text-warning" href="#" role="button"
-                               data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fas fa-tools me-1"></i> Administración
+                            <a class="nav-link dropdown-toggle text-warning fw-semibold" href="#"
+                               role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-tools me-1"></i>Administración
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="adminDropdown">
+
+                            <ul class="dropdown-menu dropdown-menu-end shadow-sm">
                                 <li>
-                                    <a class="dropdown-item" asp-area="" asp-controller="ImagenesSitios" asp-action="Index">
+                                    <a class="dropdown-item" asp-controller="ImagenesSitios" asp-action="Index">
                                         <i class="fas fa-images me-2"></i>Gestión de Imágenes
                                     </a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item" asp-area="" asp-controller="Comentarios" asp-action="Index">
+                                    <a class="dropdown-item" asp-controller="Comentarios" asp-action="Index">
                                         <i class="fas fa-comments me-2"></i>Gestión de Comentarios
                                     </a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item" asp-area="" asp-controller="Tipos" asp-action="Index">
+                                    <a class="dropdown-item" asp-controller="Tipos" asp-action="Index">
                                         <i class="fas fa-tags me-2"></i>Tipos de Tours
                                     </a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item" asp-area="" asp-controller="SitiosTuristicos" asp-action="Index">
+                                    <a class="dropdown-item" asp-controller="SitiosTuristicos" asp-action="Index">
                                         <i class="fas fa-landmark me-2"></i>Lugares Turísticos
                                     </a>
                                 </li>
@@ -71,47 +78,38 @@
                         </li>
                     }
 
-                    <!-- 🌐 Selector de idioma -->
-                    <li class="nav-item dropdown">
+                    <!-- Selector de idioma -->
+                    <li class="nav-item dropdown ms-2">
                         <a class="nav-link dropdown-toggle" href="#" role="button"
                            data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fas fa-language me-1"></i>
                             <span id="currentLanguageText">
                                 @{
                                     var currentLang = Context.Request.Cookies["selectedLanguage"] ?? "es";
-                                    switch (currentLang)
-                                    {
-                                        case "en":
-                                            <text>English</text>
-                                            break;
-                                        case "pt":
-                                            <text>Português</text>
-                                            break;
-                                        default:
-                                            <text>Español</text>
-                                            break;
-                                    }
-                                }
+                                    <text>
+                                        @(currentLang == "en" ? "English" :
+                                                                            currentLang == "pt" ? "Português" : "Español")
+                                </text>
+                                                                }
                             </span>
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarLanguageDropdown">
+
+                        <ul class="dropdown-menu dropdown-menu-end shadow-sm">
                             <li>
-                                <a class="dropdown-item language-option @(currentLang == "es" ? "active" : "")" href="#" data-lang="es">
-                                    <i class="flag-icon me-2">🇪🇸</i>Español
-                                </a>
+                                <a class="dropdown-item language-option @(currentLang == "es" ? "active" : "")"
+                                   href="#" data-lang="es">🇪🇸 Español</a>
                             </li>
                             <li>
-                                <a class="dropdown-item language-option @(currentLang == "en" ? "active" : "")" href="#" data-lang="en">
-                                    <i class="flag-icon me-2">🇺🇸</i>English
-                                </a>
+                                <a class="dropdown-item language-option @(currentLang == "en" ? "active" : "")"
+                                   href="#" data-lang="en">🇺🇸 English</a>
                             </li>
                             <li>
-                                <a class="dropdown-item language-option @(currentLang == "pt" ? "active" : "")" href="#" data-lang="pt">
-                                    <i class="flag-icon me-2">🇵🇹</i>Português
-                                </a>
+                                <a class="dropdown-item language-option @(currentLang == "pt" ? "active" : "")"
+                                   href="#" data-lang="pt">🇵🇹 Português</a>
                             </li>
                         </ul>
                     </li>
+
                 </ul>
 
                 <partial name="_LoginPartial" />
@@ -119,22 +117,23 @@
         </div>
     </nav>
 
-    <!-- Contenido principal -->
-    <main role="main" class="flex-fill container pb-3">
+    <!-- Contenido -->
+    <main class="container flex-fill py-4">
         @RenderBody()
     </main>
 
     <!-- Footer -->
-    <footer class="text-center footer mt-auto">
-        <div class="container">
+    <footer class="bg-dark text-white text-center py-3 mt-auto">
+        <div class="container small">
             <p class="mb-2">
-                &copy; 2025 - Guía Turística de Trinidad |
-                <a asp-area="" asp-controller="Home" asp-action="Privacy">Política de Privacidad</a>
+                &copy; 2025 Guía Turística de Trinidad |
+                <a class="text-warning text-decoration-none" asp-controller="Home" asp-action="Privacy">Política de Privacidad</a>
             </p>
+
             <p class="mb-0">
                 Síguenos:
-                <a href="#" class="text-white mx-2"><i class="fab fa-facebook me-1"></i>Facebook</a> |
-                <a href="#" class="text-white mx-2"><i class="fab fa-instagram me-1"></i>Instagram</a> |
+                <a href="#" class="text-white mx-2"><i class="fab fa-facebook me-1"></i>Facebook</a>
+                <a href="#" class="text-white mx-2"><i class="fab fa-instagram me-1"></i>Instagram</a>
                 <a href="#" class="text-white mx-2"><i class="fab fa-twitter me-1"></i>Twitter</a>
             </p>
         </div>
@@ -145,78 +144,17 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
 
     <script>
-        // Manejo del cambio de idioma
-        document.addEventListener('DOMContentLoaded', function() {
-            // Obtener idioma actual de localStorage o cookie
-            let currentLang = localStorage.getItem('selectedLanguage');
-            if (!currentLang) {
-                // Si no hay en localStorage, buscar en cookies
-                const cookieValue = document.cookie
-                    .split('; ')
-                    .find(row => row.startsWith('selectedLanguage='))
-                    ?.split('=')[1];
-                currentLang = cookieValue || 'es';
-                localStorage.setItem('selectedLanguage', currentLang);
-            }
-
-            // Actualizar la cookie para el servidor
-            document.cookie = `selectedLanguage=${currentLang}; path=/; max-age=31536000`;
-
-            // Manejar clic en opciones de idioma
-            document.querySelectorAll('.language-option').forEach(option => {
-                option.addEventListener('click', function(e) {
+        // Script de idioma (mejor organizado)
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.language-option').forEach(opt => {
+                opt.addEventListener('click', e => {
                     e.preventDefault();
-                    const selectedLang = this.getAttribute('data-lang');
-
-                    // Guardar en localStorage
-                    localStorage.setItem('selectedLanguage', selectedLang);
-
-                    // Guardar en cookie
-                    document.cookie = `selectedLanguage=${selectedLang}; path=/; max-age=31536000`;
-
-                    // Forzar recarga completa de la página
-                    window.location.reload(true);
+                    const lang = opt.getAttribute('data-lang');
+                    localStorage.setItem('selectedLanguage', lang);
+                    document.cookie = `selectedLanguage=${lang}; path=/; max-age=31536000`;
+                    location.reload();
                 });
             });
-
-            // Actualizar texto del idioma actual en el dropdown
-            updateCurrentLanguageText(currentLang);
-
-            function updateCurrentLanguageText(lang) {
-                const languageText = document.getElementById('currentLanguageText');
-                if (languageText) {
-                    switch(lang) {
-                        case 'en':
-                            languageText.textContent = 'English';
-                            break;
-                        case 'pt':
-                            languageText.textContent = 'Português';
-                            break;
-                        default:
-                            languageText.textContent = 'Español';
-                            break;
-                    }
-                }
-            }
-
-            // Mejorar la interactividad de los dropdowns
-            document.querySelectorAll('.dropdown-item').forEach(item => {
-                item.addEventListener('mouseenter', function() {
-                    this.style.transform = 'translateX(5px)';
-                });
-                item.addEventListener('mouseleave', function() {
-                    this.style.transform = 'translateX(0)';
-                });
-            });
-
-            // PREVENIR TRADUCCIÓN AUTOMÁTICA DE GOOGLE
-            // Agregar atributo translate="no" a elementos críticos
-            document.querySelectorAll('.navbar, .dropdown-menu, .language-option, #currentLanguageText').forEach(el => {
-                el.setAttribute('translate', 'no');
-            });
-
-            // Agregar clase para prevenir traducción
-            document.body.classList.add('notranslate');
         });
     </script>
 
