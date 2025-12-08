@@ -37,9 +37,6 @@ html, body {
     grid-template-rows: auto 1fr auto;
     min-height: 100vh;
     background: linear-gradient(135deg, var(--crema-verde) 0%, var(--blanco-verde) 100%);
-}
-
-body {
     font-family: 'Segoe UI', 'Inter', 'SF Pro Display', -apple-system, sans-serif;
     color: var(--neutral-dark);
     line-height: 1.6;
@@ -65,20 +62,15 @@ body {
 .card-header,
 .card-header-gradient,
 .btn-primary,
-.bg-primary-gradient {
+.bg-primary-gradient,
+header {
     background: var(--gradient-verde) !important;
+    color: white !important;
 }
 
 .navbar {
     box-shadow: 0 2px 15px var(--shadow-color);
     padding: 0.8rem 0;
-}
-
-.navbar-brand,
-.header-content,
-.card-header,
-.card-header-gradient {
-    color: white !important;
 }
 
 .navbar-brand {
@@ -89,8 +81,6 @@ body {
 
 /* Header con patron */
 header {
-    background: var(--gradient-verde-agua);
-    color: white;
     padding: 4rem 0;
     text-align: center;
     position: relative;
@@ -139,18 +129,19 @@ header {
 .nav-link {
     font-weight: 500;
     padding: 0.5rem 1rem !important;
+    border-radius: 25px;
+    margin: 0 2px;
 }
 
 /* Navbar links */
 .navbar .nav-link {
     color: rgba(255,255,255,0.9) !important;
-    border-radius: 25px;
-    margin: 0 2px;
 }
 
     .navbar .nav-link:hover,
     .navbar .nav-link:focus,
-    .navbar .nav-link.active {
+    .navbar .nav-link.active,
+    .nav-pills .nav-link.active {
         background: var(--gradient-verde);
         color: white !important;
         box-shadow: 0 3px 10px var(--shadow-color);
@@ -166,7 +157,7 @@ header {
 }
 
     .nav-tabs .nav-link {
-        color: var(--neutral-alt) !important; /* #4A7C59 - verde apagado */
+        color: var(--neutral-alt) !important;
         background-color: rgba(26, 93, 58, 0.08);
         border: 1px solid rgba(82, 129, 84, 0.3);
         border-bottom: none;
@@ -202,25 +193,16 @@ header {
 /* Nav-pills */
 .nav-pills .nav-link {
     color: var(--neutral-dark);
-    border-radius: 25px;
     margin: 0.2rem;
 }
-
-    .nav-pills .nav-link.active {
-        background: var(--gradient-verde);
-        color: white !important;
-        box-shadow: 0 3px 10px var(--shadow-color);
-        transform: translateY(-1px);
-    }
 
 /* ===== CARDS ===== */
 .card,
 .image-card {
-    border: none;
+    border: 1px solid var(--border-color);
     border-radius: var(--card-radius);
     box-shadow: var(--card-shadow);
     background: white;
-    border: 1px solid var(--border-color);
     overflow: hidden;
 }
 
@@ -269,6 +251,19 @@ header {
 .card:hover .card-img-top,
 .image-card:hover img {
     transform: scale(1.05);
+}
+
+.image-card .btn-remove {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 10;
+}
+
+.image-card:hover .btn-remove {
+    opacity: 1;
 }
 
 /* Ratio containers */
@@ -416,6 +411,8 @@ textarea.form-control {
     border-radius: 15px;
     box-shadow: 0 5px 20px var(--shadow-color);
     border: 3px solid var(--verde-amazonico);
+    min-height: 450px;
+    background-color: #f8f9fa;
 }
 
 .leaflet-container {
@@ -451,6 +448,36 @@ textarea.form-control {
     transform: translateY(-50%);
 }
 
+/* Ratings */
+#ratingStars {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    overflow: hidden;
+    min-width: 250px;
+    cursor: pointer;
+}
+
+.rating-stars .star {
+    font-size: 2rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    margin: 0 2px;
+}
+
+    .rating-stars .star:hover {
+        transform: scale(1.1);
+    }
+
+    .rating-stars .star:focus {
+        outline: 2px solid #0d6efd;
+        outline-offset: 2px;
+    }
+
 /* ===== UTILIDADES ===== */
 .position-relative {
     position: relative;
@@ -468,7 +495,8 @@ textarea.form-control {
 }
 
 .bg-light-subtle,
-.bg-panel {
+.bg-panel,
+.test-mode {
     background-color: #f8f9fa !important;
 }
 
@@ -476,19 +504,27 @@ textarea.form-control {
     background-color: transparent !important;
 }
 
-/* Ratings */
-.rating-stars {
-    cursor: pointer;
-    font-size: 2rem;
+/* Estados de validación */
+.is-valid {
+    border-color: #198754 !important;
 }
 
-    .rating-stars .star {
-        margin: 0 2px;
-    }
+.is-invalid {
+    border-color: #dc3545 !important;
+}
 
-        .rating-stars .star:hover {
-            transform: scale(1.2);
-        }
+.is-valid,
+.is-invalid {
+    transition: border-color 0.3s ease;
+}
+
+/* Modo test */
+.test-mode input,
+.test-mode textarea,
+.test-mode select {
+    background-color: white !important;
+    border: 1px solid #dee2e6 !important;
+}
 
 /* ===== ANIMACIONES ===== */
 @keyframes fadeInUp {
@@ -503,30 +539,23 @@ textarea.form-control {
     }
 }
 
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
 .row.mb-4,
 .row.mb-5 {
     animation: fadeInUp 0.5s ease-out;
 }
-#ratingStars {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 5px; /* Ajusta el espacio entre estrellas si es necesario */
-    flex-wrap: nowrap; /* Asegura que no se envuelvan */
-    white-space: nowrap;
-    overflow: hidden;
-}
 
-    #ratingStars .star {
-        font-size: 2rem; /* Usamos rem en lugar de fa-2x para más control */
-        cursor: pointer;
-        transition: all 0.2s ease;
-        flex-shrink: 0; /* Evita que se encojan */
-    }
-
-/* Si prefieres usar el tamaño de Font Awesome, puedes ajustar el tamaño del contenedor para que quepan 5 estrellas */
-#ratingStars {
-    min-width: 250px; /* Aproximadamente 5 estrellas de 2rem (40px) + espacios */
+.fade-in {
+    animation: fadeIn 0.3s ease-in;
 }
 
 /* ===== SCROLLBAR ===== */
@@ -583,26 +612,10 @@ textarea.form-control {
         height: 40px;
     }
 }
-.image-card .btn-remove {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    z-index: 10;
-}
 
-.image-card:hover .btn-remove {
-    opacity: 1;
-}
-
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
+/* Estilos adicionales para galería */
+.url-preview {
+    font-family: monospace;
+    font-size: 0.75rem;
+    color: #6c757d;
 }

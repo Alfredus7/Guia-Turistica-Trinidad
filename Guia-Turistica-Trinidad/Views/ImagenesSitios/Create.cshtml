@@ -112,14 +112,14 @@
                 <div class="card-header border-bottom py-3">
                     <h4 class="h5 mb-0">
                         <i class="fas fa-images me-2"></i>Galería de Imágenes
-                        <span class="badge bg-primary rounded-pill ms-2" id="galleryCountBadge">0</span>
+                        <span class="badge text-light bg-dark rounded-pill ms-2" id="galleryCountBadge">0</span>
                     </h4>
                 </div>
                 <div class="card-body">
                     <!-- Estado vacío -->
                     <div class="text-center py-5" id="emptyState">
                         <div class="mb-3">
-                            <i class="fas fa-images fa-3x text-light bg-primary p-4 rounded-circle"></i>
+                            <i class="fas fa-images fa-3x text-light bg-dark p-4 rounded-circle"></i>
                         </div>
                         <h5 class="text-muted mb-2">No hay imágenes agregadas</h5>
                         <p class="text-muted small mb-0">Las imágenes que agregues aparecerán aquí como una galería</p>
@@ -680,82 +680,4 @@
             formManager.init();
         });
     </script>
-
-    <style>
-        /* Estilos básicos */
-        .object-fit-cover {
-            object-fit: cover;
-        }
-
-        /* Tarjetas de imagen */
-        .image-card {
-            cursor: pointer;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-            .image-card:hover {
-                transform: translateY(-5px);
-                box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-            }
-
-            .image-card .card-img-top {
-                position: relative;
-            }
-
-            .image-card .btn-remove {
-                position: absolute;
-                top: 10px;
-                right: 10px;
-                opacity: 0;
-                transition: opacity 0.3s ease;
-            }
-
-            .image-card:hover .btn-remove {
-                opacity: 1;
-            }
-
-        /* Estados de validación */
-        .is-valid {
-            border-color: #198754 !important;
-        }
-
-        .is-invalid {
-            border-color: #dc3545 !important;
-        }
-
-        /* Modo test */
-        .test-mode {
-            background-color: #f8f9fa;
-        }
-
-            .test-mode input,
-            .test-mode textarea,
-            .test-mode select {
-                background-color: white !important;
-                border: 1px solid #dee2e6 !important;
-            }
-
-        /* Animaciones suaves */
-        .fade-in {
-            animation: fadeIn 0.3s ease-in;
-        }
-
-
-
-        /* Mejoras para galería */
-        .url-preview {
-            font-family: monospace;
-            font-size: 0.75rem;
-            color: #6c757d;
-        }
-
-        /* Estilos para imágenes en galería */
-        .image-card img {
-            transition: transform 0.3s ease;
-        }
-
-        .image-card:hover img {
-            transform: scale(1.05);
-        }
-    </style>
 }

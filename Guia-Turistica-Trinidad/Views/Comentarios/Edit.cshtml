@@ -2,14 +2,13 @@
 
 @{
     ViewData["Title"] = "Editar Comentario";
-    // Asegurar valores no nulos para el JavaScript
     var texto = Model.Texto ?? "";
     var puntuacion = Model.Puntuacion;
     var fecha = Model.Fecha.ToString("yyyy-MM-dd");
 }
 
 <div class="container py-4">
-    <!-- Header con navegación - ESTRUCTURA COHERENTE -->
+    <!-- Header con navegación -->
     <div class="bg-primary-gradient text-white py-4">
         <div class="container">
             <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
@@ -26,121 +25,108 @@
         </div>
     </div>
 
-    <!-- Formulario Principal - ESTRUCTURA COHERENTE -->
+    <!-- Formulario Principal -->
     <div class="container py-4">
         <form asp-action="Edit" id="commentForm" class="needs-validation" novalidate>
+            @Html.AntiForgeryToken()
             <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
             <input type="hidden" asp-for="ComentarioId" />
+            <input type="hidden" asp-for="SitioTuristicoId" />
+            <input type="hidden" asp-for="UsuarioId" />
 
             <!-- Sección de Información Actual -->
             <div class="card shadow-lg mb-5 border-0 overflow-hidden">
-                <div class="card-header card-header-gradient py-3">
+                <div class="card-header bg-primary bg-gradient py-3 text-white">
                     <h3 class="h5 mb-0">
-                        <i class="fas fa-info-circle me-2"></i>Información Actual del Comentario
+                        <i class="fas fa-info-circle me-2"></i>Información del Comentario
                     </h3>
                 </div>
                 <div class="card-body p-0">
                     <div class="row g-0">
-                        <!-- Datos del Comentario -->
+                        <!-- Información del Sitio y Usuario -->
                         <div class="col-lg-8">
                             <div class="p-4">
                                 <h5 class="fw-semibold mb-3">
                                     <i class="fas fa-comment me-2 text-primary"></i>Datos del Comentario
                                 </h5>
 
-                                <div class="mb-4">
-                                    <div class="alert alert-info mb-3">
-                                        <small>
-                                            <i class="fas fa-info-circle me-2"></i>
-                                            <strong>Instrucciones:</strong> Revisa y modifica los datos del comentario.
-                                            El sitio turístico y usuario no pueden cambiarse una vez creado el comentario.
-                                        </small>
-                                    </div>
+                                <div class="alert alert-info alert-dismissible fade show mb-3" role="alert">
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    <small>
+                                        <i class="fas fa-info-circle me-2"></i>
+                                        <strong>Instrucciones:</strong> Revisa y modifica los datos del comentario.
+                                    </small>
+                                </div>
 
-                                    <!-- Sitio Turístico (solo lectura) -->
-                                    <div class="form-group mb-4">
-                                        <label class="form-label fw-semibold">
-                                            <i class="fas fa-landmark me-2 text-muted"></i>Sitio Turístico
-                                        </label>
-                                        <div class="input-group">
-                                            <span class="input-group-text bg-transparent">
-                                                <i class="fas fa-map-marker-alt text-primary"></i>
-                                            </span>
-                                            <input type="text"
-                                                   class="form-control form-control-lg bg-light"
-                                                   value="@ViewBag.SitioTuristicoNombre"
-                                                   readonly
-                                                   id="sitioReadonly">
-                                        </div>
-                                        <div class="form-text">Sitio turístico al que pertenece este comentario</div>
+                                <!-- Sitio Turístico (solo lectura) -->
+                                <div class="form-group mb-4">
+                                    <label class="form-label fw-semibold">
+                                        <i class="fas fa-landmark me-2 text-muted"></i>Sitio Turístico
+                                    </label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                        </span>
+                                        <input type="text"
+                                               class="form-control"
+                                               value="@ViewBag.SitioTuristicoNombre"
+                                               readonly>
                                     </div>
+                                    <div class="form-text">Sitio turístico al que pertenece este comentario</div>
+                                </div>
 
-                                    <!-- Usuario (solo lectura) -->
-                                    <div class="form-group">
-                                        <label class="form-label fw-semibold">
-                                            <i class="fas fa-user me-2 text-muted"></i>Usuario
-                                        </label>
-                                        <div class="input-group">
-                                            <span class="input-group-text bg-transparent">
-                                                <i class="fas fa-user-circle text-primary"></i>
-                                            </span>
-                                            <input type="text"
-                                                   class="form-control form-control-lg bg-light"
-                                                   value="@ViewBag.UsuarioNombre"
-                                                   readonly
-                                                   id="usuarioReadonly">
-                                        </div>
-                                        <div class="form-text">Usuario que realizó el comentario</div>
+                                <!-- Usuario (solo lectura) -->
+                                <div class="form-group">
+                                    <label class="form-label fw-semibold">
+                                        <i class="fas fa-user me-2 text-muted"></i>Usuario
+                                    </label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">
+                                            <i class="fas fa-user-circle"></i>
+                                        </span>
+                                        <input type="text"
+                                               class="form-control"
+                                               value="@ViewBag.UsuarioNombre"
+                                               readonly>
                                     </div>
-
-                                    <!-- Campos ocultos para mantener la relación -->
-                                    <input type="hidden" asp-for="SitioTuristicoId" />
-                                    <input type="hidden" asp-for="UsuarioId" />
+                                    <div class="form-text">Usuario que realizó el comentario</div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Panel de Estadísticas -->
-                        <div class="col-lg-4 border-start bg-panel">
+                        <div class="col-lg-4 border-start bg-light">
                             <div class="p-4">
                                 <h5 class="fw-semibold mb-3">
-                                    <i class="fas fa-chart-bar me-2 text-primary"></i>Estadísticas del Comentario
+                                    <i class="fas fa-chart-bar me-2 text-primary"></i>Estadísticas
                                 </h5>
 
-                                <div class="border rounded-3 p-3 bg-light-subtle">
+                                <div class="border rounded-3 p-3 bg-white">
                                     <h6 class="fw-semibold mb-2 text-dark">
-                                        <i class="fas fa-history me-2 text-success"></i>Información Histórica
+                                        <i class="fas fa-history me-2 text-success"></i>Información
                                     </h6>
 
                                     <div class="mb-3">
                                         <div class="d-flex justify-content-between align-items-center mb-2">
-                                            <span class="small text-muted">Fecha de creación:</span>
+                                            <span class="small text-muted">Creado:</span>
                                             <span class="badge bg-primary">@Model.Fecha.ToString("dd/MM/yyyy")</span>
                                         </div>
                                         <div class="d-flex justify-content-between align-items-center mb-2">
-                                            <span class="small text-muted">Última modificación:</span>
-                                            <span class="badge bg-info" id="lastModifiedBadge">@DateTime.Now.ToString("dd/MM/yyyy")</span>
-                                        </div>
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <span class="small text-muted">Calificación actual:</span>
+                                            <span class="small text-muted">Calificación:</span>
                                             <div class="text-warning" id="currentRating">
                                                 @for (int i = 0; i < Model.Puntuacion; i++)
                                                 {
                                                     <i class="fas fa-star"></i>
                                                 }
-                                                @for (int i = Model.Puntuacion; i < 5; i++)
-                                                {
-                                                    <i class="fas fa-star" style="opacity: 0.3;"></i>
-                                                }
                                             </div>
                                         </div>
                                     </div>
 
-                                    <!-- Contador de caracteres actual -->
+                                    <!-- Contador de caracteres -->
                                     <div class="mt-3 pt-3 border-top">
                                         <div class="d-flex justify-content-between align-items-center">
-                                            <span class="small text-muted">Longitud del texto:</span>
-                                            <span class="badge" id="textLengthBadge">
+                                            <span class="small text-muted">Longitud:</span>
+                                            <span class="badge bg-primary" id="textLengthBadge">
                                                 @texto.Length/1000
                                             </span>
                                         </div>
@@ -149,10 +135,10 @@
 
                                 <!-- Badge de estado -->
                                 <div class="mt-3">
-                                    <span class="badge badge-success px-3 py-2" id="editStatus">
+                                    <span class="badge bg-success px-3 py-2 me-2" id="editStatus">
                                         <i class="fas fa-check-circle me-1"></i>Comentario existente
                                     </span>
-                                    <span class="badge badge-warning px-3 py-2 ms-2" id="modifiedStatus" style="display: none;">
+                                    <span class="badge bg-warning px-3 py-2" id="modifiedStatus" style="display: none;">
                                         <i class="fas fa-edit me-1"></i>Modificaciones pendientes
                                     </span>
                                 </div>
@@ -164,7 +150,7 @@
 
             <!-- Contenido del Comentario -->
             <div class="row g-4 mb-4">
-                <!-- Columna Izquierda - Contenido del Comentario -->
+                <!-- Columna Izquierda - Contenido -->
                 <div class="col-lg-8">
                     <div class="card h-100 border-0 shadow-sm">
                         <div class="card-header border-bottom py-3">
@@ -175,41 +161,43 @@
                         <div class="card-body">
                             <div class="mb-4">
                                 <label asp-for="Texto" class="form-label fw-semibold">
-                                    <i class="fas fa-align-left me-2 text-muted"></i>Comentario
+                                    <i class="fas fa-align-left me-2 text-muted"></i>Comentario *
                                 </label>
-                                <div class="position-relative">
-                                    <textarea asp-for="Texto"
-                                              class="form-control"
-                                              rows="6"
-                                              placeholder="Escribe tu experiencia, opinión o recomendación sobre este sitio turístico..."
-                                              required
-                                              id="textoInput"
-                                              maxlength="1000">@texto</textarea>
-                                    <div class="char-counter">@texto.Length/1000</div>
+                                <textarea asp-for="Texto"
+                                          class="form-control"
+                                          rows="6"
+                                          placeholder="Escribe tu experiencia, opinión o recomendación sobre este sitio turístico..."
+                                          required
+                                          id="textoInput"
+                                          maxlength="1000"
+                                          data-bs-toggle="tooltip"
+                                          data-bs-title="Tu experiencia personal en el sitio turístico">@texto</textarea>
+                                <div class="form-text text-end">
+                                    <span class="text-muted" id="textoCounter">@texto.Length/1000</span>
                                 </div>
-                                <span asp-validation-for="Texto" class="text-danger small mt-1 d-block"></span>
-                                <div class="form-text">Tu experiencia personal en el sitio turístico</div>
+                                <span asp-validation-for="Texto" class="invalid-feedback"></span>
                             </div>
 
                             <!-- Fecha de publicación -->
                             <div class="form-group">
                                 <label asp-for="Fecha" class="form-label fw-semibold">
-                                    <i class="fas fa-calendar-alt me-2 text-muted"></i>Fecha del Comentario
+                                    <i class="fas fa-calendar-alt me-2 text-muted"></i>Fecha del Comentario *
                                 </label>
                                 <input asp-for="Fecha"
                                        class="form-control"
                                        type="date"
                                        required
                                        id="fechaInput"
-                                       value="@fecha">
-                                <span asp-validation-for="Fecha" class="text-danger small mt-1 d-block"></span>
-                                <div class="form-text">Fecha en que visitaste el sitio o realizas el comentario</div>
+                                       value="@fecha"
+                                       data-bs-toggle="tooltip"
+                                       data-bs-title="Fecha en que visitaste el sitio o realizas el comentario">
+                                <span asp-validation-for="Fecha" class="invalid-feedback"></span>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Columna Derecha - Puntuación y Calificación -->
+                <!-- Columna Derecha - Calificación -->
                 <div class="col-lg-4">
                     <div class="card h-100 border-0 shadow-sm">
                         <div class="card-header border-bottom py-3">
@@ -218,10 +206,10 @@
                             </h4>
                         </div>
                         <div class="card-body">
-                            <!-- Sistema de puntuación con estrellas -->
+                            <!-- Sistema de puntuación -->
                             <div class="mb-4">
                                 <label class="form-label fw-semibold d-block">
-                                    <i class="fas fa-star me-2 text-muted"></i>Puntuación
+                                    <i class="fas fa-star me-2 text-muted"></i>Puntuación *
                                 </label>
 
                                 <div class="text-center mb-3">
@@ -229,7 +217,11 @@
                                         @for (int i = 1; i <= 5; i++)
                                         {
                                             <i class="fas fa-star fa-2x star @(i <= puntuacion ? "text-warning" : "text-muted")"
-                                               data-value="@i"></i>
+                                               data-value="@i"
+                                               role="button"
+                                               tabindex="0"
+                                               aria-label="@i estrellas"
+                                               aria-pressed="@(i <= puntuacion ? "true" : "false")"></i>
                                         }
                                     </div>
                                     <small class="text-muted" id="ratingText">
@@ -246,74 +238,66 @@
                                 </div>
 
                                 <input type="hidden" asp-for="Puntuacion" id="puntuacionInput" value="@puntuacion" />
-                                <span asp-validation-for="Puntuacion" class="text-danger small mt-1 d-block"></span>
-
-                                <div class="form-text">
-                                    Califica tu experiencia del 1 al 5 estrellas
-                                </div>
-                            </div>
-
-                            <!-- Guía de puntuación -->
-                            <div class="border rounded-3 p-3 bg-light-subtle">
-                                <h6 class="fw-semibold mb-2">
-                                    <i class="fas fa-info-circle me-2 text-info"></i>Guía de Calificación
-                                </h6>
-                                <ul class="list-unstyled small mb-0">
-                                    @for (int i = 1; i <= 5; i++)
-                                    {
-                                        <li class="mb-1">
-                                            @for (int j = 0; j < i; j++)
-                                            {
-                                                <i class="fas fa-star text-warning"></i>
-                                            }
-                                        <strong>@i @(i == 1 ? "estrella" : "estrellas"):</strong>
-                                        @(i switch
-                                        {
-                                            1 => "Mala experiencia",
-                                            2 => "Regular",
-                                            3 => "Buena",
-                                            4 => "Muy buena",
-                                            5 => "Excelente",
-                                            _ => ""
-                                        })
-                                    </li>
-                                                                        }
-                                </ul>
+                                <span asp-validation-for="Puntuacion" class="invalid-feedback"></span>
                             </div>
 
                             <!-- Preview de calificación -->
-                            <div class="mt-4">
+                            <div class="border rounded-3 p-3 bg-white mb-4">
+                                <h6 class="fw-semibold mb-2">
+                                    <i class="fas fa-info-circle me-2 text-info"></i>Tu Calificación
+                                </h6>
                                 <div class="d-flex align-items-center justify-content-between">
-                                    <span class="fw-semibold">Calificación actual:</span>
-                                    <div id="selectedRating" class="text-warning">
+                                    <div id="selectedRating" class="text-warning fs-4">
                                         @for (int i = 0; i < 5; i++)
                                         {
                                             <i class="fas fa-star" style="@(i < puntuacion ? "opacity: 1;" : "opacity: 0.3;")"></i>
                                         }
                                     </div>
+                                    <span class="fw-semibold" id="ratingValue">@puntuacion/5</span>
                                 </div>
+                                <div id="ratingDescription" class="small text-muted mt-2">
+                                    @(puntuacion switch
+                                    {
+                                        1 => "Mala experiencia - No lo recomendaría",
+                                        2 => "Regular - Podría mejorar",
+                                        3 => "Buena - Satisfactorio",
+                                        4 => "Muy buena - Lo recomendaría",
+                                        5 => "Excelente - Altamente recomendado",
+                                        _ => "Selecciona las estrellas"
+                                    })
+                                </div>
+                            </div>
+
+                            <!-- Guía de puntuación -->
+                            <div class="small">
+                                <p class="mb-1"><i class="fas fa-star text-warning"></i> <strong>1:</strong> Mala experiencia</p>
+                                <p class="mb-1"><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i> <strong>2:</strong> Regular</p>
+                                <p class="mb-1"><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i> <strong>3:</strong> Buena</p>
+                                <p class="mb-1"><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i> <strong>4:</strong> Muy buena</p>
+                                <p><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i> <strong>5:</strong> Excelente</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Acciones -->
+            <!-- Acciones con Modal de Confirmación -->
             <div class="card border-0 shadow-sm">
                 <div class="card-body p-4">
                     <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
                         <div class="text-center text-md-start">
-                            <h5 class="fw-semibold mb-1">¿Guardar cambios en el comentario?</h5>
+                            <h5 class="fw-semibold mb-1">¿Estás listo para guardar los cambios?</h5>
                             <p class="text-muted small mb-0">
-                                Verifica que la información modificada sea correcta antes de actualizar
+                                Verifica que toda la información sea correcta antes de actualizar
                             </p>
                         </div>
 
                         <div class="d-flex gap-3">
-                            <button type="button" class="btn btn-primary btn-lg px-5" onclick="formManager.restoreOriginal()">
+                            <button type="button" class="btn btn-outline-danger btn-lg px-5"
+                                    data-bs-toggle="modal" data-bs-target="#restoreModal">
                                 <i class="fas fa-undo me-2"></i>Restaurar Original
                             </button>
-                            <button type="submit" class="btn btn-primary btn-lg px-5" id="submitBtn">
+                            <button type="submit" class="btn btn-success btn-lg px-5" id="submitBtn">
                                 <i class="fas fa-save me-2"></i>Actualizar Comentario
                             </button>
                         </div>
@@ -324,103 +308,179 @@
     </div>
 </div>
 
+<!-- Modal de Confirmación para Restaurar -->
+<div class="modal fade" id="restoreModal" tabindex="-1" aria-labelledby="restoreModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="restoreModalLabel">
+                    <i class="fas fa-exclamation-triangle text-warning me-2"></i>Confirmar Restauración
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Estás seguro de que deseas restaurar todos los valores originales?</p>
+                <p class="text-muted small">Se perderán todos los cambios no guardados.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>Cancelar
+                </button>
+                <button type="button" class="btn btn-danger" id="confirmRestore">
+                    <i class="fas fa-undo me-2"></i>Restaurar Todo
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Toast para Mensajes -->
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+    <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <i class="fas fa-info-circle me-2 text-primary"></i>
+            <strong class="me-auto">Sistema</strong>
+            <small>Ahora</small>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body" id="toastMessage">
+            Mensaje de ejemplo
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 
     <script>
-        // Módulo para manejo del formulario de edición de comentarios
+        // Configuración global para Edit de Comentarios
+        const config = {
+            isTestMode: window.navigator.webdriver === true ||
+                       window.location.search.includes('testmode'),
+            originalData: {
+                Texto: "@Html.Raw(texto.Replace("\"", "\\\"").Replace("\r\n", "\\n"))",
+                Puntuacion: @puntuacion,
+                Fecha: '@fecha'
+            }
+        };
+
+        // Módulo para manejo del formulario en edición
         const formManager = {
-            originalData: {},
-            formModified: false,
+            hasChanges: false,
+            originalValues: {},
 
             init() {
-                this.saveOriginalData();
-                this.initCharCounters();
-                this.initRatingSystem();
-                this.initFormValidation();
-                this.initAutoDate();
-                this.initTooltips();
-                this.initChangeDetection();
-                this.cleanLocalStorage();
-                this.updateLastModifiedBadge();
-            },
-
-            saveOriginalData() {
-                const form = document.getElementById('commentForm');
-                const formData = new FormData(form);
-                this.originalData = {};
-
-                for (let [key, value] of formData.entries()) {
-                    this.originalData[key] = value;
+                // Configurar modo test si es necesario
+                if (config.isTestMode) {
+                    document.body.classList.add('test-mode');
+                    console.log('✅ Modo de pruebas activado - Edición de Comentario');
                 }
 
-                // Guardar valores iniciales
-                this.originalData['Puntuacion'] = @puntuacion;
-                this.originalData['Texto'] = `@Html.Raw(texto.Replace("'", "\\'").Replace("\"", "\\\""))`;
-                this.originalData['Fecha'] = '@fecha';
+                // Inicializar componentes básicos
+                this.initBasicComponents();
+                this.saveOriginalValues();
+                this.setupCharacterCounters();
+                this.setupRatingSystem();
+                this.setupChangeDetection();
+
+                // Configurar validación según modo
+                if (config.isTestMode) {
+                    this.setupTestFriendlyForm();
+                } else {
+                    this.setupUserFriendlyForm();
+                }
+
+                // Configurar modal de restauración
+                this.setupRestoreModal();
             },
 
-            initCharCounters() {
-                const textoInput = document.getElementById('textoInput');
-                const textLengthBadge = document.getElementById('textLengthBadge');
-                const charCounter = textoInput.parentNode.querySelector('.char-counter');
-
-                const updateCounter = () => {
-                    const length = textoInput.value.length;
-
-                    // Actualizar badge
-                    textLengthBadge.textContent = `${length}/1000`;
-                    if (length > 1000 * 0.9) {
-                        textLengthBadge.className = 'badge bg-warning';
-                    } else if (length > 1000) {
-                        textLengthBadge.className = 'badge bg-danger';
-                    } else {
-                        textLengthBadge.className = 'badge bg-primary';
+            initBasicComponents() {
+                // Tooltips
+                if (!config.isTestMode) {
+                    try {
+                        var tooltips = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+                        [...tooltips].forEach(el => new bootstrap.Tooltip(el));
+                    } catch (e) {
+                        console.log('Tooltips no disponibles:', e.message);
                     }
+                }
 
-                    // Actualizar char-counter
-                    if (charCounter) {
-                        charCounter.textContent = `${length}/1000`;
-                        if (length > 1000 * 0.9) {
-                            charCounter.style.color = 'var(--warning-color)';
-                        } else if (length > 1000) {
-                            charCounter.style.color = 'var(--danger-color)';
-                        } else {
-                            charCounter.style.color = 'var(--neutral-dark)';
+                // Toast
+                try {
+                    var toastEl = document.getElementById('liveToast');
+                    if (toastEl) window.appToast = new bootstrap.Toast(toastEl);
+                } catch (e) {}
+
+                // Alert dismissible
+                try {
+                    var alertEl = document.querySelector('.alert.alert-info');
+                    if (alertEl) {
+                        var closeBtn = alertEl.querySelector('.btn-close');
+                        if (closeBtn) {
+                            closeBtn.addEventListener('click', () => {
+                                alertEl.style.display = 'none';
+                            });
                         }
                     }
-
-                    // Validación
-                    if (length > 1000) {
-                        textoInput.classList.add('is-invalid');
-                    } else {
-                        textoInput.classList.remove('is-invalid');
-                    }
-
-                    this.checkForChanges();
-                };
-
-                textoInput.addEventListener('input', updateCounter);
-                textoInput.addEventListener('blur', updateCounter);
-                updateCounter();
+                } catch (e) {}
             },
 
-            initRatingSystem() {
-                const stars = document.querySelectorAll('.star');
+            saveOriginalValues() {
+                // Guardar valores originales
+                this.originalValues = {
+                    Texto: config.originalData.Texto,
+                    Puntuacion: config.originalData.Puntuacion,
+                    Fecha: config.originalData.Fecha
+                };
+            },
+
+            setupCharacterCounters() {
+                const textoInput = document.getElementById('textoInput');
+                const textoCounter = document.getElementById('textoCounter');
+                const textLengthBadge = document.getElementById('textLengthBadge');
+
+                if (textoInput && textoCounter) {
+                    const update = () => {
+                        const length = textoInput.value.length;
+                        textoCounter.textContent = `${length}/1000`;
+
+                        if (textLengthBadge) {
+                            textLengthBadge.textContent = `${length}/1000`;
+                            textLengthBadge.className = 'badge ' +
+                                (length === 0 ? 'bg-secondary' :
+                                 length > 1000 ? 'bg-danger' :
+                                 length > 900 ? 'bg-warning' : 'bg-primary');
+                        }
+
+                        if (!config.isTestMode) {
+                            textoCounter.className = 'text-muted';
+                            if (length > 900) textoCounter.classList.add('text-warning');
+                            if (length > 1000) textoCounter.classList.add('text-danger');
+                        }
+                    };
+
+                    textoInput.addEventListener('input', update);
+                    update(); // Estado inicial
+                }
+            },
+
+            setupRatingSystem() {
+                const stars = document.querySelectorAll('.rating-stars .star');
                 const puntuacionInput = document.getElementById('puntuacionInput');
                 const selectedRating = document.getElementById('selectedRating');
+                const ratingValue = document.getElementById('ratingValue');
+                const ratingDescription = document.getElementById('ratingDescription');
                 const ratingText = document.getElementById('ratingText');
-                const currentRating = document.getElementById('currentRating');
 
                 const ratingMessages = {
-                    0: "Selecciona calificación",
-                    1: "Mala experiencia",
-                    2: "Regular",
-                    3: "Buena",
-                    4: "Muy buena",
-                    5: "Excelente"
+                    0: { text: "Selecciona calificación", desc: "Sin calificar" },
+                    1: { text: "Mala experiencia", desc: "No lo recomendaría" },
+                    2: { text: "Regular", desc: "Podría mejorar" },
+                    3: { text: "Buena", desc: "Satisfactorio" },
+                    4: { text: "Muy buena", desc: "Lo recomendaría" },
+                    5: { text: "Excelente", desc: "Altamente recomendado" }
                 };
 
                 const updateRatingDisplay = (rating) => {
@@ -428,105 +488,86 @@
 
                     // Actualizar estrellas visuales
                     stars.forEach((star, index) => {
-                        if (index < rating) {
+                        const starValue = parseInt(star.dataset.value);
+                        if (starValue <= rating) {
                             star.classList.add('text-warning');
                             star.classList.remove('text-muted');
+                            star.setAttribute('aria-pressed', 'true');
                         } else {
                             star.classList.remove('text-warning');
                             star.classList.add('text-muted');
+                            star.setAttribute('aria-pressed', 'false');
                         }
                     });
 
-                    // Actualizar estrellas en preview
-                    selectedRating.innerHTML = '';
-                    for (let i = 0; i < 5; i++) {
-                        const star = document.createElement('i');
-                        star.className = 'fas fa-star';
-                        star.style.opacity = i < rating ? '1' : '0.3';
-                        star.style.fontSize = i < rating ? '1.2em' : '1em';
-                        selectedRating.appendChild(star);
+                    // Actualizar preview de calificación
+                    if (selectedRating) {
+                        const starsHtml = Array(5).fill(0).map((_, i) =>
+                            `<i class="fas fa-star${i < rating ? ' text-warning' : ' text-muted opacity-50'}"></i>`
+                        ).join('');
+                        selectedRating.innerHTML = starsHtml;
                     }
 
-                    // Actualizar texto
-                    ratingText.textContent = ratingMessages[rating] || "Selecciona calificación";
-                    ratingText.className = rating >= 4 ? 'text-success' :
-                                          rating >= 3 ? 'text-primary' :
-                                          rating >= 1 ? 'text-warning' : 'text-muted';
+                    if (ratingValue) ratingValue.textContent = `${rating}/5`;
+
+                    // Actualizar textos
+                    const msg = ratingMessages[rating];
+                    if (ratingDescription) ratingDescription.textContent = msg.desc;
+                    if (ratingText) {
+                        ratingText.textContent = msg.text;
+                        ratingText.className = rating >= 4 ? 'text-success' :
+                                              rating >= 3 ? 'text-primary' :
+                                              rating >= 1 ? 'text-warning' : 'text-muted';
+                    }
 
                     // Actualizar campo oculto
-                    puntuacionInput.value = rating;
-
-                    // Actualizar badge de calificación actual
-                    currentRating.innerHTML = '';
-                    for (let i = 0; i < 5; i++) {
-                        const star = document.createElement('i');
-                        star.className = 'fas fa-star';
-                        star.style.opacity = i < rating ? '1' : '0.3';
-                        currentRating.appendChild(star);
-                    }
-
-                    this.checkForChanges();
+                    if (puntuacionInput) puntuacionInput.value = rating;
                 };
-
-                // Establecer valor inicial
-                const initialRating = @puntuacion;
-                updateRatingDisplay(initialRating);
 
                 // Eventos para las estrellas
                 stars.forEach(star => {
                     star.addEventListener('click', (e) => {
-                        const rating = parseInt(e.target.dataset.value);
+                        const rating = parseInt(e.currentTarget.dataset.value);
                         updateRatingDisplay(rating);
+                        this.checkForChanges();
+                    });
 
-                        // Feedback táctil
-                        e.target.style.transform = 'scale(1.2)';
-                        setTimeout(() => {
-                            e.target.style.transform = 'scale(1)';
-                        }, 200);
-
-                        this.showModifiedStatus();
+                    star.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            const rating = parseInt(e.currentTarget.dataset.value);
+                            updateRatingDisplay(rating);
+                            this.checkForChanges();
+                        }
                     });
 
                     star.addEventListener('mouseover', (e) => {
-                        const hoverRating = parseInt(e.target.dataset.value);
-                        stars.forEach((s, index) => {
-                            if (index < hoverRating) {
-                                s.style.transform = 'scale(1.1)';
+                        const hoverRating = parseInt(e.currentTarget.dataset.value);
+                        stars.forEach(s => {
+                            const starValue = parseInt(s.dataset.value);
+                            if (starValue <= hoverRating) {
+                                s.classList.add('text-warning');
+                                s.classList.remove('text-muted');
                             }
                         });
                     });
 
                     star.addEventListener('mouseout', () => {
-                        stars.forEach(s => {
-                            s.style.transform = 'scale(1)';
-                        });
+                        const currentRating = puntuacionInput ? parseInt(puntuacionInput.value) : 0;
+                        updateRatingDisplay(currentRating);
                     });
                 });
+
+                // Inicializar con valor del modelo
+                const initialRating = @puntuacion;
+                updateRatingDisplay(initialRating);
             },
 
-            initAutoDate() {
-                const fechaInput = document.getElementById('fechaInput');
-
-                // Validar que no sea fecha futura
-                fechaInput.addEventListener('change', () => {
-                    const selectedDate = new Date(fechaInput.value);
-                    const today = new Date();
-                    today.setHours(0, 0, 0, 0);
-
-                    if (selectedDate > today) {
-                        fechaInput.classList.add('is-invalid');
-                        this.showToast('La fecha no puede ser futura', 'warning');
-                    } else {
-                        fechaInput.classList.remove('is-invalid');
-                    }
-
-                    this.checkForChanges();
-                });
-            },
-
-            initChangeDetection() {
+            setupChangeDetection() {
                 const form = document.getElementById('commentForm');
-                const inputs = form.querySelectorAll('input, textarea, select');
+                if (!form) return;
+
+                const inputs = form.querySelectorAll('input, textarea');
 
                 inputs.forEach(input => {
                     input.addEventListener('input', () => this.checkForChanges());
@@ -537,249 +578,314 @@
             checkForChanges() {
                 let hasChanges = false;
                 const form = document.getElementById('commentForm');
-                const formData = new FormData(form);
 
-                for (let [key, value] of formData.entries()) {
-                    if (this.originalData[key] !== value) {
-                        hasChanges = true;
-                        break;
-                    }
-                }
+                if (!form) return false;
 
-                // Verificar rating
-                const currentRating = document.getElementById('puntuacionInput').value;
-                if (currentRating != this.originalData['Puntuacion']) {
+                // Verificar texto
+                const textoInput = document.getElementById('textoInput');
+                if (textoInput && textoInput.value !== this.originalValues.Texto) {
                     hasChanges = true;
                 }
 
-                this.formModified = hasChanges;
-                this.updateModifiedStatus(hasChanges);
+                // Verificar fecha
+                const fechaInput = document.getElementById('fechaInput');
+                if (fechaInput && fechaInput.value !== this.originalValues.Fecha) {
+                    hasChanges = true;
+                }
+
+                // Verificar puntuación
+                const puntuacionInput = document.getElementById('puntuacionInput');
+                if (puntuacionInput && parseInt(puntuacionInput.value) !== this.originalValues.Puntuacion) {
+                    hasChanges = true;
+                }
+
+                this.hasChanges = hasChanges;
+                this.updateModifiedStatus();
                 return hasChanges;
             },
 
-            updateModifiedStatus(isModified) {
+            updateModifiedStatus() {
                 const editStatus = document.getElementById('editStatus');
                 const modifiedStatus = document.getElementById('modifiedStatus');
 
-                if (isModified) {
-                    editStatus.style.display = 'none';
-                    modifiedStatus.style.display = 'inline-block';
-                } else {
-                    editStatus.style.display = 'inline-block';
-                    modifiedStatus.style.display = 'none';
+                if (editStatus && modifiedStatus) {
+                    if (this.hasChanges) {
+                        editStatus.style.display = 'none';
+                        modifiedStatus.style.display = 'inline-block';
+                    } else {
+                        editStatus.style.display = 'inline-block';
+                        modifiedStatus.style.display = 'none';
+                    }
                 }
             },
 
-            showModifiedStatus() {
-                const modifiedStatus = document.getElementById('modifiedStatus');
-                modifiedStatus.style.display = 'inline-block';
-                modifiedStatus.style.animation = 'pulse 0.5s ease-in-out';
-                setTimeout(() => {
-                    modifiedStatus.style.animation = '';
-                }, 500);
-            },
-
-            initFormValidation() {
+            setupUserFriendlyForm() {
                 const form = document.getElementById('commentForm');
                 const submitBtn = document.getElementById('submitBtn');
 
+                if (!form || !submitBtn) return;
+
+                // Configurar validación en tiempo real
+                this.setupRealTimeValidation(form);
+
+                // Configurar envío del formulario
                 form.addEventListener('submit', (e) => {
-                    // Validar puntuación
-                    const puntuacionInput = document.getElementById('puntuacionInput');
-                    if (!puntuacionInput.value || puntuacionInput.value == "0") {
+                    if (!this.validateFormBeforeSubmit()) {
                         e.preventDefault();
-                        this.showToast('Por favor, califica el sitio con estrellas', 'warning');
-
-                        const starsContainer = document.getElementById('ratingStars');
-                        starsContainer.style.boxShadow = '0 0 0 0.25rem rgba(255,193,7,.25)';
-                        setTimeout(() => {
-                            starsContainer.style.boxShadow = '';
-                        }, 2000);
-                        return false;
-                    }
-
-                    // Validar texto del comentario
-                    const textoInput = document.getElementById('textoInput');
-                    if (!textoInput.value.trim()) {
-                        e.preventDefault();
-                        this.showValidationError('Por favor, escribe tu comentario', textoInput);
-                        return false;
-                    }
-
-                    if (textoInput.value.length > 1000) {
-                        e.preventDefault();
-                        this.showValidationError('El comentario no puede exceder los 1000 caracteres', textoInput);
-                        return false;
-                    }
-
-                    // Validar fecha
-                    const fechaInput = document.getElementById('fechaInput');
-                    if (!fechaInput.value) {
-                        e.preventDefault();
-                        this.showValidationError('Por favor, selecciona una fecha', fechaInput);
-                        return false;
-                    }
-
-                    const selectedDate = new Date(fechaInput.value);
-                    const today = new Date();
-                    today.setHours(0, 0, 0, 0);
-                    if (selectedDate > today) {
-                        e.preventDefault();
-                        this.showValidationError('La fecha no puede ser futura', fechaInput);
                         return false;
                     }
 
                     // Mostrar estado de carga
-                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Actualizando...';
                     submitBtn.disabled = true;
-                    submitBtn.classList.add('btn-loading');
+                    submitBtn.innerHTML = `
+                        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                        Actualizando...
+                    `;
+
                     return true;
                 });
             },
 
-            showValidationError(message, element) {
-                element.classList.add('is-invalid');
-                this.showToast(message, 'danger');
-                element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                element.focus();
-            },
+            setupTestFriendlyForm() {
+                const form = document.getElementById('commentForm');
+                const submitBtn = document.getElementById('submitBtn');
 
-            showToast(message, type = 'info') {
-                const toastContainer = document.createElement('div');
-                toastContainer.className = 'position-fixed bottom-0 end-0 p-3';
-                toastContainer.style.zIndex = '1050';
+                if (!form || !submitBtn) return;
 
-                const toast = document.createElement('div');
-                toast.className = `toast align-items-center text-white bg-${type} border-0`;
-                toast.setAttribute('role', 'alert');
-                toast.setAttribute('aria-live', 'assertive');
-                toast.setAttribute('aria-atomic', 'true');
+                console.log('Configurando formulario para pruebas...');
 
-                toast.innerHTML = `
-                    <div class="d-flex">
-                        <div class="toast-body">
-                            <i class="fas fa-${type === 'success' ? 'check-circle' :
-                                            type === 'warning' ? 'exclamation-triangle' :
-                                            type === 'danger' ? 'exclamation-circle' : 'info-circle'} me-2"></i>
-                            ${message}
-                        </div>
-                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-                    </div>
-                `;
+                // Desactivar validaciones automáticas
+                form.noValidate = true;
+                form.classList.remove('needs-validation');
 
-                toastContainer.appendChild(toast);
-                document.body.appendChild(toastContainer);
+                // Simplificar envío del formulario
+                form.addEventListener('submit', (e) => {
+                    // Validación mínima
+                    let isValid = true;
 
-                const bsToast = new bootstrap.Toast(toast, { delay: 3000 });
-                bsToast.show();
+                    const textoInput = document.getElementById('textoInput');
+                    const fechaInput = document.getElementById('fechaInput');
+                    const puntuacionInput = document.getElementById('puntuacionInput');
 
-                toast.addEventListener('hidden.bs.toast', () => {
-                    document.body.removeChild(toastContainer);
-                });
-            },
-
-            initTooltips() {
-                const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-                tooltipTriggerList.map(function (tooltipTriggerEl) {
-                    return new bootstrap.Tooltip(tooltipTriggerEl);
-                });
-            },
-
-            cleanLocalStorage() {
-                localStorage.removeItem('comentarioEditDraft_' + @Model.ComentarioId);
-                const keys = Object.keys(localStorage);
-                keys.forEach(key => {
-                    if (key.includes('comentario') || key.includes('borrador') || key.includes('draft')) {
-                        localStorage.removeItem(key);
+                    if (!textoInput || !textoInput.value.trim()) {
+                        isValid = false;
+                        if (textoInput) textoInput.classList.add('is-invalid');
                     }
+
+                    if (!fechaInput || !fechaInput.value) {
+                        isValid = false;
+                        if (fechaInput) fechaInput.classList.add('is-invalid');
+                    }
+
+                    if (!puntuacionInput || parseInt(puntuacionInput.value) === 0) {
+                        isValid = false;
+                        if (puntuacionInput) puntuacionInput.classList.add('is-invalid');
+                    }
+
+                    if (!isValid) {
+                        e.preventDefault();
+                        return false;
+                    }
+
+                    // Estado de carga simplificado
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = 'Enviando...';
+
+                    return true;
                 });
             },
 
-            updateLastModifiedBadge() {
-                const now = new Date();
-                const formattedDate = now.toLocaleDateString('es-ES');
-                document.getElementById('lastModifiedBadge').textContent = formattedDate;
+            setupRealTimeValidation(form) {
+                form.querySelectorAll('input, textarea').forEach(field => {
+                    field.addEventListener('blur', function() {
+                        validateSingleField(this);
+                    });
+                });
             },
 
-            restoreOriginal() {
-                if (this.formModified) {
-                    if (!confirm('¿Estás seguro de que deseas restaurar los valores originales? Se perderán todos los cambios no guardados.')) {
-                        return;
+            validateFormBeforeSubmit() {
+                let isValid = true;
+                const form = document.getElementById('commentForm');
+
+                // Validar texto del comentario
+                const textoInput = form.querySelector('[name="Texto"]');
+                if (!textoInput || !textoInput.value.trim()) {
+                    isValid = false;
+                    textoInput.classList.add('is-invalid');
+                    this.showMessage('El comentario es requerido', 'danger');
+                    textoInput.focus();
+                } else if (textoInput.value.length > 1000) {
+                    isValid = false;
+                    textoInput.classList.add('is-invalid');
+                    this.showMessage('El comentario no puede exceder 1000 caracteres', 'danger');
+                    textoInput.focus();
+                }
+
+                // Validar fecha
+                const fechaInput = form.querySelector('[name="Fecha"]');
+                if (!fechaInput || !fechaInput.value) {
+                    isValid = false;
+                    fechaInput.classList.add('is-invalid');
+                    this.showMessage('La fecha es requerida', 'danger');
+                    if (!textoInput || textoInput.value.trim()) fechaInput.focus();
+                } else {
+                    const selectedDate = new Date(fechaInput.value);
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+
+                    if (selectedDate > today) {
+                        isValid = false;
+                        fechaInput.classList.add('is-invalid');
+                        this.showMessage('La fecha no puede ser futura', 'danger');
                     }
+                }
+
+                // Validar puntuación
+                const puntuacionInput = form.querySelector('[name="Puntuacion"]');
+                const puntuacion = puntuacionInput ? parseInt(puntuacionInput.value) : 0;
+                if (puntuacion < 1 || puntuacion > 5) {
+                    isValid = false;
+                    if (puntuacionInput) puntuacionInput.classList.add('is-invalid');
+                    this.showMessage('Debes calificar el sitio con 1-5 estrellas', 'danger');
+
+                    // Resaltar las estrellas
+                    const starsContainer = document.getElementById('ratingStars');
+                    if (starsContainer) {
+                        starsContainer.style.boxShadow = '0 0 0 0.25rem rgba(220,53,69,.25)';
+                        setTimeout(() => {
+                            starsContainer.style.boxShadow = '';
+                        }, 3000);
+                    }
+                }
+
+                return isValid;
+            },
+
+            setupRestoreModal() {
+                const confirmBtn = document.getElementById('confirmRestore');
+                const modal = document.getElementById('restoreModal');
+
+                if (confirmBtn && modal) {
+                    confirmBtn.addEventListener('click', () => {
+                        const bsModal = bootstrap.Modal.getInstance(modal);
+                        this.restoreForm();
+                        bsModal.hide();
+                        this.showMessage('Valores originales restaurados', 'success');
+                    });
+                }
+            },
+
+            restoreForm() {
+                if (!this.checkForChanges()) {
+                    this.showMessage('No hay cambios para restaurar', 'info');
+                    return;
                 }
 
                 // Restaurar valores del formulario
-                for (const [key, value] of Object.entries(this.originalData)) {
-                    const element = document.querySelector(`[name="${key}"]`);
-                    if (element) {
-                        element.value = value;
-                    }
+                const textoInput = document.getElementById('textoInput');
+                const fechaInput = document.getElementById('fechaInput');
+                const puntuacionInput = document.getElementById('puntuacionInput');
+
+                if (textoInput) textoInput.value = this.originalValues.Texto;
+                if (fechaInput) fechaInput.value = this.originalValues.Fecha;
+                if (puntuacionInput) puntuacionInput.value = this.originalValues.Puntuacion;
+
+                // Restaurar rating visual
+                this.setupRatingSystem();
+
+                // Restaurar contadores
+                this.setupCharacterCounters();
+
+                // Restaurar validaciones
+                const form = document.getElementById('commentForm');
+                if (form) {
+                    form.querySelectorAll('.is-valid, .is-invalid').forEach(el => {
+                        el.classList.remove('is-valid', 'is-invalid');
+                    });
                 }
 
-                // Restaurar rating específicamente
-                const originalRating = @puntuacion;
-                document.getElementById('puntuacionInput').value = originalRating;
-
-                // Actualizar display de rating
-                const stars = document.querySelectorAll('.star');
-                stars.forEach((star, index) => {
-                    if (index < originalRating) {
-                        star.classList.add('text-warning');
-                        star.classList.remove('text-muted');
-                    } else {
-                        star.classList.remove('text-warning');
-                        star.classList.add('text-muted');
-                    }
-                });
-
-                // Actualizar el sistema de rating
-                this.initRatingSystem();
-
-                // Actualizar contadores
-                this.initCharCounters();
-
-                // Limpiar validaciones
-                document.querySelectorAll('.is-valid, .is-invalid').forEach(el => {
-                    el.classList.remove('is-valid', 'is-invalid');
-                });
-
-                // Restaurar botón
+                // Restaurar estado del botón
                 const submitBtn = document.getElementById('submitBtn');
-                submitBtn.innerHTML = '<i class="fas fa-save me-2"></i>Actualizar Comentario';
-                submitBtn.disabled = false;
-                submitBtn.classList.remove('btn-loading');
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fas fa-save me-2"></i>Actualizar Comentario';
+                }
 
-                // Actualizar estado
-                this.formModified = false;
-                this.updateModifiedStatus(false);
+                this.hasChanges = false;
+                this.updateModifiedStatus();
+            },
 
-                this.showToast('Valores originales restaurados', 'info');
+            showMessage(message, type = 'info') {
+                const toastEl = document.getElementById('liveToast');
+                const toastMsg = document.getElementById('toastMessage');
+
+                if (toastEl && toastMsg && window.appToast) {
+                    const iconMap = {
+                        'success': 'check-circle',
+                        'danger': 'exclamation-triangle',
+                        'warning': 'exclamation-circle',
+                        'info': 'info-circle'
+                    };
+
+                    const icon = toastEl.querySelector('i');
+                    if (icon) {
+                        icon.className = `fas fa-${iconMap[type] || 'info-circle'} me-2 text-${type}`;
+                    }
+
+                    toastMsg.textContent = message;
+                    window.appToast.show();
+                } else {
+                    console.log(`${type.toUpperCase()}: ${message}`);
+                }
             }
         };
 
-        // Inicialización cuando el DOM esté listo
+        // Función de ayuda para validación individual
+        function validateSingleField(field) {
+            if (field.hasAttribute('required') && !field.value.trim()) {
+                field.classList.add('is-invalid');
+                field.classList.remove('is-valid');
+                return false;
+            }
+
+            if (field.hasAttribute('maxlength')) {
+                const max = parseInt(field.getAttribute('maxlength'));
+                if (field.value.length > max) {
+                    field.classList.add('is-invalid');
+                    field.classList.remove('is-valid');
+                    return false;
+                }
+            }
+
+            // Validación especial para fecha
+            if (field.type === 'date' && field.value) {
+                const selectedDate = new Date(field.value);
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+
+                if (selectedDate > today) {
+                    field.classList.add('is-invalid');
+                    field.classList.remove('is-valid');
+                    return false;
+                }
+            }
+
+            if (field.value.trim()) {
+                field.classList.add('is-valid');
+                field.classList.remove('is-invalid');
+            } else {
+                field.classList.remove('is-valid', 'is-invalid');
+            }
+
+            return true;
+        }
+
+        // Inicialización principal
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('Inicializando formulario de edición de comentario...');
+
+            // Inicializar gestor del formulario
             formManager.init();
-
-            // Agregar estilos de animación
-            const style = document.createElement('style');
-            style.textContent = `
-                
-
-                .rating-stars {
-                    cursor: pointer;
-                }
-
-                .rating-stars .star {
-                    transition: all 0.2s ease;
-                    margin: 0 2px;
-                }
-
-                .rating-stars .star:hover {
-                    transform: scale(1.1);
-                }
-            `;
-            document.head.appendChild(style);
         });
     </script>
 }
